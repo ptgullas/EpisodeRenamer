@@ -1,0 +1,32 @@
+﻿{
+  "data": {
+    "id": 355622,
+    "seriesName": "Doom Patrol",
+    "aliases": [],
+    "banner": "graphical/5c66069fe1425.jpg",
+    "seriesId": "",
+    "status": "Continuing",
+    "firstAired": "",
+    "network": "DC Universe",
+    "networkId": "",
+    "runtime": "60",
+    "genre": [
+      "Action",
+      "Crime",
+      "Drama",
+      "Science-Fiction"
+    ],
+    "overview": "The Doom Patrol’s members each suffered horrible accidents that gave them superhuman abilities — but also left them scarred and disfigured. Traumatized and downtrodden, the team found purpose through The Chief, who brought them together to investigate the weirdest phenomena in existence — and to protect Earth from what they find.",
+    "lastUpdated": 1552211888,
+    "airsDayOfWeek": "Friday",
+    "airsTime": "3:00 AM",
+    "rating": "TV-MA",
+    "imdbId": "tt8416494",
+    "zap2itId": "",
+    "added": "2018-11-17 20:16:17",
+    "addedBy": null,
+    "siteRating": 0,
+    "siteRatingCount": 0,
+    "slug": "doom-patrol"
+  }
+}
