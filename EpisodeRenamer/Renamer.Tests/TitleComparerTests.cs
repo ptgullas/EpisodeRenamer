@@ -17,11 +17,51 @@ namespace Renamer.Tests {
             bool expected = true;
 
             TitleComparer comparer = new TitleComparer();
-            bool result = comparer.ContainsSeasonEpisode(episodeObject, fileName);
+            bool result = comparer.FilenameContainsSeasonEpisode(episodeObject, fileName);
 
             Assert.Equal(expected, result);
-            
-
         }
+        [Fact]
+        public void GetSeasonEpisodeInSEFormat_Valid_ReturnTrue() {
+            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+                SeriesName = "The Orville",
+                SeasonNumber = 2,
+                EpisodeNumberInSeason = 8,
+                EpisodeTitle = "Identity, Part 1"
+            };
+            TitleComparer comparer = new TitleComparer();
+            string expected = "s02e08";
+
+            Assert.Equal(expected, comparer.GetSeasonEpisodeInSEFormat(episodeObject));
+        }
+
+        [Fact]
+        public void GetSeasonEpisodeInNumberFormat_Valid_ReturnTrue() {
+            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+                SeriesName = "The Orville",
+                SeasonNumber = 2,
+                EpisodeNumberInSeason = 9,
+                EpisodeTitle = "Identity, Part 2"
+            };
+            TitleComparer comparer = new TitleComparer();
+            string expected = "2.09";
+
+            Assert.Equal(expected, comparer.GetSeasonEpisodeInNumberFormat(episodeObject));
+        }
+
+        [Fact]
+        public void GetFormattedFilename_Valid_ReturnTrue() {
+            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+                SeriesName = "Doom Patrol",
+                SeasonNumber = 1,
+                EpisodeNumberInSeason = 2,
+                EpisodeTitle = "Donkey Patrol"
+            };
+            TitleComparer comparer = new TitleComparer();
+            string expected = "Doom Patrol - 1.02 - Donkey Patrol";
+
+            Assert.Equal(expected, comparer.GetFormattedFilename(episodeObject));
+        }
+
     }
 }

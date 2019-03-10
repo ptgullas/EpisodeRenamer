@@ -8,18 +8,5 @@ namespace Renamer.Services.Models {
         public int SeasonNumber { get; set; }
         public int EpisodeNumberInSeason { get; set; }
         public string EpisodeTitle { get; set; }
-
-        public string GetSeasonEpisodeInSEFormat() {
-            return $"s{SeasonNumber.ToString("D2")}e{EpisodeNumberInSeason.ToString("D2")}";
-        }
-
-        public string GetSeasonEpisodeInNumberFormat() {
-            return $"{SeasonNumber}.{EpisodeNumberInSeason.ToString("D2")}";
-        }
-
-
-        public string GetFullName() {
-            return ($"{SeriesName} - {GetSeasonEpisodeInSEFormat()} - {EpisodeTitle}");
-        }
     }
 }
