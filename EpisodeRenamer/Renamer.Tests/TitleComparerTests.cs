@@ -63,5 +63,127 @@ namespace Renamer.Tests {
             Assert.Equal(expected, comparer.GetFormattedFilename(episodeObject));
         }
 
+        [Fact]
+        public void GetSeriesNameInLowercaseAndPeriodsWithoutStartingArticle_ReturnsTrue() {
+            TitleComparer comparer = new TitleComparer();
+            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+                SeriesName = "The Chilling Adventures of Sabrina",
+                SeasonNumber = 1,
+                EpisodeNumberInSeason = 4,
+                EpisodeTitle = "Witch Academy"
+            };
+            string expected = "chilling.adventures.of.sabrina";
+
+            string result = comparer.GetSeriesNameInLowercaseAndPeriodsWithoutStartingArticle(episodeObject);
+
+            Assert.Equal(expected, result);
+        }
+        [Fact]
+        public void FilenameContainsSeriesName_ContainsSeriesName_ReturnsTrue() {
+            TitleComparer comparer = new TitleComparer();
+            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+                SeriesName = "The Chilling Adventures of Sabrina",
+                SeasonNumber = 1,
+                EpisodeNumberInSeason = 4,
+                EpisodeTitle = "Witch Academy"
+            };
+            string fileName = @"the.chilling.adventures.of.sabrina.s01e04.720p.webrip.hevc.x265.rmteam.mkv";
+
+            Assert.True(comparer.FilenameContainsSeriesName(episodeObject, fileName));
+        }
+        [Fact]
+        public void FilenameContainsSeriesName_DoesNotContainSeriesName_ReturnsFalse() {
+            TitleComparer comparer = new TitleComparer();
+            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+                SeriesName = "The Chilling Adventures of Sabrina",
+                SeasonNumber = 1,
+                EpisodeNumberInSeason = 4,
+                EpisodeTitle = "Witch Academy"
+            };
+            string fileName = @"doctor.who.2005.s11e10.the.battle.of.ranskoor.av.kolos.720p.web.dl.hevc.x265.rmteam.mkv";
+
+            Assert.False(comparer.FilenameContainsSeriesName(episodeObject, fileName));
+        }
+
+        [Fact]
+        public void FilenameMatchesEpisode_ItMatches_ReturnsTrue() {
+            TitleComparer comparer = new TitleComparer();
+            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+                SeriesName = "The Chilling Adventures of Sabrina",
+                SeasonNumber = 1,
+                EpisodeNumberInSeason = 4,
+                EpisodeTitle = "Witch Academy"
+            };
+            string fileName = @"the.chilling.adventures.of.sabrina.s01e04.720p.webrip.hevc.x265.rmteam.mkv";
+
+            Assert.True(comparer.FilenameMatchesEpisode(episodeObject, fileName));
+        }
+
+        [Fact]
+        public void FilenameMatchesEpisode_DoesNotMatch_ReturnsFalse() {
+            TitleComparer comparer = new TitleComparer();
+            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+                SeriesName = "The Chilling Adventures of Sabrina",
+                SeasonNumber = 1,
+                EpisodeNumberInSeason = 4,
+                EpisodeTitle = "Witch Academy"
+            };
+            string fileName = @"the.chilling.adventures.of.sabrina.s01e07.720p.webrip.hevc.x265.rmteam.mkv";
+
+            Assert.False(comparer.FilenameMatchesEpisode(episodeObject, fileName));
+        }
+
+        [Fact]
+        public void ExtractSeasonEpisodeFromFilename_ReturnSeasonEpisode() {
+            TitleComparer comparer = new TitleComparer();
+            string fileName = @"the.chilling.adventures.of.sabrina.s01e07.720p.webrip.hevc.x265.rmteam.mkv";
+
+            string expected = "s01e07";
+            Assert.Equal(expected, comparer.ExtractSeasonEpisodeFromFilename(fileName));
+
+        }
+        [Fact]
+        public void ExtractSeriesNameFromFilename() {
+            TitleComparer comparer = new TitleComparer();
+            string fileName = @"the.chilling.adventures.of.sabrina.s01e07.720p.webrip.hevc.x265.rmteam.mkv";
+
+            string expected = "the.chilling.adventures.of.sabrina";
+            Assert.Equal(expected, comparer.ExtractSeriesNameFromFilename(fileName));
+
+        }
+
+        [Fact]
+        public void ExtractSeasonNumberFromFilename_ReturnsSeason() {
+            TitleComparer comparer = new TitleComparer();
+            string fileName = @"the.chilling.adventures.of.sabrina.s01e07.720p.webrip.hevc.x265.rmteam.mkv";
+
+            int expected = 1;
+            Assert.Equal(expected, comparer.ExtractSeasonNumberFromFilename(fileName));
+
+        }
+        [Fact]
+        public void ExtractSeasonEpisodeFromFilenameAsEpisodeObject_ContainsSeasonEpisode_ReturnsEpObject() {
+            TitleComparer comparer = new TitleComparer();
+            string fileName = @"the.chilling.adventures.of.sabrina.s01e07.720p.webrip.hevc.x265.rmteam.mkv";
+
+            int expectedSeason = 1;
+            int expectedEpisode = 7;
+            Assert.Equal(expectedSeason, comparer.ExtractSeasonEpisodeFromFilenameAsEpisodeObject(fileName).SeasonNumber);
+            Assert.Equal(expectedEpisode, comparer.ExtractSeasonEpisodeFromFilenameAsEpisodeObject(fileName).EpisodeNumberInSeason);
+
+        }
+        [Fact]
+        public void ExtractSeasonEpisodeFromFilenameAsEpisodeObject_DoesNotContainSeasonEpisode_Throws() {
+            TitleComparer comparer = new TitleComparer();
+            string fileName = @"the.chilling.adventures.of.sabrina.mkv";
+            string expectedMessage = $"Filename does not contain episode number in s##e## format.\r\nParameter name:{fileName}";
+
+            // Act & Assert
+            Exception ex = Assert.Throws<ArgumentException>(() => comparer.ExtractSeasonEpisodeFromFilenameAsEpisodeObject(fileName));
+
+            Assert.Equal(expectedMessage.Substring(0,50), ex.Message.Substring(0,50));
+        }
+
+
     }
 }
