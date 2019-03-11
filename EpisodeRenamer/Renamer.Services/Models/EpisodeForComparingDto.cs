@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Renamer.Services.Models {
-    public class EpisodeForComparing {
+    public class EpisodeForComparingDto {
         public string SeriesName { get; set; }
         public int SeasonNumber { get; set; }
         public int EpisodeNumberInSeason { get; set; }

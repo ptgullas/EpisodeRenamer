@@ -7,7 +7,7 @@ namespace Renamer.Tests {
     public class TitleComparerTests {
         [Fact]
         public void ContainsSeasonEpisode_DoesContain_ReturnTrue() {
-            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+            EpisodeForComparingDto episodeObject = new EpisodeForComparingDto() {
                 SeriesName = "Counterpart",
                 SeasonNumber = 2,
                 EpisodeNumberInSeason = 9,
@@ -23,7 +23,7 @@ namespace Renamer.Tests {
         }
         [Fact]
         public void GetSeasonEpisodeInSEFormat_Valid_ReturnTrue() {
-            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+            EpisodeForComparingDto episodeObject = new EpisodeForComparingDto() {
                 SeriesName = "The Orville",
                 SeasonNumber = 2,
                 EpisodeNumberInSeason = 8,
@@ -37,7 +37,7 @@ namespace Renamer.Tests {
 
         [Fact]
         public void GetSeasonEpisodeInNumberFormat_Valid_ReturnTrue() {
-            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+            EpisodeForComparingDto episodeObject = new EpisodeForComparingDto() {
                 SeriesName = "The Orville",
                 SeasonNumber = 2,
                 EpisodeNumberInSeason = 9,
@@ -51,7 +51,7 @@ namespace Renamer.Tests {
 
         [Fact]
         public void GetFormattedFilename_Valid_ReturnTrue() {
-            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+            EpisodeForComparingDto episodeObject = new EpisodeForComparingDto() {
                 SeriesName = "Doom Patrol",
                 SeasonNumber = 1,
                 EpisodeNumberInSeason = 2,
@@ -66,7 +66,7 @@ namespace Renamer.Tests {
         [Fact]
         public void GetSeriesNameInLowercaseAndPeriodsWithoutStartingArticle_ReturnsTrue() {
             TitleComparer comparer = new TitleComparer();
-            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+            EpisodeForComparingDto episodeObject = new EpisodeForComparingDto() {
                 SeriesName = "The Chilling Adventures of Sabrina",
                 SeasonNumber = 1,
                 EpisodeNumberInSeason = 4,
@@ -81,7 +81,7 @@ namespace Renamer.Tests {
         [Fact]
         public void FilenameContainsSeriesName_ContainsSeriesName_ReturnsTrue() {
             TitleComparer comparer = new TitleComparer();
-            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+            EpisodeForComparingDto episodeObject = new EpisodeForComparingDto() {
                 SeriesName = "The Chilling Adventures of Sabrina",
                 SeasonNumber = 1,
                 EpisodeNumberInSeason = 4,
@@ -94,7 +94,7 @@ namespace Renamer.Tests {
         [Fact]
         public void FilenameContainsSeriesName_DoesNotContainSeriesName_ReturnsFalse() {
             TitleComparer comparer = new TitleComparer();
-            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+            EpisodeForComparingDto episodeObject = new EpisodeForComparingDto() {
                 SeriesName = "The Chilling Adventures of Sabrina",
                 SeasonNumber = 1,
                 EpisodeNumberInSeason = 4,
@@ -108,7 +108,7 @@ namespace Renamer.Tests {
         [Fact]
         public void FilenameMatchesEpisode_ItMatches_ReturnsTrue() {
             TitleComparer comparer = new TitleComparer();
-            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+            EpisodeForComparingDto episodeObject = new EpisodeForComparingDto() {
                 SeriesName = "The Chilling Adventures of Sabrina",
                 SeasonNumber = 1,
                 EpisodeNumberInSeason = 4,
@@ -122,7 +122,7 @@ namespace Renamer.Tests {
         [Fact]
         public void FilenameMatchesEpisode_DoesNotMatch_ReturnsFalse() {
             TitleComparer comparer = new TitleComparer();
-            EpisodeForComparing episodeObject = new EpisodeForComparing() {
+            EpisodeForComparingDto episodeObject = new EpisodeForComparingDto() {
                 SeriesName = "The Chilling Adventures of Sabrina",
                 SeasonNumber = 1,
                 EpisodeNumberInSeason = 4,

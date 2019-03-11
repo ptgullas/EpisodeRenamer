@@ -15,16 +15,16 @@ namespace Renamer.Services {
 
 
         public List<string> ConvertFavorites(string favoritesJson) {
-            var myData = JsonConvert.DeserializeObject<UserData>(favoritesJson);
+            var myData = JsonConvert.DeserializeObject<UserDataDto>(favoritesJson);
             return myData.faves.favorites;
         }
 
-        public TVSeries ConvertTVSeries(string seriesJson) {
+        public TVSeriesDto ConvertTVSeries(string seriesJson) {
             TVSeriesOuter outerData = JsonConvert.DeserializeObject<TVSeriesOuter>(seriesJson);
             return outerData.tvSeries;
         }
 
-        public Episode[] ConvertEpisodes(string episodesJson) {
+        public EpisodeDto[] ConvertEpisodes(string episodesJson) {
             EpisodeOuter outerData = JsonConvert.DeserializeObject<EpisodeOuter>(episodesJson);
             return outerData.episodes;
         }

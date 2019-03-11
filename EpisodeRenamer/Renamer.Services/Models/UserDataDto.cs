@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Renamer.Services.Models {
-    public class UserData {
+    public class UserDataDto {
         [JsonProperty("data")]
         public Faves faves;
     }
