@@ -56,6 +56,20 @@ namespace Renamer.Tests {
             Assert.Equal(expected, title.RemoveFirstWordArticlesFromTitle());
         }
 
+        [Theory]
+        [InlineData(@"Chapter One: October Country")]
+        public void ReplaceInvalidChars_HasColonSpace_ReturnsStringWithHyphen(string val) {
+            string expected = "Chapter One-October Country";
+            Assert.Equal(expected, val.ReplaceInvalidChars());
+        }
+
+        [Theory]
+        [InlineData(@"Chapter Six/ An Exorcism in Greendale")]
+        [InlineData(@"Chapter Six\ An Exorcism in Greendale")]
+        public void ReplaceInvalidChars_HasInvalidChars_ReturnsStringWithHyphen(string val) {
+            string expected = "Chapter Six- An Exorcism in Greendale";
+            Assert.Equal(expected, val.ReplaceInvalidChars());
+        }
 
     }
 }

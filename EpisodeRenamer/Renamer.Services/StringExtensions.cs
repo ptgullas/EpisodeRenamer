@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Renamer.Services {
     public static class StringExtensions {
@@ -21,6 +22,15 @@ namespace Renamer.Services {
 
         public static string ReplaceSpaces(this string str, char replace = '.') {
             return str.Replace(' ', replace);
+        }
+        public static string ReplaceColonSpaceWithHyphen(this string str) {
+            return str.Replace(": ", "-");
+        }
+        public static string ReplaceInvalidChars(this string str, string strToReplace = "-") {
+            str = str.ReplaceColonSpaceWithHyphen();
+            // this is a colon, a backslash, and a forward slash
+            string invalidChars = "[:\\\\/]";
+            return Regex.Replace(str, invalidChars, strToReplace);
         }
 
         public static bool IsNumeric(this string source) {
