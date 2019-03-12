@@ -14,7 +14,7 @@ namespace Renamer.Tests {
             JsonConverter converter = new JsonConverter();
 
 
-            Assert.Equal(val, converter.ConvertFavorites(json)[0]);
+            Assert.Equal(val, converter.ConvertFavoritesToDto(json)[0]);
         }
         [Theory]
         [InlineData("Doom Patrol")]
@@ -25,7 +25,7 @@ namespace Renamer.Tests {
             JsonConverter converter = new JsonConverter();
 
 
-            Assert.Equal(val, converter.ConvertTVSeries(json).SeriesNameTVDB);
+            Assert.Equal(val, converter.ConvertTVSeriesToDto(json).SeriesNameTVDB);
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Renamer.Tests {
             int expectedEpisodeNum = 1;
 
             // Act
-            EpisodeDto[] eps = converter.ConvertEpisodes(json);
+            EpisodeDto[] eps = converter.ConvertEpisodesToDto(json);
             EpisodeDto ep = eps[0];
             // Assert
             Assert.Equal(expectedName, ep.EpisodeName);

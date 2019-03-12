@@ -14,17 +14,17 @@ namespace Renamer.Services {
         }
 
 
-        public List<string> ConvertFavorites(string favoritesJson) {
+        public List<string> ConvertFavoritesToDto(string favoritesJson) {
             var myData = JsonConvert.DeserializeObject<UserDataDto>(favoritesJson);
             return myData.faves.favorites;
         }
 
-        public TVSeriesDto ConvertTVSeries(string seriesJson) {
+        public TVSeriesDto ConvertTVSeriesToDto(string seriesJson) {
             TVSeriesOuter outerData = JsonConvert.DeserializeObject<TVSeriesOuter>(seriesJson);
             return outerData.tvSeries;
         }
 
-        public EpisodeDto[] ConvertEpisodes(string episodesJson) {
+        public EpisodeDto[] ConvertEpisodesToDto(string episodesJson) {
             EpisodeOuter outerData = JsonConvert.DeserializeObject<EpisodeOuter>(episodesJson);
             return outerData.episodes;
         }
