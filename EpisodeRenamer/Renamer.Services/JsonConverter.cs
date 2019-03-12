@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 using Renamer.Services.Models;
+using Renamer.Data.Entities;
 
 namespace Renamer.Services {
 
@@ -28,7 +29,15 @@ namespace Renamer.Services {
             EpisodeOuterDto outerData = JsonConvert.DeserializeObject<EpisodeOuterDto>(episodesJson);
             return outerData.episodes;
         }
+        /*
+        public List<int> ConvertFavorites(string favoritesJson) {
+            UserData outerData = JsonConvert.DeserializeObject<UserData>(favoritesJson);
+            return outerData.userFavorites;
+        }
 
-        
+        public Episode[] ConvertEpisodes(string episodesJson) {
+
+        }
+        */
     }
 }
