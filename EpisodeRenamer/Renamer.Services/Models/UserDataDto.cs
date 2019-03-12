@@ -6,10 +6,10 @@ using System.Text;
 namespace Renamer.Services.Models {
     public class UserDataDto {
         [JsonProperty("data")]
-        public Faves faves;
+        public FavesDto faves;
     }
 
-    public class Faves {
+    public class FavesDto {
         public List<string> favorites;
     }
 }

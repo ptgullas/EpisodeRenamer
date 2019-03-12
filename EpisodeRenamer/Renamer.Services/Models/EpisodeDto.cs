@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Renamer.Services.Models {
 
-    public class EpisodeOuter {
+    public class EpisodeOuterDto {
         [JsonProperty("data")]
         public EpisodeDto[] episodes;
     }

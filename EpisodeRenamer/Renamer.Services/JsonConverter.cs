@@ -20,13 +20,15 @@ namespace Renamer.Services {
         }
 
         public TVSeriesDto ConvertTVSeriesToDto(string seriesJson) {
-            TVSeriesOuter outerData = JsonConvert.DeserializeObject<TVSeriesOuter>(seriesJson);
+            TVSeriesOuterDto outerData = JsonConvert.DeserializeObject<TVSeriesOuterDto>(seriesJson);
             return outerData.tvSeries;
         }
 
         public EpisodeDto[] ConvertEpisodesToDto(string episodesJson) {
-            EpisodeOuter outerData = JsonConvert.DeserializeObject<EpisodeOuter>(episodesJson);
+            EpisodeOuterDto outerData = JsonConvert.DeserializeObject<EpisodeOuterDto>(episodesJson);
             return outerData.episodes;
         }
+
+        
     }
 }

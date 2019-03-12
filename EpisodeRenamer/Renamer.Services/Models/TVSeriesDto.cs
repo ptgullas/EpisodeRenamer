@@ -4,7 +4,7 @@ using System.Text;
 using Newtonsoft.Json;
 namespace Renamer.Services.Models {
 
-    public class TVSeriesOuter {
+    public class TVSeriesOuterDto {
         [JsonProperty("data")]
         public TVSeriesDto tvSeries;
     }
