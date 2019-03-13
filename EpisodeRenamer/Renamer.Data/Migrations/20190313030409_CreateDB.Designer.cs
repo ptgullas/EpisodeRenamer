@@ -9,8 +9,8 @@ using Renamer.Data.Entities;
 namespace Renamer.Data.Migrations
 {
     [DbContext(typeof(EpisodeContext))]
-    [Migration("20190312035304_CreateEpisodeDB")]
-    partial class CreateEpisodeDB
+    [Migration("20190313030409_CreateDB")]
+    partial class CreateDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,12 +55,16 @@ namespace Renamer.Data.Migrations
 
                     b.Property<string>("SeriesNamePreferred");
 
+                    b.Property<int?>("UserFavoriteId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserFavoriteId");
 
                     b.ToTable("Series");
                 });
 
-            modelBuilder.Entity("Renamer.Data.Entities.UserFavorites", b =>
+            modelBuilder.Entity("Renamer.Data.Entities.UserFavorite", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -77,6 +81,13 @@ namespace Renamer.Data.Migrations
                     b.HasOne("Renamer.Data.Entities.TVSeries")
                         .WithMany("Episodes")
                         .HasForeignKey("TVSeriesId");
+                });
+
+            modelBuilder.Entity("Renamer.Data.Entities.TVSeries", b =>
+                {
+                    b.HasOne("Renamer.Data.Entities.UserFavorite")
+                        .WithMany("Series")
+                        .HasForeignKey("UserFavoriteId");
                 });
 #pragma warning restore 612, 618
         }

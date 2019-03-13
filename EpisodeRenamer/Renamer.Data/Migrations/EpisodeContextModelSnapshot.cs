@@ -53,16 +53,16 @@ namespace Renamer.Data.Migrations
 
                     b.Property<string>("SeriesNamePreferred");
 
-                    b.Property<int?>("UserFavoritesId");
+                    b.Property<int?>("UserFavoriteId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserFavoritesId");
+                    b.HasIndex("UserFavoriteId");
 
                     b.ToTable("Series");
                 });
 
-            modelBuilder.Entity("Renamer.Data.Entities.UserFavorites", b =>
+            modelBuilder.Entity("Renamer.Data.Entities.UserFavorite", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -83,9 +83,9 @@ namespace Renamer.Data.Migrations
 
             modelBuilder.Entity("Renamer.Data.Entities.TVSeries", b =>
                 {
-                    b.HasOne("Renamer.Data.Entities.UserFavorites")
+                    b.HasOne("Renamer.Data.Entities.UserFavorite")
                         .WithMany("Series")
-                        .HasForeignKey("UserFavoritesId");
+                        .HasForeignKey("UserFavoriteId");
                 });
 #pragma warning restore 612, 618
         }
