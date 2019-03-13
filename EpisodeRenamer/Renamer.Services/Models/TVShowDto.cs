@@ -4,12 +4,12 @@ using System.Text;
 using Newtonsoft.Json;
 namespace Renamer.Services.Models {
 
-    public class TVSeriesOuterDto {
+    public class TVShowOuterDto {
         [JsonProperty("data")]
-        public TVSeriesDto tvSeries;
+        public TVShowDto tvSeries;
     }
 
-    public class TVSeriesDto {
+    public class TVShowDto {
         [JsonProperty("id")]
         public int SeriesId { get; set; }
         [JsonProperty("seriesName")]
