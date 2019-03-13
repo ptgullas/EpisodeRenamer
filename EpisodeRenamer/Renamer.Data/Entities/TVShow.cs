@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Renamer.Data.Entities {
-    public class TVSeries {
+    public class TVShow {
         public int Id { get; set; }
         [JsonProperty("id")]
         public int SeriesId { get; set; }

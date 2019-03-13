@@ -10,8 +10,10 @@ namespace Renamer.Data.Entities {
         public int TVDBEpisodeId { get; set; }
         public int Season { get; set; }
         public int AiredSeasonId { get; set; }
+        public int AiredEpisodeNumber { get; set; }
         public string EpisodeName { get; set; }
         public DateTime FirstAired { get; set; }
+        public int AbsoluteNumber { get; set; }
         public int SeriesId { get; set; }
     }
 }
