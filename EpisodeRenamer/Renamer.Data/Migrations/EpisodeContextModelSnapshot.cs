@@ -37,11 +37,9 @@ namespace Renamer.Data.Migrations
 
                     b.Property<int>("TVDBEpisodeId");
 
-                    b.Property<int?>("TVShowId");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("TVShowId");
+                    b.HasIndex("SeriesId");
 
                     b.ToTable("Episodes");
                 });
@@ -59,7 +57,7 @@ namespace Renamer.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Show");
+                    b.ToTable("Shows");
                 });
 
             modelBuilder.Entity("Renamer.Data.Entities.UserFavorite", b =>
@@ -71,6 +69,8 @@ namespace Renamer.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SeriesId");
+
                     b.ToTable("UserFavorites");
                 });
 
@@ -78,7 +78,8 @@ namespace Renamer.Data.Migrations
                 {
                     b.HasOne("Renamer.Data.Entities.TVShow")
                         .WithMany("Episodes")
-                        .HasForeignKey("TVShowId");
+                        .HasForeignKey("SeriesId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

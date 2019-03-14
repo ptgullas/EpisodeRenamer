@@ -33,18 +33,7 @@ namespace Renamer.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserFavorites", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserFavorites_Shows_SeriesId",
-                        column: x => x.SeriesId,
-                        principalTable: "Shows",
-                        principalColumn: "SeriesId",
-                        onDelete: ReferentialAction.Restrict);
                 });
-            migrationBuilder.CreateIndex(
-                name: "IX_UserFavorites_SeriesId",
-                table: "UserFavorites",
-                column: "SeriesId");
-
 
             migrationBuilder.CreateTable(
                 name: "Episodes",
@@ -68,13 +57,18 @@ namespace Renamer.Data.Migrations
                         name: "FK_Episodes_Shows_SeriesId",
                         column: x => x.SeriesId,
                         principalTable: "Shows",
-                        principalColumn: "SeriesId",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Episodes_SeriesId",
                 table: "Episodes",
+                column: "SeriesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserFavorites_SeriesId",
+                table: "UserFavorites",
                 column: "SeriesId");
         }
 
