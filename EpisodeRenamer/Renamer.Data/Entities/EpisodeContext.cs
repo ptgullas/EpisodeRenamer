@@ -2,16 +2,27 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+
 
 namespace Renamer.Data.Entities {
     public class EpisodeContext : DbContext {
+
+        public EpisodeContext(DbContextOptions<EpisodeContext> options) 
+            : base(options) {
+
+        }
+
+
         public DbSet<Episode> Episodes { get; set; }
         public DbSet<TVShow> Show { get; set; }
         public DbSet<UserFavorite> UserFavorites { get; set; }
 
+        /*
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseSqlite("Data Source=tvepisodes.db");
+            optionsBuilder.UseSqlite("Data Source=C:\\Users\\Prime Time Pauly G\\source\\repos\\EpisodeRenamer\\EpisodeRenamer\\RenamerConsole\\tvepisodes.db");
         }
+        */
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity("Renamer.Data.Entities.Episode", b => {
