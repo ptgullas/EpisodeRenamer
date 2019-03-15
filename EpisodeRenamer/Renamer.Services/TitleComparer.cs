@@ -78,7 +78,7 @@ namespace Renamer.Services {
 
         public EpisodeForComparingDto CreateEpisodeObjectFromFilename(string filename) {
             EpisodeForComparingDto ep = ExtractSeasonEpisodeFromFilenameAsEpisodeObject(filename);
-            ep.SeriesName = ExtractSeriesNameFromFilename(filename).Replace('.',' ');
+            ep.SeriesName = ExtractSeriesNameFromFilename(filename).ReplacePeriodsWithSpaces();
             return ep;
         }
 

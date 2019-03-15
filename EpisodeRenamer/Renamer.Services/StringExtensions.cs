@@ -20,6 +20,10 @@ namespace Renamer.Services {
             return title;
         }
 
+        public static string ReplacePeriodsWithSpaces(this string str) {
+            return str.Replace('.', ' ');
+        }
+
         public static string ReplaceSpaces(this string str, char replace = '.') {
             return str.Replace(' ', replace);
         }
