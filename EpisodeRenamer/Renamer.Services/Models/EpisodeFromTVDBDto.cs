@@ -7,10 +7,10 @@ namespace Renamer.Services.Models {
 
     public class EpisodeOuterDto {
         [JsonProperty("data")]
-        public EpisodeDto[] episodes;
+        public EpisodeFromTVDBDto[] episodes;
     }
 
-    public class EpisodeDto {
+    public class EpisodeFromTVDBDto {
         public int SeriesId { get; set; }
         [JsonProperty("airedSeason")]
         public int Season { get; set; }

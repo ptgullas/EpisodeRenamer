@@ -40,8 +40,8 @@ namespace Renamer.Tests {
             int expectedEpisodeNum = 1;
 
             // Act
-            EpisodeDto[] eps = converter.ConvertEpisodesToDto(json);
-            EpisodeDto ep = eps[0];
+            EpisodeFromTVDBDto[] eps = converter.ConvertEpisodesToDto(json);
+            EpisodeFromTVDBDto ep = eps[0];
             // Assert
             Assert.Equal(expectedName, ep.EpisodeName);
             Assert.Equal(expectedSeason, ep.Season);
