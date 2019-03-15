@@ -73,6 +73,7 @@ namespace Renamer.Tests {
                 .UseInMemoryDatabase(databaseName: "FindByName_ShowInDB_ReturnsShow")
                 .Options;
             TVShow show1 = new TVShow() {
+                SeriesId = 281662,
                 SeriesName = "Marvel's Daredevil",
                 SeriesNamePreferred = "Daredevil"
             };
@@ -100,6 +101,7 @@ namespace Renamer.Tests {
                 .UseInMemoryDatabase(databaseName: "FindByName_ShowNotInDB_ReturnsNull")
                 .Options;
             TVShow show1 = new TVShow() {
+                SeriesId = 281662,
                 SeriesName = "Marvel's Daredevil",
                 SeriesNamePreferred = "Daredevil"
             };

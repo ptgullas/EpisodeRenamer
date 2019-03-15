@@ -20,7 +20,7 @@ namespace Renamer.Services {
             return myData.faves.favorites;
         }
 
-        public TVShowDto ConvertTVSeriesToDto(string seriesJson) {
+        public TVShowFromTVDBDto ConvertTVSeriesToDto(string seriesJson) {
             TVShowOuterDto outerData = JsonConvert.DeserializeObject<TVShowOuterDto>(seriesJson);
             return outerData.tvSeries;
         }

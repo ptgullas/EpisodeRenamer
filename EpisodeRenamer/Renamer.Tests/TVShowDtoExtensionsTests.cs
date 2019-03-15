@@ -10,7 +10,7 @@ namespace Renamer.Tests {
     public class TVShowDtoExtensionsTests {
         [Fact]
         public void ConvertToTVShow_ValidShowNoPreferred_Passes() {
-            TVShowDto newShow = new TVShowDto() {
+            TVShowFromTVDBDto newShow = new TVShowFromTVDBDto() {
                 SeriesId = 356640,
                 SeriesNameTVDB = "Russian Doll"
             };
@@ -28,7 +28,7 @@ namespace Renamer.Tests {
 
         [Fact]
         public void ConvertToTVShow_ValidShowWithPreferred_Passes() {
-            TVShowDto newShow = new TVShowDto() {
+            TVShowFromTVDBDto newShow = new TVShowFromTVDBDto() {
                 SeriesId = 281662,
                 SeriesNameTVDB = "Marvel's Daredevil",
                 SeriesNamePreferred = "Daredevil"

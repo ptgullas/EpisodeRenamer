@@ -6,10 +6,10 @@ namespace Renamer.Services.Models {
 
     public class TVShowOuterDto {
         [JsonProperty("data")]
-        public TVShowDto tvSeries;
+        public TVShowFromTVDBDto tvSeries;
     }
 
-    public class TVShowDto {
+    public class TVShowFromTVDBDto {
         [JsonProperty("id")]
         public int SeriesId { get; set; }
         [JsonProperty("seriesName")]

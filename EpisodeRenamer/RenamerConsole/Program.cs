@@ -38,7 +38,7 @@ namespace RenamerConsole {
         static void SetUpAutomapper() {
             Mapper.Initialize(config => {
                 config.CreateMap<EpisodeDto, Episode>();
-                config.CreateMap<TVShowDto, TVShow>();
+                config.CreateMap<TVShowFromTVDBDto, TVShow>();
             });
         }
 

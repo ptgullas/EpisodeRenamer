@@ -21,6 +21,15 @@ namespace Renamer.Services {
             }
         }
 
+        public Episode FindByEpisodeForComparingDto(EpisodeForComparingDto epForComparing) {
+            TVShowService tvshowService = new TVShowService(_context);
+            TVShow show = tvshowService.FindByName(epForComparing.SeriesName);
+            return _context.Episodes
+                .FirstOrDefault(b => b.SeriesId == show.SeriesId
+                    && b.Season == epForComparing.SeasonNumber
+                    && b.AiredEpisodeNumber == epForComparing.EpisodeNumberInSeason);
+        }
+
 
     }
 }

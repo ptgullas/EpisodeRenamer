@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Renamer.Services.Models {
     public static class TVShowDtoExtensions {
-        public static TVShow ToTVShow(this TVShowDto dto) {
+        public static TVShow ToTVShow(this TVShowFromTVDBDto dto) {
             return new TVShow() {
                 SeriesId = dto.SeriesId,
                 SeriesName = dto.SeriesNameTVDB,
