@@ -43,7 +43,7 @@ namespace RenamerConsole {
         }
 
         static void FindSampleShow(EpisodeContext context) {
-            var shows = context.Show
+            var shows = context.Shows
                 .Where(s => s.SeriesId == 328487)
                 .ToList();
             foreach (TVShow s in shows) {

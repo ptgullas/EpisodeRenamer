@@ -1,52 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+﻿using Xunit;
 using Renamer.Services;
 using Renamer.Services.Models;
 using Renamer.Data.Entities;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Renamer.Tests {
     public class TVShowServiceTests {
         [Fact]
-        public void ConvertToTVShow_ValidShowNoPreferred_Passes() {
-            TVShowDto newShow = new TVShowDto() {
-                SeriesId = 356640,
-                SeriesNameTVDB = "Russian Doll"
-            };
-
-            int expectedSeriesId = 356640;
-            string expectedSeriesName = "Russian Doll";
-
-            TVShowService service = new TVShowService();
-
-            var result = service.ConvertToTVShow(newShow);
-
-            Assert.Equal(expectedSeriesId, result.SeriesId);
-            Assert.Equal(expectedSeriesName, result.SeriesName);
-            Assert.Null(result.SeriesNamePreferred);
-        }
-
-        [Fact]
-        public void ConvertToTVShow_ValidShowWithPreferred_Passes() {
-            TVShowDto newShow = new TVShowDto() {
+        public void Add_ShowNotInDB_WritesToDB() {
+            var options = new DbContextOptionsBuilder<EpisodeContext>()
+                .UseInMemoryDatabase(databaseName: "Add_ShowNotInDB_WritesToDB")
+                .Options;
+            TVShow show = new TVShow() {
                 SeriesId = 281662,
-                SeriesNameTVDB = "Marvel's Daredevil",
+                SeriesName = "Marvel's Daredevil",
                 SeriesNamePreferred = "Daredevil"
-               
             };
-
-            int expectedSeriesId = 281662;
-            string expectedSeriesName = "Marvel's Daredevil";
-            string expectedPreferredName = "Daredevil";
-
-            TVShowService service = new TVShowService();
-
-            var result = service.ConvertToTVShow(newShow);
-
-            Assert.Equal(expectedSeriesId, result.SeriesId);
-            Assert.Equal(expectedSeriesName, result.SeriesName);
-            Assert.Equal(expectedPreferredName, result.SeriesNamePreferred);
+            using (var context = new EpisodeContext(options)) {
+                var service = new TVShowService(context);
+                service.Add(show);
+            }
+            using (var context = new EpisodeContext(options)) {
+                Assert.Equal(1, context.Shows.Count());
+                Assert.Equal("Daredevil", context.Shows.Single().SeriesNamePreferred);
+            }
         }
     }
 }

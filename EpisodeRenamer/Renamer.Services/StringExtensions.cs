@@ -48,5 +48,18 @@ namespace Renamer.Services {
             }
             return result;
         }
+
+        public static int GetLevenshteinDistance(this string str, string strToCompare) {
+            return LevenshteinDistance.Compute(str, strToCompare);
+        }
+
+        public static string RemoveNonAlphanumeric(this string str) {
+            char[] arr = str.Where(c => (char.IsLetterOrDigit(c) ||
+                             char.IsWhiteSpace(c)))
+                            .ToArray();
+
+            return new string(arr);
+        }
+
     }
 }

@@ -71,5 +71,19 @@ namespace Renamer.Tests {
             Assert.Equal(expected, val.ReplaceInvalidChars());
         }
 
+        [Fact]
+        public void GetLevenshteinDistance_DistanceOf1_Passes() {
+            string stringToTest = "The Chilling Adventures of Sabrina";
+            string stringToCompare = "the Chilling Adventures of Sabrina";
+            int expected = 1;
+            Assert.Equal(expected, stringToTest.GetLevenshteinDistance(stringToCompare));
+        }
+
+        [Fact]
+        public void RemoveNonAlphanumeric_ContainsAlphaNumeric_Removes() {
+            string stringToTest = "Marvel's Daredevil";
+            string expected = "Marvels Daredevil";
+            Assert.Equal(expected, stringToTest.RemoveNonAlphanumeric());
+        }
     }
 }

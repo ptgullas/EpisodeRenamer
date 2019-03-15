@@ -9,7 +9,8 @@ namespace Renamer.Tests {
     public class LevenshteinDistanceTests {
         [Fact]
         public void Compute_Passes() {
-            string showFromDB = "The Chilling Adventures of Sabrina".ToUpper();
+            string showFromDB = "The Chilling Adventures of Sabrina"
+                .ToUpper();
             string showFromFile = "the.chilling.adventures.of.sabrina"
                 .ToUpper()
                 .ReplacePeriodsWithSpaces();

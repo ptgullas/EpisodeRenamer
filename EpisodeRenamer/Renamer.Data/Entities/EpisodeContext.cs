@@ -15,7 +15,7 @@ namespace Renamer.Data.Entities {
 
 
         public DbSet<Episode> Episodes { get; set; }
-        public DbSet<TVShow> Show { get; set; }
+        public DbSet<TVShow> Shows { get; set; }
         public DbSet<UserFavorite> UserFavorites { get; set; }
 
         /*
