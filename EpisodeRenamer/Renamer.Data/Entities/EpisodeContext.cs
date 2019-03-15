@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using System.Linq;
 
 
 namespace Renamer.Data.Entities {
@@ -27,13 +28,16 @@ namespace Renamer.Data.Entities {
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity("Renamer.Data.Entities.Episode", b => {
                 b.Property<int>("Id").ValueGeneratedOnAdd();
-                b.Property<int>("AbsoluteNumber");
-                b.Property<int>("AiredEpisodeNumber");
+                b.Property<int>("TVDBEpisodeId");
+                b.Property<int>("Season");
                 b.Property<int>("AiredSeasonId");
+                b.Property<int>("AiredEpisodeNumber");
                 b.Property<string>("EpisodeName");
                 b.Property<DateTime>("FirstAired");
-                b.Property<int>("Season");
-                b.Property<int>("SeriesId");
+                b.Property<int>("AbsoluteNumber");
+                b.Property<int>("SeriesId")
+                    .IsRequired();
+                b.HasAlternateKey("TVDBEpisodeId");
                 b.HasKey("Id");
                 b.HasIndex("SeriesId");
                 b.ToTable("Episodes");
@@ -43,9 +47,11 @@ namespace Renamer.Data.Entities {
                 b.Property<int>("Id")
                     .ValueGeneratedOnAdd();
 
-                b.Property<int>("SeriesId");
+                b.Property<int>("SeriesId")
+                    .IsRequired();
                 b.Property<string>("SeriesName");
                 b.Property<string>("SeriesNamePreferred");
+                b.HasAlternateKey("SeriesId");
                 b.HasKey("Id");
                 b.ToTable("Shows");
             });
