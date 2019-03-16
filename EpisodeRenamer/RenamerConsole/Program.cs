@@ -30,6 +30,8 @@ namespace RenamerConsole {
 
             SetUpAutomapper();
 
+            GetApiKey();
+            ReadTVDBInfo();
             FindSampleShow(context);
             // Console.WriteLine("Adding show");
             //AddSampleShow(context);
@@ -40,6 +42,21 @@ namespace RenamerConsole {
                 config.CreateMap<EpisodeFromTVDBDto, Episode>();
                 config.CreateMap<TVShowFromTVDBDto, TVShow>();
             });
+        }
+
+        static void GetApiKey() {
+            var tvdbInfo = Configuration.GetSection("TVDBInfo");
+            string apiKey = tvdbInfo.GetValue<string>("apikey");
+            Console.WriteLine($"apiKey: {apiKey}");
+            
+        }
+
+        static void ReadTVDBInfo() {
+            string filePath = Configuration.GetSection("TVDBInfo").GetValue<string>("filePath");
+            TVDBInfo tvdbInfo = TVDBInfo.ReadFromFile(filePath);
+            tvdbInfo.TokenRetrieved = DateTime.Now.AddDays(-1);
+            Console.WriteLine($"apiKey from TVDBInfo: {tvdbInfo.ApiKey}. DateTime: {tvdbInfo.TokenRetrieved}");
+            tvdbInfo.SaveToFile(filePath);
         }
 
         static void FindSampleShow(EpisodeContext context) {

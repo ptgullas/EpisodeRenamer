@@ -21,13 +21,25 @@ namespace Renamer.Services {
             }
         }
 
+        public void AddEpisodeToShow(Episode ep) {
+            var show = _context.Shows
+                .Include(s => s.Episodes)
+                .Single(b => b.SeriesId == ep.SeriesId);
+            show.Episodes.Add(ep);
+        }
+
         public Episode FindByEpisodeForComparingDto(EpisodeForComparingDto epForComparing) {
             TVShowService tvshowService = new TVShowService(_context);
             TVShow show = tvshowService.FindByName(epForComparing.SeriesName);
-            return _context.Episodes
-                .FirstOrDefault(b => b.SeriesId == show.SeriesId
-                    && b.Season == epForComparing.SeasonNumber
-                    && b.AiredEpisodeNumber == epForComparing.EpisodeNumberInSeason);
+            if (show != null) {
+                return _context.Episodes
+                    .FirstOrDefault(b => b.SeriesId == show.SeriesId
+                        && b.Season == epForComparing.SeasonNumber
+                        && b.AiredEpisodeNumber == epForComparing.EpisodeNumberInSeason);
+            }
+            else {
+                return null;
+            }
         }
 
 

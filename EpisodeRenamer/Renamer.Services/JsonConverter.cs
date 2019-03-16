@@ -14,7 +14,6 @@ namespace Renamer.Services {
 
         }
 
-
         public List<string> ConvertFavoritesToDto(string favoritesJson) {
             var myData = JsonConvert.DeserializeObject<UserDataDto>(favoritesJson);
             return myData.faves.favorites;
