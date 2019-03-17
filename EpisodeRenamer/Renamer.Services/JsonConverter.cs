@@ -4,6 +4,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Renamer.Services.Models;
 using Renamer.Data.Entities;
+using System.Linq;
 
 namespace Renamer.Services {
 
@@ -14,9 +15,10 @@ namespace Renamer.Services {
 
         }
 
-        public List<string> ConvertFavoritesToDto(string favoritesJson) {
+        public List<int> ConvertFavoritesToDto(string favoritesJson) {
             var myData = JsonConvert.DeserializeObject<UserDataDto>(favoritesJson);
-            return myData.faves.favorites;
+            var integerFavorites = myData.faves.favorites.Select(s => s.ToInt());
+            return integerFavorites.ToList();
         }
 
         public TVShowFromTVDBDto ConvertTVSeriesToDto(string seriesJson) {

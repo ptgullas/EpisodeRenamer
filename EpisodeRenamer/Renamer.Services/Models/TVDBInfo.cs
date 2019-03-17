@@ -17,6 +17,18 @@ namespace Renamer.Services.Models {
         [JsonProperty("tokenRetrieved")]
         public DateTime TokenRetrieved { get; set; }
 
+        public bool TokenIsExpired {
+            get {
+                return (HoursSinceLastRefresh >= 24);
+            }
+        }
+
+        public bool TokenIsAlmostExpired {
+            get {
+                return (HoursSinceLastRefresh >= 23) && (HoursSinceLastRefresh < 24);
+            }
+        }
+
         public TVDBInfo() {
 
         }
@@ -34,8 +46,24 @@ namespace Renamer.Services.Models {
         }
 
         public void SaveToFile(string filePath) {
-            string jsonContents = JsonConvert.SerializeObject(this, Formatting.Indented);
+            string jsonContents = Serialize();
             File.WriteAllText(filePath, jsonContents);
+        }
+
+        public TVDBAuthenticator ToAuthenticator() {
+            return JsonConvert.DeserializeObject<TVDBAuthenticator>(Serialize());
+        }
+
+        private string Serialize() {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
+
+        private int HoursSinceLastRefresh {
+            get {
+                DateTime currentTime = DateTime.Now;
+                TimeSpan ts = currentTime - TokenRetrieved;
+                return ts.Hours;
+            }
         }
 
     }

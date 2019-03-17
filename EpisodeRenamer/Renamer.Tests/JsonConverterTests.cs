@@ -6,8 +6,8 @@ using System.IO;
 namespace Renamer.Tests {
     public class JsonConverterTests {
         [Theory]
-        [InlineData("78804")]
-        public void ConvertFavorites_ReadFirstFavorite_ReturnTrue(string val) {
+        [InlineData(78804)]
+        public void ConvertFavorites_ReadFirstFavorite_ReturnTrue(int val) {
             string pathToJson = @"..\..\..\..\Renamer.Data\SampleData\UserFavorites.json";
             string json = File.ReadAllText(pathToJson);
 
