@@ -15,7 +15,7 @@ namespace Renamer.Services.Models {
         [JsonProperty("token")]
         public string Token { get; set; }
         [JsonProperty("tokenRetrieved")]
-        public DateTime TokenRetrieved { get; set; }
+        public DateTime TokenRetrievedDate { get; set; }
 
         public bool TokenIsExpired {
             get {
@@ -61,7 +61,7 @@ namespace Renamer.Services.Models {
         private int HoursSinceLastRefresh {
             get {
                 DateTime currentTime = DateTime.Now;
-                TimeSpan ts = currentTime - TokenRetrieved;
+                TimeSpan ts = currentTime - TokenRetrievedDate;
                 return ts.Hours;
             }
         }

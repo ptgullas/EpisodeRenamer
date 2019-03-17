@@ -35,6 +35,7 @@ namespace Renamer.Data.Entities {
                 b.Property<string>("EpisodeName");
                 b.Property<DateTime>("FirstAired");
                 b.Property<int>("AbsoluteNumber");
+                b.Property<DateTime>("LastUpdated");
                 b.Property<int>("SeriesId")
                     .IsRequired();
                 b.HasAlternateKey("TVDBEpisodeId");

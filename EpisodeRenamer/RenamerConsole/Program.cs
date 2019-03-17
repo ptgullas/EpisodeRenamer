@@ -38,7 +38,7 @@ namespace RenamerConsole {
             var context = new EpisodeContext(options);
 
 
-            DisplayMenuAndProcessUserInput(httpClientFactory);
+            DisplayMenuAndProcessUserInput(httpClientFactory, options);
             // SetUpAutomapper();
 
             // GetNewToken(httpClientFactory);
@@ -51,12 +51,12 @@ namespace RenamerConsole {
             //AddSampleShow(context);
         }
 
-        static public async void DisplayMenuAndProcessUserInput(IHttpClientFactory httpClientFactory) {
+        static public async void DisplayMenuAndProcessUserInput(IHttpClientFactory httpClientFactory, DbContextOptions<EpisodeContext> options) {
             TVDBInfo tvdbInfo = GetTVDBInfo();
             int userInput = 0;
             do {
                 userInput = DisplayMenu(tvdbInfo);
-                await ProcessUserInput(userInput, tvdbInfo, httpClientFactory);
+                await ProcessUserInput(userInput, tvdbInfo, httpClientFactory, options);
             } while (userInput != 5);
         }
 
@@ -68,6 +68,7 @@ namespace RenamerConsole {
             DisplayTokenStatus(tokenIsValid);
 
             Console.WriteLine("2. Fetch User Favorites");
+            Console.WriteLine("3. Fetch show and display it");
             Console.WriteLine("5. Exit if you dare");
             var result = Console.ReadLine();
             if (result.IsNumeric()) {
@@ -78,9 +79,12 @@ namespace RenamerConsole {
             }
         }
 
-        static async Task ProcessUserInput(int selection, TVDBInfo tvdbInfo, IHttpClientFactory httpClientFactory) {
+        static async Task ProcessUserInput(int selection, TVDBInfo tvdbInfo, IHttpClientFactory httpClientFactory, DbContextOptions<EpisodeContext> options) {
             if (selection == 2) {
-                await GetUserFavorites(tvdbInfo, httpClientFactory);
+                await GetUserFavorites(tvdbInfo, httpClientFactory, options);
+            }
+            else if (selection == 3) {
+                await GetShow(tvdbInfo, httpClientFactory);
             }
         }
 
@@ -109,14 +113,41 @@ namespace RenamerConsole {
                 Console.ResetColor();
         }
 
-        static async Task GetUserFavorites(TVDBInfo tvdbInfo, IHttpClientFactory httpClientFactory) {
+        static async Task GetUserFavorites(TVDBInfo tvdbInfo, IHttpClientFactory httpClientFactory, DbContextOptions<EpisodeContext> options) {
             Console.WriteLine("Getting user favorites...");
             if (!tvdbInfo.TokenIsExpired) {
-                TVDBRetrieverService service = new TVDBRetrieverService(httpClientFactory);
-                List<int> faves = await service.FetchUserFavorites(tvdbInfo.Token);
+                TVDBRetrieverService retrieverService = new TVDBRetrieverService(httpClientFactory);
+                List<int> faves = await retrieverService.FetchUserFavorites(tvdbInfo.Token);
                 faves.Sort();
                 faves
                     .ForEach(c => Console.WriteLine(c));
+                EpisodeContext context = new EpisodeContext(options);
+                var seriesIdsInDb = context.Shows.Select(s => s.SeriesId);
+                var seriesIdsNotInDb = faves.Except(seriesIdsInDb);
+                // foreach seriesId not in DB, fetch it & add to Shows table
+            }
+        }
+
+        static async Task GetShow(TVDBInfo tvdbInfo, IHttpClientFactory httpClientFactory) {
+            Console.WriteLine("What seriesId should we get?");
+            if (!tvdbInfo.TokenIsExpired) {
+                TVDBRetrieverService service = new TVDBRetrieverService(httpClientFactory);
+                TVShowFromTVDBDto showDto = await service.FetchTVShow(356640, tvdbInfo.Token);
+                if (showDto.SeriesId != 0) {
+                    TVShow show = showDto.ToTVShow();
+                    Console.Write($"Retrieved show: SeriesId: ");
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.Write($"{show.SeriesId}");
+                    Console.ResetColor();
+                    Console.Write(", Name: ");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine(show.SeriesName);
+                    Console.ResetColor();
+
+                }
+                else {
+                    Console.WriteLine("Couldn't retrieve show");
+                }
             }
         }
 
@@ -143,25 +174,25 @@ namespace RenamerConsole {
         static void ReadTVDBInfo() {
             string filePath = GetTVDBInfoFilePath();
             TVDBInfo tvdbInfo = TVDBInfo.ReadFromFile(filePath);
-            tvdbInfo.TokenRetrieved = DateTime.Now.AddDays(-1);
-            Console.WriteLine($"apiKey from TVDBInfo: {tvdbInfo.ApiKey}. DateTime: {tvdbInfo.TokenRetrieved}");
+            tvdbInfo.TokenRetrievedDate = DateTime.Now.AddDays(-1);
+            Console.WriteLine($"apiKey from TVDBInfo: {tvdbInfo.ApiKey}. DateTime: {tvdbInfo.TokenRetrievedDate}");
             tvdbInfo.SaveToFile(filePath);
         }
 
-        static async void GetNewToken(IHttpClientFactory httpClientFactory) {
+        static async void GetNewToken(TVDBRetrieverService retrieverService) {
             string filePath = GetTVDBInfoFilePath();
             TVDBInfo tvdbInfo = TVDBInfo.ReadFromFile(filePath);
             if (tvdbInfo.TokenIsExpired) {
-                TVDBRetrieverService service = new TVDBRetrieverService(httpClientFactory);
-                string newToken = await service.FetchToken(tvdbInfo.ToAuthenticator());
-                tvdbInfo.Token = newToken;
-                tvdbInfo.TokenRetrieved = DateTime.Now;
-                tvdbInfo.SaveToFile(filePath);
+                Console.WriteLine("Token is expired. Fetching new one....");
+                string newToken = await retrieverService.FetchNewToken(tvdbInfo.ToAuthenticator());
+                SetNewTokenAndSaveToFile(ref tvdbInfo, newToken, filePath);
                 Console.WriteLine($"Saved authentication info to {filePath}");
             }
             else if (tvdbInfo.TokenIsAlmostExpired) {
                 // refresh the token
-                Console.WriteLine("Will refresh the token");
+                Console.WriteLine("Token will expire soon. Will refresh it");
+                string newToken = await retrieverService.FetchRefreshToken(tvdbInfo.Token);
+                SetNewTokenAndSaveToFile(ref tvdbInfo, newToken, filePath);
             }
             else {
                 Console.WriteLine("Token is still good");
@@ -176,6 +207,13 @@ namespace RenamerConsole {
 
         static string GetTVDBInfoFilePath() {
             return Configuration.GetSection("TVDBInfo").GetValue<string>("filePath");
+        }
+
+        static void SetNewTokenAndSaveToFile(ref TVDBInfo tvdbInfo, string token, string filePath) {
+            tvdbInfo.Token = token;
+            tvdbInfo.TokenRetrievedDate = DateTime.Now;
+            tvdbInfo.SaveToFile(filePath);
+
         }
 
         static void FindSampleShow(EpisodeContext context) {

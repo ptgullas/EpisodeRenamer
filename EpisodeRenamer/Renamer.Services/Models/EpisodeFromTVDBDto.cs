@@ -21,6 +21,7 @@ namespace Renamer.Services.Models {
         [JsonProperty("firstAired")]
         public DateTime DateAired { get; set; }
         public DateTime DateRetrieved { get; set; }
+        public long LastUpdated { get; set; }
 
     }
 }

@@ -14,6 +14,8 @@ namespace Renamer.Data.Entities {
         public string EpisodeName { get; set; }
         public DateTime FirstAired { get; set; }
         public int AbsoluteNumber { get; set; }
+        public DateTime LastUpdated { get; set; }
+
         public int SeriesId { get; set; }
     }
 }

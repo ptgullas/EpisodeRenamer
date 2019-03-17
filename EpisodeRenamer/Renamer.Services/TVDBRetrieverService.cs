@@ -18,7 +18,7 @@ namespace Renamer.Services {
             _uriBuilder = new UriBuilder("https", "api.thetvdb.com");
         }
 
-        public async Task<string> FetchToken(TVDBAuthenticator authenticator) {
+        public async Task<string> FetchNewToken(TVDBAuthenticator authenticator) {
             string myToken = null;
             string jsonAuth = JsonConvert.SerializeObject(authenticator);
 
@@ -43,6 +43,27 @@ namespace Renamer.Services {
             _uriBuilder.Path = "login";
             return _uriBuilder.Uri;
         }
+        public async Task<string> FetchRefreshToken(string token) {
+            string myToken = token;
+            var client = _clientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            try {
+                var response = await client.GetAsync(GetRefreshTokenUri());
+                response.EnsureSuccessStatusCode();
+                var stringResult = await response.Content.ReadAsStringAsync();
+                TokenFromTVDBDto TokenObject = JsonConvert.DeserializeObject<TokenFromTVDBDto>(stringResult);
+                myToken = TokenObject.Token;
+            }
+            catch (Exception e) {
+                Console.WriteLine($"{ e.Message }");
+            }
+            return myToken;
+        }
+
+        public Uri GetRefreshTokenUri() {
+            _uriBuilder.Path = "refresh_token";
+            return _uriBuilder.Uri;
+        }
 
         public async Task<List<int>> FetchUserFavorites(string token) {
             List<int> favoritesFromApi = new List<int>();
@@ -63,6 +84,29 @@ namespace Renamer.Services {
         }
         public Uri GetFavoritesUri() {
             _uriBuilder.Path = "user/favorites";
+            return _uriBuilder.Uri;
+        }
+
+        public async Task<TVShowFromTVDBDto> FetchTVShow(int seriesId, string token) {
+            TVShowFromTVDBDto showDto = new TVShowFromTVDBDto();
+            var client = _clientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            try {
+                var response = await client.GetAsync(GetShowUri(seriesId));
+                response.EnsureSuccessStatusCode();
+                var stringResponse = await response.Content.ReadAsStringAsync();
+                JsonConverter converter = new JsonConverter();
+                showDto = converter.ConvertTVSeriesToDto(stringResponse);
+            }
+            catch (Exception e) {
+                Console.WriteLine($"{ e.Message }");
+            }
+            return showDto;
+        }
+
+        public Uri GetShowUri(int seriesId) {
+            _uriBuilder.Path = $"series/{seriesId}/filter";
+            _uriBuilder.Query = $"keys=seriesName,id";
             return _uriBuilder.Uri;
         }
 
