@@ -10,6 +10,8 @@ using Renamer.Data.Entities;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RenamerConsole {
     class Program {
@@ -36,7 +38,7 @@ namespace RenamerConsole {
             var context = new EpisodeContext(options);
 
 
-            DisplayMenuAndProcessUserInput();
+            DisplayMenuAndProcessUserInput(httpClientFactory);
             // SetUpAutomapper();
 
             // GetNewToken(httpClientFactory);
@@ -49,11 +51,12 @@ namespace RenamerConsole {
             //AddSampleShow(context);
         }
 
-        static public void DisplayMenuAndProcessUserInput() {
+        static public async void DisplayMenuAndProcessUserInput(IHttpClientFactory httpClientFactory) {
             TVDBInfo tvdbInfo = GetTVDBInfo();
             int userInput = 0;
             do {
                 userInput = DisplayMenu(tvdbInfo);
+                await ProcessUserInput(userInput, tvdbInfo, httpClientFactory);
             } while (userInput != 5);
         }
 
@@ -63,6 +66,8 @@ namespace RenamerConsole {
             Console.WriteLine();
             Console.Write("1. Get or refresh token:  ");
             DisplayTokenStatus(tokenIsValid);
+
+            Console.WriteLine("2. Fetch User Favorites");
             Console.WriteLine("5. Exit if you dare");
             var result = Console.ReadLine();
             if (result.IsNumeric()) {
@@ -72,6 +77,13 @@ namespace RenamerConsole {
                 return 0;
             }
         }
+
+        static async Task ProcessUserInput(int selection, TVDBInfo tvdbInfo, IHttpClientFactory httpClientFactory) {
+            if (selection == 2) {
+                await GetUserFavorites(tvdbInfo, httpClientFactory);
+            }
+        }
+
         static public bool IsTokenValid() {
             string filePath = GetTVDBInfoFilePath();
             TVDBInfo tvdbInfo = TVDBInfo.ReadFromFile(filePath);
@@ -95,6 +107,17 @@ namespace RenamerConsole {
                 Console.WriteLine("(Token Expired!)");
             }
                 Console.ResetColor();
+        }
+
+        static async Task GetUserFavorites(TVDBInfo tvdbInfo, IHttpClientFactory httpClientFactory) {
+            Console.WriteLine("Getting user favorites...");
+            if (!tvdbInfo.TokenIsExpired) {
+                TVDBRetrieverService service = new TVDBRetrieverService(httpClientFactory);
+                List<int> faves = await service.FetchUserFavorites(tvdbInfo.Token);
+                faves.Sort();
+                faves
+                    .ForEach(c => Console.WriteLine(c));
+            }
         }
 
         static void PauseForInput() {
@@ -130,7 +153,7 @@ namespace RenamerConsole {
             TVDBInfo tvdbInfo = TVDBInfo.ReadFromFile(filePath);
             if (tvdbInfo.TokenIsExpired) {
                 TVDBRetrieverService service = new TVDBRetrieverService(httpClientFactory);
-                string newToken = await service.GetToken(tvdbInfo.ToAuthenticator());
+                string newToken = await service.FetchToken(tvdbInfo.ToAuthenticator());
                 tvdbInfo.Token = newToken;
                 tvdbInfo.TokenRetrieved = DateTime.Now;
                 tvdbInfo.SaveToFile(filePath);
