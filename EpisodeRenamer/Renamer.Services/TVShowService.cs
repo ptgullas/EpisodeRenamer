@@ -40,5 +40,10 @@ namespace Renamer.Services {
             return show;
         }
 
+        public List<int> GetSeriesIdsNotInDatabase(List<int> seriesIdsToCheck) {
+            var seriesIdsInDB = _context.Shows.Select(s => s.SeriesId);
+            return seriesIdsToCheck.Except(seriesIdsInDB).ToList();
+        }
+
     }
 }

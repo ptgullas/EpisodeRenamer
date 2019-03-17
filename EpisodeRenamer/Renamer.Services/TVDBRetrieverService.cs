@@ -10,11 +10,9 @@ using System.Threading.Tasks;
 namespace Renamer.Services {
     public class TVDBRetrieverService {
         private readonly IHttpClientFactory _clientFactory;
-        private readonly string _baseUri;
         private readonly UriBuilder _uriBuilder;
         public TVDBRetrieverService(IHttpClientFactory clientFactory) {
             _clientFactory = clientFactory;
-            _baseUri = "https://api.thetvdb.com";
             _uriBuilder = new UriBuilder("https", "api.thetvdb.com");
         }
 

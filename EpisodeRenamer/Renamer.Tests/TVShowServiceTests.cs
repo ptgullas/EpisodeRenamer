@@ -115,5 +115,60 @@ namespace Renamer.Tests {
                 Assert.Null(result);
             }
         }
+
+        [Fact]
+        public void GetSeriesIdsNotInDatabase_IdsNotPresent_ReturnsList() {
+            var options = new DbContextOptionsBuilder<EpisodeContext>()
+                .UseInMemoryDatabase(databaseName: "GetSeriesIdsNotInDatabase_IdsNotPresent_ReturnsList")
+                .Options;
+            TVShow show1 = new TVShow() {
+                SeriesId = 281662,
+                SeriesName = "Marvel's Daredevil",
+                SeriesNamePreferred = "Daredevil"
+            };
+            using (var context = new EpisodeContext(options)) {
+                var service = new TVShowService(context);
+                service.Add(show1);
+            }
+            List<int> seriesIdsToCheck = new List<int>() { 134, 16690, 281662, 300000 };
+            int expectedCount = 3;
+            using (var context = new EpisodeContext(options)) {
+                var service = new TVShowService(context);
+                var result = service.GetSeriesIdsNotInDatabase(seriesIdsToCheck);
+                
+                Assert.Equal(expectedCount, result.Count);
+                Assert.Equal(0, result.Find(c => c == 281662));
+            }
+        }
+
+        [Fact]
+        public void GetSeriesIdsNotInDatabase_AllIdsPresent_ReturnsList() {
+            var options = new DbContextOptionsBuilder<EpisodeContext>()
+                .UseInMemoryDatabase(databaseName: "GetSeriesIdsNotInDatabase_AllIdsPresent_ReturnsList")
+                .Options;
+            TVShow show1 = new TVShow() {
+                SeriesId = 281662,
+                SeriesName = "Marvel's Daredevil",
+                SeriesNamePreferred = "Daredevil"
+            };
+            TVShow show2 = new TVShow() {
+                SeriesId = 328487,
+                SeriesName = "The Orville"
+            };
+            using (var context = new EpisodeContext(options)) {
+                var service = new TVShowService(context);
+                service.Add(show1);
+                service.Add(show2);
+            }
+            List<int> seriesIdsToCheck = new List<int>() { 281662, 328487 };
+            int expectedCount = 0;
+            using (var context = new EpisodeContext(options)) {
+                var service = new TVShowService(context);
+                var result = service.GetSeriesIdsNotInDatabase(seriesIdsToCheck);
+
+                Assert.Equal(expectedCount, result.Count);
+            }
+
+        }
     }
 }
