@@ -37,8 +37,12 @@ namespace RenamerConsole {
                 .Options;
             var context = new EpisodeContext(options);
 
+            TVDBRetrieverService retrieverService = new TVDBRetrieverService(httpClientFactory);
+            TVShowService showService = new TVShowService(context);
+            string tvdbInfoPath = GetTVDBInfoFilePath();
+            RenamerFacade facade = new RenamerFacade(retrieverService, showService, context, tvdbInfoPath);
 
-            DisplayMenuAndProcessUserInput(httpClientFactory, options);
+            DisplayMenuAndProcessUserInput(facade);
             // SetUpAutomapper();
 
             // GetNewToken(httpClientFactory);
@@ -51,12 +55,12 @@ namespace RenamerConsole {
             //AddSampleShow(context);
         }
 
-        static public async void DisplayMenuAndProcessUserInput(IHttpClientFactory httpClientFactory, DbContextOptions<EpisodeContext> options) {
-            TVDBInfo tvdbInfo = GetTVDBInfo();
+        static public async void DisplayMenuAndProcessUserInput(RenamerFacade facade) {
+            TVDBInfo tvdbInfo = facade._tvdbInfo;
             int userInput = 0;
             do {
                 userInput = DisplayMenu(tvdbInfo);
-                await ProcessUserInput(userInput, tvdbInfo, httpClientFactory, options);
+                await ProcessUserInput(userInput, facade);
             } while (userInput != 5);
         }
 
@@ -67,7 +71,7 @@ namespace RenamerConsole {
             Console.Write("1. Get or refresh token:  ");
             DisplayTokenStatus(tokenIsValid);
 
-            Console.WriteLine("2. Fetch User Favorites");
+            Console.WriteLine("2. Populate Shows table from User Favorites");
             Console.WriteLine("3. Fetch show and display it");
             Console.WriteLine("5. Exit if you dare");
             var result = Console.ReadLine();
@@ -79,12 +83,15 @@ namespace RenamerConsole {
             }
         }
 
-        static async Task ProcessUserInput(int selection, TVDBInfo tvdbInfo, IHttpClientFactory httpClientFactory, DbContextOptions<EpisodeContext> options) {
-            if (selection == 2) {
-                await GetUserFavorites(tvdbInfo, httpClientFactory, options);
+        static async Task ProcessUserInput(int selection, RenamerFacade facade) {
+            if (selection == 1) {
+                facade.FetchTokenIfNeeded();
+            }
+            else if (selection == 2) {
+                await facade.PopulateShowsFromFavorites();
             }
             else if (selection == 3) {
-                await GetShow(tvdbInfo, httpClientFactory);
+                Console.WriteLine("Not yet implemented");
             }
         }
 
@@ -179,7 +186,7 @@ namespace RenamerConsole {
             tvdbInfo.SaveToFile(filePath);
         }
 
-        static async void GetNewToken(TVDBRetrieverService retrieverService) {
+        static async void RetrieveTokenIfNeeded(TVDBRetrieverService retrieverService) {
             string filePath = GetTVDBInfoFilePath();
             TVDBInfo tvdbInfo = TVDBInfo.ReadFromFile(filePath);
             if (tvdbInfo.TokenIsExpired) {
@@ -213,7 +220,6 @@ namespace RenamerConsole {
             tvdbInfo.Token = token;
             tvdbInfo.TokenRetrievedDate = DateTime.Now;
             tvdbInfo.SaveToFile(filePath);
-
         }
 
         static void FindSampleShow(EpisodeContext context) {
