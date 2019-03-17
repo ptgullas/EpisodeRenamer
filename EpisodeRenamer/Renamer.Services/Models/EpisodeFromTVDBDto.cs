@@ -8,6 +8,19 @@ namespace Renamer.Services.Models {
     public class EpisodeOuterDto {
         [JsonProperty("data")]
         public EpisodeFromTVDBDto[] episodes;
+        [JsonProperty]
+        public EpisodeLinksDto links;
+    }
+
+    public class EpisodeLinksDto {
+        [JsonProperty]
+        public int? First { get; set; }
+        [JsonProperty]
+        public int? Last { get; set; }
+        [JsonProperty]
+        public int? Next { get; set; }
+        [JsonProperty]
+        public int? Prev { get; set; }
     }
 
     public class EpisodeFromTVDBDto {

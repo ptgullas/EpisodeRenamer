@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using Renamer.Services.Models;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace Renamer.Services {
     public class TVDBRetrieverService {
@@ -17,6 +18,7 @@ namespace Renamer.Services {
         }
 
         public async Task<string> FetchNewToken(TVDBAuthenticator authenticator) {
+            Log.Information("Fetching new token...");
             string myToken = null;
             string jsonAuth = JsonConvert.SerializeObject(authenticator);
 
@@ -27,6 +29,7 @@ namespace Renamer.Services {
                 client.BaseAddress = GetLoginUri();
                 var response = await client.PostAsync(GetLoginUri(), stringContent);
                 response.EnsureSuccessStatusCode();
+                Log.Information("Successfully fetched new token");
                 var stringResult = await response.Content.ReadAsStringAsync();
                 TokenFromTVDBDto TokenObject = JsonConvert.DeserializeObject<TokenFromTVDBDto>(stringResult);
                 myToken = TokenObject.Token;
@@ -42,18 +45,20 @@ namespace Renamer.Services {
             return _uriBuilder.Uri;
         }
         public async Task<string> FetchRefreshToken(string token) {
+            Log.Information("Fetching refresh token");
             string myToken = token;
             var client = _clientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             try {
                 var response = await client.GetAsync(GetRefreshTokenUri());
                 response.EnsureSuccessStatusCode();
+                Log.Information("Successfully fetched refresh token");
                 var stringResult = await response.Content.ReadAsStringAsync();
                 TokenFromTVDBDto TokenObject = JsonConvert.DeserializeObject<TokenFromTVDBDto>(stringResult);
                 myToken = TokenObject.Token;
             }
             catch (Exception e) {
-                Console.WriteLine($"{ e.Message }");
+                Log.Error($"{ e.Message }");
             }
             return myToken;
         }
@@ -64,19 +69,21 @@ namespace Renamer.Services {
         }
 
         public async Task<List<int>> FetchUserFavorites(string token) {
+            Log.Information("Retrieving user favorites...");
             List<int> favoritesFromApi = new List<int>();
             var client = _clientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             try {
                 var response = await client.GetAsync(GetFavoritesUri());
                 response.EnsureSuccessStatusCode();
+                Log.Information("Successfully retrieved favorites");
                 var stringResponse = await response.Content.ReadAsStringAsync();
                 JsonConverter converter = new JsonConverter();
                 favoritesFromApi = converter.ConvertFavoritesToDto(stringResponse);
 
             }
             catch (Exception e) {
-                Console.WriteLine($"{ e.Message }");
+                Log.Error($"{ e.Message }");
             }
             return favoritesFromApi;
         }
@@ -86,6 +93,7 @@ namespace Renamer.Services {
         }
 
         public async Task<TVShowFromTVDBDto> FetchTVShow(int seriesId, string token) {
+            Log.Information("Fetching TV Series with seriesId {a}", seriesId);
             TVShowFromTVDBDto showDto = new TVShowFromTVDBDto();
             var client = _clientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -95,9 +103,10 @@ namespace Renamer.Services {
                 var stringResponse = await response.Content.ReadAsStringAsync();
                 JsonConverter converter = new JsonConverter();
                 showDto = converter.ConvertTVSeriesToDto(stringResponse);
+                Log.Information($"Successfully fetched TV Series {seriesId}: {showDto.SeriesNameTVDB}");
             }
             catch (Exception e) {
-                Console.WriteLine($"{ e.Message }");
+                Log.Error($"{ e.Message }");
             }
             return showDto;
         }
@@ -105,6 +114,14 @@ namespace Renamer.Services {
         public Uri GetShowUri(int seriesId) {
             _uriBuilder.Path = $"series/{seriesId}/filter";
             _uriBuilder.Query = $"keys=seriesName,id";
+            return _uriBuilder.Uri;
+        }
+
+        public Uri GetEpisodesUri(int seriesId, int page = 1) {
+            _uriBuilder.Path = $"series/{seriesId}/episodes";
+            if (page != 1) {
+                _uriBuilder.Query = $"page={page}";
+            }
             return _uriBuilder.Uri;
         }
 

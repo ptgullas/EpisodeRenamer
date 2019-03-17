@@ -65,6 +65,16 @@ namespace Renamer.Services.Models {
                 return ts.Hours;
             }
         }
+        public DateTime GetExpiration() {
+            return TokenRetrievedDate.AddHours(24);
+        }
+        public void PrintExpiration() {
+            string expireWord = "expires";
+            if (TokenIsExpired) {
+                expireWord = "expired";
+            }
+            Console.WriteLine($"Token {expireWord} on {TokenRetrievedDate.AddHours(24).ToString("MM/dd/yyyy hh:mm tt")}");
+        }
 
     }
 }

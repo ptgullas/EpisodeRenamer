@@ -133,5 +133,46 @@ namespace Renamer.Tests {
             }
 
         }
-    }
+
+        [Fact]
+        public void AddEpisodeToShow_ShowIsInDB_AddsEp() {
+            TVShow show = new TVShow() {
+                SeriesId = 328487,
+                SeriesName = "The Orville"
+            };
+
+            Episode ep1 = new Episode() {
+                SeriesId = 328487,
+                TVDBEpisodeId = 6089488,
+                Season = 1,
+                AiredEpisodeNumber = 1,
+                EpisodeName = "Old Wounds",
+                LastUpdated = DateTimeOffset.FromUnixTimeMilliseconds(1527457806).DateTime.ToLocalTime()
+            };
+
+            int expectedEpisodeId = 6089488;
+            string expectedEpisodeName = "Old Wounds";
+            var options = new DbContextOptionsBuilder<EpisodeContext>()
+                .UseInMemoryDatabase(databaseName: "AddEpisodeToShow_ShowIsInDB_AddsEp")
+                .Options;
+
+            // Act
+            using (var context = new EpisodeContext(options)) {
+                var service = new EpisodeService(context);
+                var TVService = new TVShowService(context);
+                TVService.Add(show);
+
+                service.AddEpisodeToShow(ep1);
+            }
+
+            using (var context = new EpisodeContext(options)) {
+                var service = new EpisodeService(context);
+                var result = context.Episodes.FirstOrDefault(e => e.TVDBEpisodeId == expectedEpisodeId);
+                
+                Assert.NotNull(result);
+                Assert.Equal(expectedEpisodeName, result.EpisodeName);
+
+            }
+        }
+     }
 }

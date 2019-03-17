@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace RenamerConsole {
     class Program {
@@ -19,6 +20,12 @@ namespace RenamerConsole {
         public static IConfigurationRoot Configuration;
 
         static void Main(string[] args) {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File("c:\\temp\\logs\\renamerLog.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+            Log.Information("Started log on {a}", DateTime.Now.ToLongTimeString());
             string projectRoot = AppContext.BaseDirectory.Substring(0, AppContext.BaseDirectory.LastIndexOf(@"\bin"));
             // PrintDirectories(appRoot);
 
@@ -65,14 +72,15 @@ namespace RenamerConsole {
         }
 
         static public int DisplayMenu(TVDBInfo tvdbInfo) {
-            bool tokenIsValid = !tvdbInfo.TokenIsExpired; 
+            bool tokenIsValid = !tvdbInfo.TokenIsExpired;
+            tvdbInfo.PrintExpiration();
             Console.WriteLine("Episode Renamer!");
             Console.WriteLine();
             Console.Write("1. Get or refresh token:  ");
             DisplayTokenStatus(tokenIsValid);
 
             Console.WriteLine("2. Populate Shows table from User Favorites");
-            Console.WriteLine("3. Fetch show and display it");
+            Console.WriteLine("3. Add episode to show");
             Console.WriteLine("5. Exit if you dare");
             var result = Console.ReadLine();
             if (result.IsNumeric()) {
