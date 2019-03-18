@@ -117,5 +117,14 @@ namespace Renamer.Services {
                 }
             }
         }
+        public EpisodeForComparingDto CreateEpisodeForComparingDtoFromEntity(Episode ep) {
+            string seriesNamePreferred = _context.Shows
+                .FirstOrDefault(b => b.SeriesId == ep.SeriesId)
+                .SeriesNamePreferred;
+            EpisodeForComparingDto epDto = ep.ToEpisodeForComparingDto();
+            epDto.SeriesName = seriesNamePreferred;
+            return epDto;
+        }
     }
+
 }
