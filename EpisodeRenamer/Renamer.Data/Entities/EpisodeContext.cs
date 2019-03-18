@@ -20,10 +20,11 @@ namespace Renamer.Data.Entities {
         public DbSet<TVShow> Shows { get; set; }
         public DbSet<UserFavorite> UserFavorites { get; set; }
 
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseSqlite("Data Source=C:\\Users\\Prime Time Pauly G\\source\\repos\\EpisodeRenamer\\EpisodeRenamer\\RenamerConsole\\tvepisodes.db");
-        }
+        // may have to comment this out after creating model
+        // but uncomment when doing DB changes
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+        //    optionsBuilder.UseSqlite("Data Source=C:\\Users\\Prime Time Pauly G\\source\\repos\\EpisodeRenamer\\EpisodeRenamer\\RenamerConsole\\tvepisodes.db");
+        //}
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
