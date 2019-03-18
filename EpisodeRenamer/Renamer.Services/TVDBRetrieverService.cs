@@ -117,6 +117,25 @@ namespace Renamer.Services {
             return _uriBuilder.Uri;
         }
 
+        public async Task<EpisodeOuterDto> FetchEpisodes(int seriesId, string token, int page = 1) {
+            Log.Information("Fetching Episodes from seriesId {a}", seriesId);
+            EpisodeOuterDto episodesOuter = new EpisodeOuterDto();
+            var client = _clientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            try {
+                var response = await client.GetAsync(GetEpisodesUri(seriesId, page));
+                response.EnsureSuccessStatusCode();
+                var stringResponse = await response.Content.ReadAsStringAsync();
+                JsonConverter converter = new JsonConverter();
+                episodesOuter = converter.ConvertEpisodeOuterObjectToDto(stringResponse);
+                Log.Information($"Successfully fetched episodes for TV Series {seriesId}");
+            }
+            catch (Exception e) {
+                Log.Error($"{ e.Message }");
+            }
+            return episodesOuter;
+        }
+
         public Uri GetEpisodesUri(int seriesId, int page = 1) {
             _uriBuilder.Path = $"series/{seriesId}/episodes";
             if (page != 1) {

@@ -5,21 +5,25 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Serilog;
+using System.Linq;
 
 namespace Renamer.Services {
     public class RenamerFacade {
         private TVDBRetrieverService _retrieverService;
         private TVShowService _showService;
+        private EpisodeService _episodeService;
         private EpisodeContext _context;
         private string _tvdbInfoFilePath;
 
         public TVDBInfo _tvdbInfo;
         public RenamerFacade(TVDBRetrieverService retrieverService,
             TVShowService showService,
+            EpisodeService episodeService,
             EpisodeContext context,
             string tvdbPath) {
             _retrieverService = retrieverService;
             _showService = showService;
+            _episodeService = episodeService;
             _context = context;
             _tvdbInfoFilePath = tvdbPath;
 
@@ -51,7 +55,6 @@ namespace Renamer.Services {
             Log.Information($"Saved authentication info to {_tvdbInfoFilePath}");
         }
 
-
         public async Task PopulateShowsFromFavorites() {
             try {
                 var faveSeriesIds = await _retrieverService.FetchUserFavorites(_tvdbInfo.Token);
@@ -69,6 +72,35 @@ namespace Renamer.Services {
             }
             catch (Exception e) {
                 Log.Error(e.Message);
+            }
+        }
+
+        public async Task PopulateEpisodes(int seriesId, int numberOfPagesFromEndToFetch = 0) {
+            try {
+                var episodeOuter = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token);
+                // always add the episodes on page 1
+                AddEpisodesInEpisodeObject(episodeOuter);
+                if (numberOfPagesFromEndToFetch > 0) {
+                    int lastPage = episodeOuter.links.Last;
+                    int pageToEndOn = lastPage - numberOfPagesFromEndToFetch;
+                    if (pageToEndOn <= 0) {
+                        pageToEndOn = 1; // we already added the episodes on page 1, so stop when we get down to 1
+                    }
+                    for (int i = lastPage; i > pageToEndOn; i--) {
+                        episodeOuter = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token, i);
+                        AddEpisodesInEpisodeObject(episodeOuter);
+                    }
+                }
+            }
+            catch (Exception e) {
+                Log.Error(e.Message);
+            }
+        }
+        private void AddEpisodesInEpisodeObject(EpisodeOuterDto episodeOuter) {
+            var episodeList = episodeOuter.episodes.ToList();
+            foreach (EpisodeFromTVDBDto epDto in episodeList) {
+                Episode ep = epDto.ToEpisode();
+                _episodeService.Add(ep);
             }
         }
     }

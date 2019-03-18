@@ -5,6 +5,7 @@ using Renamer.Data.Entities;
 using Renamer.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Serilog;
 
 namespace Renamer.Services {
     public class EpisodeService {
@@ -18,14 +19,17 @@ namespace Renamer.Services {
                 .Any(b => b.TVDBEpisodeId == ep.TVDBEpisodeId)) {
                 _context.Episodes.Add(ep);
                 _context.SaveChanges();
+                Log.Information($"Added EpisodeId {ep.TVDBEpisodeId} - \"{ep.EpisodeName}\" to database");
             }
         }
 
+        // Don't use this (doesn't check TVDBEpisodeId)
         public void AddEpisodeToShow(Episode ep) {
             var show = _context.Shows
                 .Include(s => s.Episodes)
                 .Single(b => b.SeriesId == ep.SeriesId);
             show.Episodes.Add(ep);
+            _context.SaveChanges();
         }
 
         public Episode FindByEpisodeForComparingDto(EpisodeForComparingDto epForComparing) {

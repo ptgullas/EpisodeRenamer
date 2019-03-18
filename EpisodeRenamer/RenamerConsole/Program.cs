@@ -46,8 +46,9 @@ namespace RenamerConsole {
 
             TVDBRetrieverService retrieverService = new TVDBRetrieverService(httpClientFactory);
             TVShowService showService = new TVShowService(context);
+            EpisodeService epService = new EpisodeService(context);
             string tvdbInfoPath = GetTVDBInfoFilePath();
-            RenamerFacade facade = new RenamerFacade(retrieverService, showService, context, tvdbInfoPath);
+            RenamerFacade facade = new RenamerFacade(retrieverService, showService, epService, context, tvdbInfoPath);
 
             DisplayMenuAndProcessUserInput(facade);
             // SetUpAutomapper();

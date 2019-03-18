@@ -48,5 +48,24 @@ namespace Renamer.Tests {
             Assert.Equal(expectedEpisodeNum, ep.NumberInSeason);
         }
 
+        [Fact]
+        public void ConvertEpisodeOuterObjectToDto_Valid_ReturnsOuterObject() {
+            string pathToJson = @"..\..\..\..\Renamer.Data\SampleData\OrvilleEpisodes.json";
+            string json = File.ReadAllText(pathToJson);
+
+            JsonConverter converter = new JsonConverter();
+            int expectedLastPage = 1;
+            string expectedName = "Old Wounds";
+            int expectedSeason = 1;
+            int expectedEpisodeNum = 1;
+
+            EpisodeOuterDto episodeOuter = converter.ConvertEpisodeOuterObjectToDto(json);
+
+            Assert.Equal(expectedLastPage, episodeOuter.links.Last);
+            Assert.Equal(expectedName, episodeOuter.episodes[0].EpisodeName);
+            Assert.Equal(expectedSeason, episodeOuter.episodes[0].Season);
+            Assert.Equal(expectedEpisodeNum, episodeOuter.episodes[0].NumberInSeason);
+        }
+
     }
 }

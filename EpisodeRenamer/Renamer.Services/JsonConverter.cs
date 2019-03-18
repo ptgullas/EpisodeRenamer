@@ -26,10 +26,20 @@ namespace Renamer.Services {
             return outerData.tvSeries;
         }
 
+        public EpisodeOuterDto ConvertEpisodeOuterObjectToDto(string episodesJson) {
+            return JsonConvert.DeserializeObject<EpisodeOuterDto>(episodesJson);
+        }
+
         public EpisodeFromTVDBDto[] ConvertEpisodesToDto(string episodesJson) {
             EpisodeOuterDto outerData = JsonConvert.DeserializeObject<EpisodeOuterDto>(episodesJson);
             return outerData.episodes;
         }
+
+        public EpisodeLinksDto ConvertEpisodeLinksToDto(string episodesJson) {
+            EpisodeOuterDto outerData = JsonConvert.DeserializeObject<EpisodeOuterDto>(episodesJson);
+            return outerData.links;
+        }
+
         /*
         public List<int> ConvertFavorites(string favoritesJson) {
             UserData outerData = JsonConvert.DeserializeObject<UserData>(favoritesJson);

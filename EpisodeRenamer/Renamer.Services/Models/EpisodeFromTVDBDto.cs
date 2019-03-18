@@ -14,9 +14,9 @@ namespace Renamer.Services.Models {
 
     public class EpisodeLinksDto {
         [JsonProperty]
-        public int? First { get; set; }
+        public int First { get; set; }
         [JsonProperty]
-        public int? Last { get; set; }
+        public int Last { get; set; }
         [JsonProperty]
         public int? Next { get; set; }
         [JsonProperty]
@@ -24,6 +24,8 @@ namespace Renamer.Services.Models {
     }
 
     public class EpisodeFromTVDBDto {
+        [JsonProperty("id")]
+        public int EpisodeId { get; set; }
         public int SeriesId { get; set; }
         [JsonProperty("airedSeason")]
         public int Season { get; set; }
@@ -35,6 +37,8 @@ namespace Renamer.Services.Models {
         public DateTime DateAired { get; set; }
         public DateTime DateRetrieved { get; set; }
         public long LastUpdated { get; set; }
+        public int AiredSeasonId { get; set; }
+        public int AbsoluteNumber { get; set; }
 
     }
 }
