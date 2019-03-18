@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Renamer.Data.Migrations
 {
-    public partial class CreateDB : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -20,6 +20,7 @@ namespace Renamer.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Shows", x => x.Id);
+                    table.UniqueConstraint("AK_Shows_SeriesId", x => x.SeriesId);
                 });
 
             migrationBuilder.CreateTable(
@@ -48,16 +49,18 @@ namespace Renamer.Data.Migrations
                     EpisodeName = table.Column<string>(nullable: true),
                     FirstAired = table.Column<DateTime>(nullable: false),
                     AbsoluteNumber = table.Column<int>(nullable: false),
+                    LastUpdated = table.Column<DateTime>(nullable: false),
                     SeriesId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Episodes", x => x.Id);
+                    table.UniqueConstraint("AK_Episodes_TVDBEpisodeId", x => x.TVDBEpisodeId);
                     table.ForeignKey(
                         name: "FK_Episodes_Shows_SeriesId",
                         column: x => x.SeriesId,
                         principalTable: "Shows",
-                        principalColumn: "Id",
+                        principalColumn: "SeriesId",
                         onDelete: ReferentialAction.Cascade);
                 });
 

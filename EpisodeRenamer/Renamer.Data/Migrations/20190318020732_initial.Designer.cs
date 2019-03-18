@@ -9,8 +9,8 @@ using Renamer.Data.Entities;
 namespace Renamer.Data.Migrations
 {
     [DbContext(typeof(EpisodeContext))]
-    [Migration("20190314151412_CreateDB")]
-    partial class CreateDB
+    [Migration("20190318020732_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,6 +33,8 @@ namespace Renamer.Data.Migrations
 
                     b.Property<DateTime>("FirstAired");
 
+                    b.Property<DateTime>("LastUpdated");
+
                     b.Property<int>("Season");
 
                     b.Property<int>("SeriesId");
@@ -40,6 +42,8 @@ namespace Renamer.Data.Migrations
                     b.Property<int>("TVDBEpisodeId");
 
                     b.HasKey("Id");
+
+                    b.HasAlternateKey("TVDBEpisodeId");
 
                     b.HasIndex("SeriesId");
 
@@ -81,6 +85,7 @@ namespace Renamer.Data.Migrations
                     b.HasOne("Renamer.Data.Entities.TVShow")
                         .WithMany("Episodes")
                         .HasForeignKey("SeriesId")
+                        .HasPrincipalKey("SeriesId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

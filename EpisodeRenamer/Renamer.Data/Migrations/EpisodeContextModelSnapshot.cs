@@ -31,6 +31,8 @@ namespace Renamer.Data.Migrations
 
                     b.Property<DateTime>("FirstAired");
 
+                    b.Property<DateTime>("LastUpdated");
+
                     b.Property<int>("Season");
 
                     b.Property<int>("SeriesId");
@@ -38,6 +40,8 @@ namespace Renamer.Data.Migrations
                     b.Property<int>("TVDBEpisodeId");
 
                     b.HasKey("Id");
+
+                    b.HasAlternateKey("TVDBEpisodeId");
 
                     b.HasIndex("SeriesId");
 
@@ -79,6 +83,7 @@ namespace Renamer.Data.Migrations
                     b.HasOne("Renamer.Data.Entities.TVShow")
                         .WithMany("Episodes")
                         .HasForeignKey("SeriesId")
+                        .HasPrincipalKey("SeriesId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

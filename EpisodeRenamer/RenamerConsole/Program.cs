@@ -81,7 +81,7 @@ namespace RenamerConsole {
             DisplayTokenStatus(tokenIsValid);
 
             Console.WriteLine("2. Populate Shows table from User Favorites");
-            Console.WriteLine("3. Add episode to show");
+            Console.WriteLine("3. Populate Doom Patrol episodes");
             Console.WriteLine("5. Exit if you dare");
             var result = Console.ReadLine();
             if (result.IsNumeric()) {
@@ -100,7 +100,7 @@ namespace RenamerConsole {
                 await facade.PopulateShowsFromFavorites();
             }
             else if (selection == 3) {
-                Console.WriteLine("Not yet implemented");
+                await facade.PopulateEpisodes(355622);
             }
         }
 

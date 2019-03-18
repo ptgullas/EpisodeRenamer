@@ -11,19 +11,20 @@ namespace Renamer.Data.Entities {
 
         public EpisodeContext(DbContextOptions<EpisodeContext> options) 
             : base(options) {
-
         }
 
+        public EpisodeContext() {
 
+        }
         public DbSet<Episode> Episodes { get; set; }
         public DbSet<TVShow> Shows { get; set; }
         public DbSet<UserFavorite> UserFavorites { get; set; }
 
-        /*
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseSqlite("Data Source=C:\\Users\\Prime Time Pauly G\\source\\repos\\EpisodeRenamer\\EpisodeRenamer\\RenamerConsole\\tvepisodes.db");
         }
-        */
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity("Renamer.Data.Entities.Episode", b => {
@@ -72,7 +73,8 @@ namespace Renamer.Data.Entities {
             {
                 b.HasOne("Renamer.Data.Entities.TVShow")
                     .WithMany("Episodes")
-                    .HasForeignKey("SeriesId");
+                    .HasForeignKey("SeriesId")
+                    .HasPrincipalKey("SeriesId");
             });
         }
     }
