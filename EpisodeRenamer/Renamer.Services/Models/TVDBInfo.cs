@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Serilog;
 
 namespace Renamer.Services.Models {
     public class TVDBInfo {
@@ -58,11 +59,11 @@ namespace Renamer.Services.Models {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
 
-        private int HoursSinceLastRefresh {
+        private double HoursSinceLastRefresh {
             get {
                 DateTime currentTime = DateTime.Now;
                 TimeSpan ts = currentTime - TokenRetrievedDate;
-                return ts.Hours;
+                return ts.TotalHours;
             }
         }
         public DateTime GetExpiration() {
