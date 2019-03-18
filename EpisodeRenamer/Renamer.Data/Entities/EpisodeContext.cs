@@ -20,22 +20,22 @@ namespace Renamer.Data.Entities {
         public DbSet<TVShow> Shows { get; set; }
         public DbSet<UserFavorite> UserFavorites { get; set; }
 
-        
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseSqlite("Data Source=C:\\Users\\Prime Time Pauly G\\source\\repos\\EpisodeRenamer\\EpisodeRenamer\\RenamerConsole\\tvepisodes.db");
         }
-        
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity("Renamer.Data.Entities.Episode", b => {
                 b.Property<int>("Id").ValueGeneratedOnAdd();
                 b.Property<int>("TVDBEpisodeId");
-                b.Property<int>("Season");
-                b.Property<int>("AiredSeasonId");
-                b.Property<int>("AiredEpisodeNumber");
-                b.Property<string>("EpisodeName");
-                b.Property<DateTime>("FirstAired");
-                b.Property<int>("AbsoluteNumber");
+                b.Property<int?>("Season");
+                b.Property<int?>("AiredSeasonId");
+                b.Property<int?>("AiredEpisodeNumber");
+                b.Property<string>("EpisodeName")
+                    .IsRequired();
+                b.Property<int?>("AbsoluteNumber");
                 b.Property<DateTime>("LastUpdated");
                 b.Property<int>("SeriesId")
                     .IsRequired();

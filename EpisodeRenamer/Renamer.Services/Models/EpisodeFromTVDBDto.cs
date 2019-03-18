@@ -28,17 +28,14 @@ namespace Renamer.Services.Models {
         public int EpisodeId { get; set; }
         public int SeriesId { get; set; }
         [JsonProperty("airedSeason")]
-        public int Season { get; set; }
+        public int? Season { get; set; }
         [JsonProperty("airedEpisodeNumber")]
-        public int NumberInSeason { get; set; }
+        public int? NumberInSeason { get; set; }
         public string EpisodeName { get; set; }
-        public bool IsInList { get; set; }
-        [JsonProperty("firstAired")]
-        public DateTime DateAired { get; set; }
         public DateTime DateRetrieved { get; set; }
         public long LastUpdated { get; set; }
-        public int AiredSeasonId { get; set; }
-        public int AbsoluteNumber { get; set; }
+        public int? AiredSeasonId { get; set; }
+        public int? AbsoluteNumber { get; set; }
 
     }
 }

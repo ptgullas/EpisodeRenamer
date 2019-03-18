@@ -75,7 +75,15 @@ namespace Renamer.Services {
             }
         }
 
+        public async Task PopulateEpisodesFromExistingShows(int numberOfPagesFromEndToFetch = 2) {
+            var seriesIdsInDB = _context.Shows.Select(s => s.SeriesId);
+            foreach (int seriesId in seriesIdsInDB) {
+                await PopulateEpisodes(seriesId, numberOfPagesFromEndToFetch);
+            }
+        }
+
         public async Task PopulateEpisodes(int seriesId, int numberOfPagesFromEndToFetch = 0) {
+            Log.Information($"Populating Episodes from seriesId {seriesId}");
             try {
                 var episodeOuter = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token);
                 // always add the episodes on page 1
@@ -99,8 +107,14 @@ namespace Renamer.Services {
         private void AddEpisodesInEpisodeObject(EpisodeOuterDto episodeOuter) {
             var episodeList = episodeOuter.episodes.ToList();
             foreach (EpisodeFromTVDBDto epDto in episodeList) {
-                Episode ep = epDto.ToEpisode();
-                _episodeService.Add(ep);
+                try {
+                    Log.Information("Adding episode {a}: \"{b}\"", epDto.EpisodeId, epDto.EpisodeName);
+                    Episode ep = epDto.ToEpisode();
+                    _episodeService.Add(ep);
+                }
+                catch (Exception e) {
+                    Log.Error(e.Message);
+                }
             }
         }
     }

@@ -57,8 +57,8 @@ namespace RenamerConsole {
 
             // GetApiKey();
             //ReadTVDBInfo();
-            //FindSampleShow(context);
-            PauseForInput();
+            // FindSampleShow(context);
+            // PauseForInput();
             // Console.WriteLine("Adding show");
             //AddSampleShow(context);
         }
@@ -66,10 +66,10 @@ namespace RenamerConsole {
         static public async void DisplayMenuAndProcessUserInput(RenamerFacade facade) {
             TVDBInfo tvdbInfo = facade._tvdbInfo;
             int userInput = 0;
-            do {
+            while (userInput != 5) {
                 userInput = DisplayMenu(tvdbInfo);
                 await ProcessUserInput(userInput, facade);
-            } while (userInput != 5);
+            }
         }
 
         static public int DisplayMenu(TVDBInfo tvdbInfo) {
@@ -81,7 +81,8 @@ namespace RenamerConsole {
             DisplayTokenStatus(tokenIsValid);
 
             Console.WriteLine("2. Populate Shows table from User Favorites");
-            Console.WriteLine("3. Populate Doom Patrol episodes");
+            Console.WriteLine("3. Populate Episodes for all existing shows");
+            Console.WriteLine("4. Populate Episodes");
             Console.WriteLine("5. Exit if you dare");
             var result = Console.ReadLine();
             if (result.IsNumeric()) {
@@ -100,7 +101,12 @@ namespace RenamerConsole {
                 await facade.PopulateShowsFromFavorites();
             }
             else if (selection == 3) {
-                await facade.PopulateEpisodes(355622);
+                await facade.PopulateEpisodesFromExistingShows();
+            }
+            else if (selection == 4) {
+                Console.WriteLine("Enter ID:");
+                int mySeriesId = Console.ReadLine().ToInt();
+                await facade.PopulateEpisodes(mySeriesId);
             }
         }
 

@@ -43,12 +43,11 @@ namespace Renamer.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     TVDBEpisodeId = table.Column<int>(nullable: false),
-                    Season = table.Column<int>(nullable: false),
-                    AiredSeasonId = table.Column<int>(nullable: false),
-                    AiredEpisodeNumber = table.Column<int>(nullable: false),
-                    EpisodeName = table.Column<string>(nullable: true),
-                    FirstAired = table.Column<DateTime>(nullable: false),
-                    AbsoluteNumber = table.Column<int>(nullable: false),
+                    Season = table.Column<int>(nullable: true),
+                    AiredSeasonId = table.Column<int>(nullable: true),
+                    AiredEpisodeNumber = table.Column<int>(nullable: true),
+                    EpisodeName = table.Column<string>(nullable: false),
+                    AbsoluteNumber = table.Column<int>(nullable: true),
                     LastUpdated = table.Column<DateTime>(nullable: false),
                     SeriesId = table.Column<int>(nullable: false)
                 },

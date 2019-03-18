@@ -21,19 +21,18 @@ namespace Renamer.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AbsoluteNumber");
+                    b.Property<int?>("AbsoluteNumber");
 
-                    b.Property<int>("AiredEpisodeNumber");
+                    b.Property<int?>("AiredEpisodeNumber");
 
-                    b.Property<int>("AiredSeasonId");
+                    b.Property<int?>("AiredSeasonId");
 
-                    b.Property<string>("EpisodeName");
-
-                    b.Property<DateTime>("FirstAired");
+                    b.Property<string>("EpisodeName")
+                        .IsRequired();
 
                     b.Property<DateTime>("LastUpdated");
 
-                    b.Property<int>("Season");
+                    b.Property<int?>("Season");
 
                     b.Property<int>("SeriesId");
 
