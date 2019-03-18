@@ -8,5 +8,6 @@ namespace Renamer.Services.Models {
         public int SeasonNumber { get; set; }
         public int EpisodeNumberInSeason { get; set; }
         public string EpisodeTitle { get; set; }
+        public string FilePath { get; set; }
     }
 }
