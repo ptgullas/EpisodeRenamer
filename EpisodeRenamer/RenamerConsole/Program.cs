@@ -83,8 +83,9 @@ namespace RenamerConsole {
 
             Console.WriteLine("2. Populate Shows table from User Favorites");
             Console.WriteLine("3. Populate Episodes for all existing shows");
-            Console.WriteLine("4. Populate Episodes");
+            Console.WriteLine("4. Populate Episodes for a specific show");
             Console.WriteLine("5. Rename files!!");
+            Console.WriteLine("6. Add Preferred Name for a show");
             Console.WriteLine("9. Exit if you dare");
             var result = Console.ReadLine();
             if (result.IsNumeric()) {
@@ -141,44 +142,6 @@ namespace RenamerConsole {
                 Console.ResetColor();
         }
 
-        static async Task GetUserFavorites(TVDBInfo tvdbInfo, IHttpClientFactory httpClientFactory, DbContextOptions<EpisodeContext> options) {
-            Console.WriteLine("Getting user favorites...");
-            if (!tvdbInfo.TokenIsExpired) {
-                TVDBRetrieverService retrieverService = new TVDBRetrieverService(httpClientFactory);
-                List<int> faves = await retrieverService.FetchUserFavorites(tvdbInfo.Token);
-                faves.Sort();
-                faves
-                    .ForEach(c => Console.WriteLine(c));
-                EpisodeContext context = new EpisodeContext(options);
-                var seriesIdsInDb = context.Shows.Select(s => s.SeriesId);
-                var seriesIdsNotInDb = faves.Except(seriesIdsInDb);
-                // foreach seriesId not in DB, fetch it & add to Shows table
-            }
-        }
-
-        static async Task GetShow(TVDBInfo tvdbInfo, IHttpClientFactory httpClientFactory) {
-            Console.WriteLine("What seriesId should we get?");
-            if (!tvdbInfo.TokenIsExpired) {
-                TVDBRetrieverService service = new TVDBRetrieverService(httpClientFactory);
-                TVShowFromTVDBDto showDto = await service.FetchTVShow(356640, tvdbInfo.Token);
-                if (showDto.SeriesId != 0) {
-                    TVShow show = showDto.ToTVShow();
-                    Console.Write($"Retrieved show: SeriesId: ");
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-                    Console.Write($"{show.SeriesId}");
-                    Console.ResetColor();
-                    Console.Write(", Name: ");
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(show.SeriesName);
-                    Console.ResetColor();
-
-                }
-                else {
-                    Console.WriteLine("Couldn't retrieve show");
-                }
-            }
-        }
-
         static void PauseForInput() {
             Console.WriteLine("Press any key to continue.");
             Console.ReadLine();
@@ -205,26 +168,6 @@ namespace RenamerConsole {
             tvdbInfo.TokenRetrievedDate = DateTime.Now.AddDays(-1);
             Console.WriteLine($"apiKey from TVDBInfo: {tvdbInfo.ApiKey}. DateTime: {tvdbInfo.TokenRetrievedDate}");
             tvdbInfo.SaveToFile(filePath);
-        }
-
-        static async void RetrieveTokenIfNeeded(TVDBRetrieverService retrieverService) {
-            string filePath = GetTVDBInfoFilePath();
-            TVDBInfo tvdbInfo = TVDBInfo.ReadFromFile(filePath);
-            if (tvdbInfo.TokenIsExpired) {
-                Console.WriteLine("Token is expired. Fetching new one....");
-                string newToken = await retrieverService.FetchNewToken(tvdbInfo.ToAuthenticator());
-                SetNewTokenAndSaveToFile(ref tvdbInfo, newToken, filePath);
-                Console.WriteLine($"Saved authentication info to {filePath}");
-            }
-            else if (tvdbInfo.TokenIsAlmostExpired) {
-                // refresh the token
-                Console.WriteLine("Token will expire soon. Will refresh it");
-                string newToken = await retrieverService.FetchRefreshToken(tvdbInfo.Token);
-                SetNewTokenAndSaveToFile(ref tvdbInfo, newToken, filePath);
-            }
-            else {
-                Console.WriteLine("Token is still good");
-            }
         }
 
         static TVDBInfo GetTVDBInfo() {
