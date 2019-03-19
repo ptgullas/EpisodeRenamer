@@ -82,16 +82,16 @@ namespace Renamer.Services {
         public async Task PopulateEpisodesFromExistingShows(int numberOfPagesFromEndToFetch = 2) {
             var seriesIdsInDB = _context.Shows.Select(s => s.SeriesId);
             foreach (int seriesId in seriesIdsInDB) {
-                await PopulateEpisodes(seriesId, numberOfPagesFromEndToFetch);
+                await PopulateEpisodesFromSeriesId(seriesId, numberOfPagesFromEndToFetch);
             }
         }
 
-        public async Task PopulateEpisodes(int seriesId, int numberOfPagesFromEndToFetch = 0) {
+        public async Task PopulateEpisodesFromSeriesId(int seriesId, int numberOfPagesFromEndToFetch = 0) {
             Log.Information($"Populating Episodes from seriesId {seriesId}");
             try {
                 var episodeOuter = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token);
                 // always add the episodes on page 1
-                AddEpisodesInEpisodeObject(episodeOuter);
+                AddEpisodesOnPageToDatabase(episodeOuter);
                 if (numberOfPagesFromEndToFetch > 0) {
                     int lastPage = episodeOuter.links.Last;
                     int pageToEndOn = lastPage - numberOfPagesFromEndToFetch;
@@ -100,7 +100,7 @@ namespace Renamer.Services {
                     }
                     for (int i = lastPage; i > pageToEndOn; i--) {
                         episodeOuter = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token, i);
-                        AddEpisodesInEpisodeObject(episodeOuter);
+                        AddEpisodesOnPageToDatabase(episodeOuter);
                     }
                 }
             }
@@ -108,7 +108,7 @@ namespace Renamer.Services {
                 Log.Error(e.Message);
             }
         }
-        private void AddEpisodesInEpisodeObject(EpisodeOuterDto episodeOuter) {
+        private void AddEpisodesOnPageToDatabase(EpisodeOuterDto episodeOuter) {
             var episodeList = episodeOuter.episodes.ToList();
             foreach (EpisodeFromTVDBDto epDto in episodeList) {
                 try {

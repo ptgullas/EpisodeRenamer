@@ -108,7 +108,7 @@ namespace RenamerConsole {
             else if (selection == 4) {
                 Console.WriteLine("Enter ID:");
                 int mySeriesId = Console.ReadLine().ToInt();
-                await facade.PopulateEpisodes(mySeriesId);
+                await facade.PopulateEpisodesFromSeriesId(mySeriesId);
             }
             else if (selection == 5) {
                 Console.WriteLine("OK we are getting down to business");
