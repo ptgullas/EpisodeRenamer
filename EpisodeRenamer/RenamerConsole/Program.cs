@@ -19,7 +19,7 @@ namespace RenamerConsole {
 
         public static IConfigurationRoot Configuration;
 
-        static void Main(string[] args) {
+        static async Task Main(string[] args) {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
@@ -51,7 +51,7 @@ namespace RenamerConsole {
             string tvdbInfoPath = GetTVDBInfoFilePath();
             RenamerFacade facade = new RenamerFacade(retrieverService, showService, epService, localService, context, tvdbInfoPath);
 
-            DisplayMenuAndProcessUserInput(facade);
+            await DisplayMenuAndProcessUserInput(facade);
             // SetUpAutomapper();
 
             // GetNewToken(httpClientFactory);
@@ -64,7 +64,7 @@ namespace RenamerConsole {
             //AddSampleShow(context);
         }
 
-        static public async void DisplayMenuAndProcessUserInput(RenamerFacade facade) {
+        static public async Task DisplayMenuAndProcessUserInput(RenamerFacade facade) {
             TVDBInfo tvdbInfo = facade._tvdbInfo;
             int userInput = 0;
             while (userInput != 9) {

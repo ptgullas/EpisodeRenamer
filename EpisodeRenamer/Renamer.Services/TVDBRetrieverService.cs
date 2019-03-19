@@ -74,7 +74,8 @@ namespace Renamer.Services {
             try {
                 var client = _clientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                var response = await client.GetAsync(GetFavoritesUri());
+                Uri favoritesUri = GetFavoritesUri();
+                var response = await client.GetAsync(favoritesUri);
                 response.EnsureSuccessStatusCode();
                 Log.Information("Successfully retrieved favorites");
                 var stringResponse = await response.Content.ReadAsStringAsync();
@@ -88,6 +89,7 @@ namespace Renamer.Services {
             return favoritesFromApi;
         }
         public Uri GetFavoritesUri() {
+            Log.Information("In GetFavoritesUri");
             _uriBuilder.Path = "user/favorites";
             return _uriBuilder.Uri;
         }
