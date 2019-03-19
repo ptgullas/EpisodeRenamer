@@ -150,13 +150,15 @@ namespace Renamer.Services {
             foreach (EpisodeForComparingDto epDto in sourceEps) {
                 try {
                     Episode epEntity = _episodeService.FindByEpisodeForComparingDto(epDto);
-                    EpisodeForComparingDto targetDto = CreateEpisodeForComparingDtoFromEntity(epEntity);
-                    string localFile = Path.GetFileName(epDto.FilePath);
+                    if (epEntity != null) {
+                        EpisodeForComparingDto targetDto = CreateEpisodeForComparingDtoFromEntity(epEntity);
+                        string localFile = Path.GetFileName(epDto.FilePath);
 
-                    Console.WriteLine($"Rename {localFile} to {targetDto.GetFormattedFilename()}?");
-                    string userInput = Console.ReadLine().ToUpper();
-                    if (userInput == "Y") {
-                        _localservice.RenameFile(epDto.FilePath, targetDto);
+                        Console.WriteLine($"Rename {localFile} to {targetDto.GetFormattedFilename()}?");
+                        string userInput = Console.ReadLine().ToUpper();
+                        if (userInput == "Y") {
+                            _localservice.RenameFile(epDto.FilePath, targetDto);
+                        }
                     }
                 }
                 catch (Exception e) {
