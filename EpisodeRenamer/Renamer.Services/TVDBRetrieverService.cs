@@ -71,9 +71,9 @@ namespace Renamer.Services {
         public async Task<List<int>> FetchUserFavorites(string token) {
             Log.Information("Retrieving user favorites...");
             List<int> favoritesFromApi = new List<int>();
-            var client = _clientFactory.CreateClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             try {
+                var client = _clientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 var response = await client.GetAsync(GetFavoritesUri());
                 response.EnsureSuccessStatusCode();
                 Log.Information("Successfully retrieved favorites");
