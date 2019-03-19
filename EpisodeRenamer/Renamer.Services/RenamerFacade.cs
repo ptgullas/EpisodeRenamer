@@ -132,9 +132,9 @@ namespace Renamer.Services {
             else {
                 seriesName = show.SeriesNamePreferred;
             }
-            EpisodeForComparingDto epDto = ep.ToEpisodeForComparingDto();
-            epDto.SeriesName = seriesName;
-            return epDto;
+            EpisodeForComparingDto targetEpisodeDto = ep.ToEpisodeForComparingDto();
+            targetEpisodeDto.SeriesName = seriesName.ReplaceInvalidChars();
+            return targetEpisodeDto;
         }
 
         public void RenameFiles() {
