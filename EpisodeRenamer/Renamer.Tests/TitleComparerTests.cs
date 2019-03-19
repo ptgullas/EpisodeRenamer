@@ -183,6 +183,22 @@ namespace Renamer.Tests {
 
             Assert.Equal(expectedMessage.Substring(0,50), ex.Message.Substring(0,50));
         }
+
+        [Fact]
+        public void FilenameContainsSeasonEpisodeFormat_ContainsSeasonEpisode_ReturnsTrue() {
+            TitleComparer comparer = new TitleComparer();
+            string fileName = @"the.chilling.adventures.of.sabrina.s01e07.720p.webrip.hevc.x265.rmteam.mkv";
+            Assert.True(comparer.FilenameContainsSeasonEpisodeFormat(fileName));
+        }
+
+        [Fact]
+        public void FilenameContainsSeasonEpisodeFormat_ContainsEpisodeWithZero_ReturnsTrue() {
+            TitleComparer comparer = new TitleComparer();
+            string fileName = @"the.chilling.adventures.of.sabrina.s02e00.720p.webrip.hevc.x265.rmteam.mkv";
+            Assert.True(comparer.FilenameContainsSeasonEpisodeFormat(fileName));
+        }
+
+
         [Fact]
         public void CreateEpisodeObjectFromFilename_ValidFile_CreatesObject() {
             TitleComparer comparer = new TitleComparer();

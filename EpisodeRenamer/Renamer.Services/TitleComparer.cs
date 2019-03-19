@@ -3,11 +3,36 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using Serilog;
 
 namespace Renamer.Services {
     public class TitleComparer {
         public TitleComparer() {
 
+        }
+
+
+        /// <summary>
+        /// Returns episode information as string in "SeriesName - x.yy - EpisodeTitle" format
+        /// </summary>
+        /// <param name="ep"></param>
+        /// <returns></returns>
+        public string GetFormattedFilename(EpisodeForComparingDto ep) {
+            return ($"{ep.SeriesName} - {GetSeasonEpisodeInNumberFormat(ep)} - {ep.EpisodeTitle}");
+        }
+
+        /// <summary>
+        /// Returns Season & Episode in ep as string in "x.yy" format
+        /// </summary>
+        /// <param name="ep"></param>
+        /// <returns></returns>
+        public string GetSeasonEpisodeInNumberFormat(EpisodeForComparingDto ep) {
+            return $"{ep.SeasonNumber}.{ep.EpisodeNumberInSeason.ToString("D2")}";
+        }
+
+
+        public bool FilenameMatchesEpisode(EpisodeForComparingDto ep, string filename) {
+            return (FilenameContainsSeriesName(ep, filename) && FilenameContainsSeasonEpisode(ep, filename));
         }
 
         public bool FilenameContainsSeasonEpisode(EpisodeForComparingDto ep, string fileName) {
@@ -18,36 +43,44 @@ namespace Renamer.Services {
         public string GetSeasonEpisodeInSEFormat(EpisodeForComparingDto ep) {
             return $"s{ep.SeasonNumber.ToString("D2")}e{ep.EpisodeNumberInSeason.ToString("D2")}";
         }
-        public string GetSeasonEpisodeInNumberFormat(EpisodeForComparingDto ep) {
-            return $"{ep.SeasonNumber}.{ep.EpisodeNumberInSeason.ToString("D2")}";
-        }
-        public string GetFormattedFilename(EpisodeForComparingDto ep) {
-            return ($"{ep.SeriesName} - {GetSeasonEpisodeInNumberFormat(ep)} - {ep.EpisodeTitle}");
-        }
-
-
-        public string GetSeriesNameInLowercaseAndPeriodsWithoutStartingArticle(EpisodeForComparingDto ep) {
-            return ep.SeriesName.RemoveFirstWordArticlesFromTitle().ReplaceSpaces().ToLower();
-        }
 
         public bool FilenameContainsSeriesName(EpisodeForComparingDto ep, string filename) {
             string seriesNameToCompare = GetSeriesNameInLowercaseAndPeriodsWithoutStartingArticle(ep);
             return filename.ToLower().Contains(seriesNameToCompare);
         }
 
-        public bool FilenameMatchesEpisode(EpisodeForComparingDto ep, string filename) {
-            return (FilenameContainsSeriesName(ep, filename) && FilenameContainsSeasonEpisode(ep, filename));
+        public string GetSeriesNameInLowercaseAndPeriodsWithoutStartingArticle(EpisodeForComparingDto ep) {
+            return ep.SeriesName.RemoveFirstWordArticlesFromTitle().ReplaceSpaces().ToLower();
+        }
+
+        public EpisodeForComparingDto CreateEpisodeObjectFromPath(string filePath) {
+            EpisodeForComparingDto ep = CreateEpisodeObjectFromFilename(Path.GetFileName(filePath));
+            ep.FilePath = filePath;
+            return ep;
+        }
+
+        public EpisodeForComparingDto CreateEpisodeObjectFromFilename(string filename) {
+            EpisodeForComparingDto ep = ExtractSeasonEpisodeFromFilenameAsEpisodeObject(filename);
+            ep.SeriesName = ExtractSeriesNameFromFilename(filename).ReplacePeriodsWithSpaces();
+            return ep;
+        }
+        public EpisodeForComparingDto ExtractSeasonEpisodeFromFilenameAsEpisodeObject(string filename) {
+            EpisodeForComparingDto ep = new EpisodeForComparingDto();
+            GroupCollection groups = GetSeasonEpisodeMatchFromFilename(filename).Groups;
+            if (RegexGroupsContainSeasonEpisodeFormat(groups)) {
+                ep.SeasonNumber = groups[1].ToString().ToInt();
+                ep.EpisodeNumberInSeason = groups[2].ToString().ToInt();
+                return ep;
+            }
+            else {
+                Log.Information("Filename does not contain episode number in s##e## format.", filename);
+                return null;
+            }
         }
 
         public string ExtractSeasonEpisodeFromFilename(string filename) {
             string seasonepisode = GetSeasonEpisodeMatchFromFilename(filename).Value.Replace(".", "");
             return seasonepisode;
-        }
-
-        private Match GetSeasonEpisodeMatchFromFilename(string filename) {
-            string seasonEpisodePattern = @"\.s(\d+)e(\d+)\.";
-            Regex rgx = new Regex(seasonEpisodePattern);
-            return rgx.Match(filename);
         }
 
         public string ExtractSeriesNameFromFilename(string filename) {
@@ -59,34 +92,38 @@ namespace Renamer.Services {
                 return "";
             }
         }
+
         public int ExtractSeasonNumberFromFilename(string filename) {
            GroupCollection groups = GetSeasonEpisodeMatchFromFilename(filename).Groups;
            return groups[1].ToString().ToInt();
         }
 
-        public EpisodeForComparingDto ExtractSeasonEpisodeFromFilenameAsEpisodeObject(string filename) {
-            EpisodeForComparingDto ep = new EpisodeForComparingDto();
+
+        private Match GetSeasonEpisodeMatchFromFilename(string filename) {
+            string seasonEpisodePattern = @"\.s(\d+)e(\d+)\.";
+            Regex rgx = new Regex(seasonEpisodePattern);
+            return rgx.Match(filename);
+        }
+
+        public bool FilenameContainsSeasonEpisodeFormat(string filename) {
             GroupCollection groups = GetSeasonEpisodeMatchFromFilename(filename).Groups;
-            if (groups.Count == 3) {
-                ep.SeasonNumber = groups[1].ToString().ToInt();
-                ep.EpisodeNumberInSeason = groups[2].ToString().ToInt();
-                return ep;
+            if (RegexGroupsContainSeasonEpisodeFormat(groups)) {
+                return true;
             }
             else {
-                throw new ArgumentException("Filename does not contain episode number in s##e## format.", filename);
+                return false;
             }
         }
+        private bool RegexGroupsContainSeasonEpisodeFormat(GroupCollection groups) {
+            if (groups.Count == 3 && groups[1].ToString().IsNumeric() && groups[2].ToString().IsNumeric()) {
+                return true;
+            }
+            else {
+                return false;
+            }
 
-        public EpisodeForComparingDto CreateEpisodeObjectFromFilename(string filename) {
-            EpisodeForComparingDto ep = ExtractSeasonEpisodeFromFilenameAsEpisodeObject(filename);
-            ep.SeriesName = ExtractSeriesNameFromFilename(filename).ReplacePeriodsWithSpaces();
-            return ep;
         }
 
-        public EpisodeForComparingDto CreateEpisodeObjectFromPath(string filePath) {
-            EpisodeForComparingDto ep = CreateEpisodeObjectFromFilename(Path.GetFileName(filePath));
-            ep.FilePath = filePath;
-            return ep;
-        }
+
     }
 }

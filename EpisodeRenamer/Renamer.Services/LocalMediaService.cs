@@ -25,7 +25,10 @@ namespace Renamer.Services {
             List<EpisodeForComparingDto> epsToCompare = new List<EpisodeForComparingDto>();
             foreach (string file in files) {
                 try {
-                    epsToCompare.Add(_titleComparer.CreateEpisodeObjectFromPath(file));
+                    EpisodeForComparingDto epFromFilenameDto = _titleComparer.CreateEpisodeObjectFromPath(file);
+                    if (epFromFilenameDto != null) {
+                        epsToCompare.Add(epFromFilenameDto);
+                    }
                 }
                 catch (Exception e) {
                     Log.Warning(e, "Can't create EpisodeForComparingFromDto object from file {a}", file);
