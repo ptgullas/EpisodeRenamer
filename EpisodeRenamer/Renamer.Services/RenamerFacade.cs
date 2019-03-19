@@ -71,7 +71,7 @@ namespace Renamer.Services {
                     foreach (int seriesId in seriesIdsNotInDB) {
                         await FetchTVShowAndAddItToDatabase(seriesId, _tvdbInfo.Token);
                         await PopulateEpisodesFromSeriesId(seriesId);
-                        // set 2-second timer here
+                        // set 2-second timer here (may need to also use Stopwatch class)
                         await Task.Delay(2000);
                     }
                 }
