@@ -141,6 +141,7 @@ namespace Renamer.Services {
             }
             EpisodeForComparingDto targetEpisodeDto = ep.ToEpisodeForComparingDto();
             targetEpisodeDto.SeriesName = seriesName.ReplaceInvalidChars();
+            targetEpisodeDto.EpisodeTitle = targetEpisodeDto.EpisodeTitle.ReplaceInvalidChars();
             return targetEpisodeDto;
         }
 
