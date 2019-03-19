@@ -68,6 +68,8 @@ namespace Renamer.Services {
                 if (seriesIdsNotInDB.Count != 0) {
                     foreach (int seriesId in seriesIdsNotInDB) {
                         await FetchTVShowAndAddItToDatabase(seriesId, _tvdbInfo.Token);
+                        await PopulateEpisodesFromSeriesId(seriesId);
+                        // set 2-second timer here
                     }
                 }
             }
