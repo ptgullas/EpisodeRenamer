@@ -86,7 +86,7 @@ namespace Renamer.Services {
             }
         }
 
-        public async Task PopulateEpisodesFromSeriesId(int seriesId, int numberOfPagesFromEndToFetch = 0) {
+        public async Task PopulateEpisodesFromSeriesId(int seriesId, int numberOfPagesFromEndToFetch = 1) {
             Log.Information($"Populating Episodes from seriesId {seriesId}");
             try {
                 var episodeOuter = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token);
@@ -99,6 +99,7 @@ namespace Renamer.Services {
                         pageToEndOn = 1; // we already added the episodes on page 1, so stop when we get down to 1
                     }
                     for (int i = lastPage; i > pageToEndOn; i--) {
+                        Log.Information("Fetching episodes JSON from page {a}", i);
                         episodeOuter = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token, i);
                         AddEpisodesOnPageToDatabase(episodeOuter);
                     }
