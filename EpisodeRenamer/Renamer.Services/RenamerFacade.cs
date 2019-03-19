@@ -67,10 +67,7 @@ namespace Renamer.Services {
                 Log.Information($"{seriesIdsNotInDB.Count} item(s) not in database");
                 if (seriesIdsNotInDB.Count != 0) {
                     foreach (int seriesId in seriesIdsNotInDB) {
-                        TVShowFromTVDBDto newShowDto = await _retrieverService.FetchTVShow(seriesId, _tvdbInfo.Token);
-                        TVShow newShow = newShowDto.ToTVShow();
-                        Log.Information($"Adding seriesId {seriesId}: {newShow.SeriesName} to Shows table");
-                        _showService.Add(newShow);
+                        await FetchTVShowAndAddItToDatabase(seriesId, _tvdbInfo.Token);
                     }
                 }
             }
@@ -78,6 +75,13 @@ namespace Renamer.Services {
                 Log.Error(e.Message);
             }
         }
+
+        public async Task FetchTVShowAndAddItToDatabase(int seriesId, string token) {
+            TVShowFromTVDBDto newShowDto = await _retrieverService.FetchTVShow(seriesId, token);
+            TVShow newShow = newShowDto.ToTVShow();
+            Log.Information($"Adding seriesId {seriesId}: {newShow.SeriesName} to Shows table");
+            _showService.Add(newShow);
+        } 
 
         public async Task PopulateEpisodesFromExistingShows(int numberOfPagesFromEndToFetch = 2) {
             var seriesIdsInDB = _context.Shows.Select(s => s.SeriesId);
