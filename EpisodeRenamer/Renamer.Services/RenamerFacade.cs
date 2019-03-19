@@ -6,12 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Serilog;
 using System.Linq;
+using System.IO;
 
 namespace Renamer.Services {
     public class RenamerFacade {
         private TVDBRetrieverService _retrieverService;
         private TVShowService _showService;
         private EpisodeService _episodeService;
+        private LocalMediaService _localservice;
         private EpisodeContext _context;
         private string _tvdbInfoFilePath;
 
@@ -19,11 +21,13 @@ namespace Renamer.Services {
         public RenamerFacade(TVDBRetrieverService retrieverService,
             TVShowService showService,
             EpisodeService episodeService,
+            LocalMediaService localService,
             EpisodeContext context,
             string tvdbPath) {
             _retrieverService = retrieverService;
             _showService = showService;
             _episodeService = episodeService;
+            _localservice = localService;
             _context = context;
             _tvdbInfoFilePath = tvdbPath;
 
@@ -118,13 +122,36 @@ namespace Renamer.Services {
             }
         }
         public EpisodeForComparingDto CreateEpisodeForComparingDtoFromEntity(Episode ep) {
-            string seriesNamePreferred = _context.Shows
-                .FirstOrDefault(b => b.SeriesId == ep.SeriesId)
-                .SeriesNamePreferred;
+            TVShow show = _context.Shows
+                .FirstOrDefault(b => b.SeriesId == ep.SeriesId);
+            string seriesName;
+
+            if (show.SeriesNamePreferred == null) {
+                seriesName = show.SeriesName;
+            }
+            else {
+                seriesName = show.SeriesNamePreferred;
+            }
             EpisodeForComparingDto epDto = ep.ToEpisodeForComparingDto();
-            epDto.SeriesName = seriesNamePreferred;
+            epDto.SeriesName = seriesName;
             return epDto;
         }
+
+        public void RenameFiles() {
+            List<EpisodeForComparingDto> sourceEps = _localservice.GetFilesAsDtosToCompare();
+            foreach (EpisodeForComparingDto epDto in sourceEps) {
+                Episode epEntity = _episodeService.FindByEpisodeForComparingDto(epDto);
+                EpisodeForComparingDto targetDto = CreateEpisodeForComparingDtoFromEntity(epEntity);
+                string localFile = Path.GetFileName(epDto.FilePath);
+
+                Console.WriteLine($"Rename {localFile} to {targetDto.GetFormattedFilename()}?");
+                string userInput = Console.ReadLine().ToUpper();
+                if (userInput == "Y") {
+                    _localservice.RenameFile(epDto.FilePath, targetDto);
+                }
+            }
+        }
+
     }
 
 }

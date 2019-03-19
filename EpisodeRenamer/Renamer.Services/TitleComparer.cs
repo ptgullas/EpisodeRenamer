@@ -1,6 +1,7 @@
 ﻿using Renamer.Services.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace Renamer.Services {
@@ -82,5 +83,10 @@ namespace Renamer.Services {
             return ep;
         }
 
+        public EpisodeForComparingDto CreateEpisodeObjectFromPath(string filePath) {
+            EpisodeForComparingDto ep = CreateEpisodeObjectFromFilename(Path.GetFileName(filePath));
+            ep.FilePath = filePath;
+            return ep;
+        }
     }
 }

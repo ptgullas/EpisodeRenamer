@@ -183,7 +183,36 @@ namespace Renamer.Tests {
 
             Assert.Equal(expectedMessage.Substring(0,50), ex.Message.Substring(0,50));
         }
+        [Fact]
+        public void CreateEpisodeObjectFromFilename_ValidFile_CreatesObject() {
+            TitleComparer comparer = new TitleComparer();
+            string fileName = @"the.chilling.adventures.of.sabrina.s01e07.720p.webrip.hevc.x265.rmteam.mkv";
 
+            int expectedSeason = 1;
+            int expectedEpisode = 7;
+            string expectedTitle = "the chilling adventures of sabrina";
+
+            EpisodeForComparingDto epDto = comparer.CreateEpisodeObjectFromFilename(fileName);
+            Assert.Equal(expectedSeason, epDto.SeasonNumber);
+            Assert.Equal(expectedEpisode, epDto.EpisodeNumberInSeason);
+            Assert.Equal(expectedTitle, epDto.SeriesName);
+        }
+
+        [Fact]
+        public void CreateEpisodeObjectFromPath_ValidFile_CreatesObject() {
+            TitleComparer comparer = new TitleComparer();
+            string path = @"c:\temp\mypath1\mypath2\the.chilling.adventures.of.sabrina.s01e07.720p.webrip.hevc.x265.rmteam.mkv";
+
+            int expectedSeason = 1;
+            int expectedEpisode = 7;
+            string expectedTitle = "the chilling adventures of sabrina";
+
+            EpisodeForComparingDto epDto = comparer.CreateEpisodeObjectFromPath(path);
+            Assert.Equal(expectedSeason, epDto.SeasonNumber);
+            Assert.Equal(expectedEpisode, epDto.EpisodeNumberInSeason);
+            Assert.Equal(expectedTitle, epDto.SeriesName);
+            Assert.Equal(path, epDto.FilePath);
+        }
 
     }
 }

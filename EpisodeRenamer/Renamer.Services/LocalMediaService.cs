@@ -24,7 +24,12 @@ namespace Renamer.Services {
             List<string> files = GetFiles();
             List<EpisodeForComparingDto> epsToCompare = new List<EpisodeForComparingDto>();
             foreach (string file in files) {
-                epsToCompare.Add(_titleComparer.CreateEpisodeObjectFromFilename(file));
+                try {
+                    epsToCompare.Add(_titleComparer.CreateEpisodeObjectFromPath(file));
+                }
+                catch (Exception e) {
+                    Log.Warning(e, "Can't create EpisodeForComparingFromDto object from file {a}", file);
+                }
             }
             return epsToCompare;
         }
@@ -32,8 +37,10 @@ namespace Renamer.Services {
         public void RenameFile(string filePath, EpisodeForComparingDto ep) {
             try {
                 string extension = Path.GetExtension(filePath);
+                string sourceDirectory = Path.GetDirectoryName(filePath);
                 string newFilename = _titleComparer.GetFormattedFilename(ep);
-                File.Move(filePath, $"{newFilename}.{extension}");
+                string newPath = Path.Combine(sourceDirectory, $"{newFilename}{extension}");
+                File.Move(filePath, newPath);
             }
             catch (Exception e) {
                 Log.Error(e.Message);

@@ -47,8 +47,9 @@ namespace RenamerConsole {
             TVDBRetrieverService retrieverService = new TVDBRetrieverService(httpClientFactory);
             TVShowService showService = new TVShowService(context);
             EpisodeService epService = new EpisodeService(context);
+            LocalMediaService localService = new LocalMediaService(Configuration.GetSection("LocalMedia").GetValue<string>("directoryPath"));
             string tvdbInfoPath = GetTVDBInfoFilePath();
-            RenamerFacade facade = new RenamerFacade(retrieverService, showService, epService, context, tvdbInfoPath);
+            RenamerFacade facade = new RenamerFacade(retrieverService, showService, epService, localService, context, tvdbInfoPath);
 
             DisplayMenuAndProcessUserInput(facade);
             // SetUpAutomapper();
@@ -66,7 +67,7 @@ namespace RenamerConsole {
         static public async void DisplayMenuAndProcessUserInput(RenamerFacade facade) {
             TVDBInfo tvdbInfo = facade._tvdbInfo;
             int userInput = 0;
-            while (userInput != 5) {
+            while (userInput != 9) {
                 userInput = DisplayMenu(tvdbInfo);
                 await ProcessUserInput(userInput, facade);
             }
@@ -83,7 +84,8 @@ namespace RenamerConsole {
             Console.WriteLine("2. Populate Shows table from User Favorites");
             Console.WriteLine("3. Populate Episodes for all existing shows");
             Console.WriteLine("4. Populate Episodes");
-            Console.WriteLine("5. Exit if you dare");
+            Console.WriteLine("5. Rename files!!");
+            Console.WriteLine("9. Exit if you dare");
             var result = Console.ReadLine();
             if (result.IsNumeric()) {
                 return result.ToInt();
@@ -107,6 +109,10 @@ namespace RenamerConsole {
                 Console.WriteLine("Enter ID:");
                 int mySeriesId = Console.ReadLine().ToInt();
                 await facade.PopulateEpisodes(mySeriesId);
+            }
+            else if (selection == 5) {
+                Console.WriteLine("OK we are getting down to business");
+                facade.RenameFiles();
             }
         }
 
