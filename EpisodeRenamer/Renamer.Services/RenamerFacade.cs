@@ -17,6 +17,8 @@ namespace Renamer.Services {
         private EpisodeContext _context;
         private string _tvdbInfoFilePath;
 
+        private static System.Timers.Timer myTimer;
+
         public TVDBInfo _tvdbInfo;
         public RenamerFacade(TVDBRetrieverService retrieverService,
             TVShowService showService,
@@ -78,6 +80,7 @@ namespace Renamer.Services {
             }
         }
 
+
         public async Task FetchTVShowAndAddItToDatabase(int seriesId, string token) {
             TVShowFromTVDBDto newShowDto = await _retrieverService.FetchTVShow(seriesId, token);
             TVShow newShow = newShowDto.ToTVShow();
@@ -96,8 +99,7 @@ namespace Renamer.Services {
             Log.Information($"Populating Episodes from seriesId {seriesId}");
             try {
                 var episodeOuter = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token);
-                // always add the episodes on page 1
-                AddEpisodesOnPageToDatabase(episodeOuter);
+                AddEpisodesOnPageToDatabase(episodeOuter); // always add the episodes on page 1
                 if (numberOfPagesFromEndToFetch > 0) {
                     int lastPage = episodeOuter.links.Last;
                     int pageToEndOn = lastPage - numberOfPagesFromEndToFetch;
@@ -128,6 +130,26 @@ namespace Renamer.Services {
                 }
             }
         }
+
+        public string FindTVShowNameBySeriesId(int seriesId) {
+            TVShow show = _showService.FindBySeriesId(seriesId);
+            string title = null;
+            if (show != null) {
+                title = show.SeriesName;
+            }
+            return title;
+        }
+
+        public void AddPreferredNameToTVShow(int seriesId, string preferredName) {
+            Log.Information($"Adding preferred name {preferredName} to seriesId {seriesId}");
+            try {
+                _showService.AddPreferredName(seriesId, preferredName);
+            }
+            catch (Exception e) {
+                Log.Error(e, "Trouble adding preferred name {a} to {b}", preferredName, seriesId);
+            }
+        }
+
         public EpisodeForComparingDto CreateEpisodeForComparingDtoFromEntity(Episode ep) {
             TVShow show = _context.Shows
                 .FirstOrDefault(b => b.SeriesId == ep.SeriesId);

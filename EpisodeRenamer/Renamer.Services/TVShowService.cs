@@ -40,6 +40,11 @@ namespace Renamer.Services {
             return show;
         }
 
+        public TVShow FindBySeriesId(int seriesId) {
+            TVShow show = _context.Shows.FirstOrDefault(s => s.SeriesId == seriesId);
+            return show;
+        }
+
         public List<int> GetSeriesIdsNotInDatabase(List<int> seriesIdsToCheck) {
             var seriesIdsInDB = _context.Shows.Select(s => s.SeriesId);
             return seriesIdsToCheck.Except(seriesIdsInDB).ToList();
