@@ -140,14 +140,19 @@ namespace Renamer.Services {
         public void RenameFiles() {
             List<EpisodeForComparingDto> sourceEps = _localservice.GetFilesAsDtosToCompare();
             foreach (EpisodeForComparingDto epDto in sourceEps) {
-                Episode epEntity = _episodeService.FindByEpisodeForComparingDto(epDto);
-                EpisodeForComparingDto targetDto = CreateEpisodeForComparingDtoFromEntity(epEntity);
-                string localFile = Path.GetFileName(epDto.FilePath);
+                try {
+                    Episode epEntity = _episodeService.FindByEpisodeForComparingDto(epDto);
+                    EpisodeForComparingDto targetDto = CreateEpisodeForComparingDtoFromEntity(epEntity);
+                    string localFile = Path.GetFileName(epDto.FilePath);
 
-                Console.WriteLine($"Rename {localFile} to {targetDto.GetFormattedFilename()}?");
-                string userInput = Console.ReadLine().ToUpper();
-                if (userInput == "Y") {
-                    _localservice.RenameFile(epDto.FilePath, targetDto);
+                    Console.WriteLine($"Rename {localFile} to {targetDto.GetFormattedFilename()}?");
+                    string userInput = Console.ReadLine().ToUpper();
+                    if (userInput == "Y") {
+                        _localservice.RenameFile(epDto.FilePath, targetDto);
+                    }
+                }
+                catch (Exception e) {
+                    Log.Warning(e, "Could not rename file {a}", epDto.FilePath);
                 }
             }
         }
