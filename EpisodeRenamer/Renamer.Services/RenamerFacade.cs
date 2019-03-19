@@ -72,6 +72,7 @@ namespace Renamer.Services {
                         await FetchTVShowAndAddItToDatabase(seriesId, _tvdbInfo.Token);
                         await PopulateEpisodesFromSeriesId(seriesId);
                         // set 2-second timer here
+                        await Task.Delay(2000);
                     }
                 }
             }
@@ -88,7 +89,7 @@ namespace Renamer.Services {
             _showService.Add(newShow);
         } 
 
-        public async Task PopulateEpisodesFromExistingShows(int numberOfPagesFromEndToFetch = 2) {
+        public async Task PopulateEpisodesFromExistingShows(int numberOfPagesFromEndToFetch = 1) {
             var seriesIdsInDB = _context.Shows.Select(s => s.SeriesId);
             foreach (int seriesId in seriesIdsInDB) {
                 await PopulateEpisodesFromSeriesId(seriesId, numberOfPagesFromEndToFetch);
