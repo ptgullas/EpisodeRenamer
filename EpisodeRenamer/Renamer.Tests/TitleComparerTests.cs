@@ -183,6 +183,17 @@ namespace Renamer.Tests {
 
             Assert.Equal(expectedMessage.Substring(0,50), ex.Message.Substring(0,50));
         }
+        [Fact]
+        public void ExtractSeasonEpisodeFromFilenameAsEpisodeObject_ContainsEpisode00_ReturnsEpObject() {
+            TitleComparer comparer = new TitleComparer();
+            string fileName = @"doctor.who.2005.s12e00.resolution.720p.webrip.hevc.x265.rmteam.mkv";
+
+            int expectedSeason = 12;
+            int expectedEpisode = 0;
+            Assert.Equal(expectedSeason, comparer.ExtractSeasonEpisodeFromFilenameAsEpisodeObject(fileName).SeasonNumber);
+            Assert.Equal(expectedEpisode, comparer.ExtractSeasonEpisodeFromFilenameAsEpisodeObject(fileName).EpisodeNumberInSeason);
+
+        }
 
         [Fact]
         public void FilenameContainsSeasonEpisodeFormat_ContainsSeasonEpisode_ReturnsTrue() {
@@ -194,7 +205,7 @@ namespace Renamer.Tests {
         [Fact]
         public void FilenameContainsSeasonEpisodeFormat_ContainsEpisodeWithZero_ReturnsTrue() {
             TitleComparer comparer = new TitleComparer();
-            string fileName = @"the.chilling.adventures.of.sabrina.s02e00.720p.webrip.hevc.x265.rmteam.mkv";
+            string fileName = @"doctor.who.2005.s12.e00.resolution.720p.webrip.hevc.x265.rmteam.mkv";
             Assert.True(comparer.FilenameContainsSeasonEpisodeFormat(fileName));
         }
 

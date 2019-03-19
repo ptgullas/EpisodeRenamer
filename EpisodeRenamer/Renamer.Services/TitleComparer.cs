@@ -73,7 +73,7 @@ namespace Renamer.Services {
                 return ep;
             }
             else {
-                Log.Information("Filename does not contain episode number in s##e## format.", filename);
+                Log.Information("Filename {a} does not contain episode number in s##e## format.", filename);
                 return null;
             }
         }
