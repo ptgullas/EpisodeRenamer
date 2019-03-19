@@ -131,18 +131,18 @@ namespace Renamer.Services {
         public EpisodeForComparingDto CreateEpisodeForComparingDtoFromEntity(Episode ep) {
             TVShow show = _context.Shows
                 .FirstOrDefault(b => b.SeriesId == ep.SeriesId);
-            string seriesName;
+            string seriesName = GetSeriesTitleForRenaming(show);
+            EpisodeForComparingDto targetEpisodeDto = ep.ToEpisodeForComparingDto(seriesName);
+            return targetEpisodeDto;
+        }
 
+        private string GetSeriesTitleForRenaming(TVShow show) {
             if (show.SeriesNamePreferred == null) {
-                seriesName = show.SeriesName;
+                return show.SeriesName;
             }
             else {
-                seriesName = show.SeriesNamePreferred;
+                return show.SeriesNamePreferred;
             }
-            EpisodeForComparingDto targetEpisodeDto = ep.ToEpisodeForComparingDto();
-            targetEpisodeDto.SeriesName = seriesName.ReplaceInvalidChars();
-            targetEpisodeDto.EpisodeTitle = targetEpisodeDto.EpisodeTitle.ReplaceInvalidChars();
-            return targetEpisodeDto;
         }
 
         public void RenameFiles() {
