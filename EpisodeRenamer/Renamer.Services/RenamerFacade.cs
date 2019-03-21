@@ -123,6 +123,8 @@ namespace Renamer.Services {
                 Log.Error(e, "Error populating episodes for seriesId {a}", seriesId);
             }
         }
+
+
         private void AddEpisodesOnPageToDatabase(EpisodeOuterDto episodeOuter) {
             var episodeList = episodeOuter.episodes.ToList();
             foreach (EpisodeFromTVDBDto epDto in episodeList) {
@@ -132,10 +134,15 @@ namespace Renamer.Services {
                     if (epDto.IsRelativelyNew()) {
                         _episodeService.UpdateEpisodeIfLastUpdatedIsNewer(ep);
                     }
-                    _episodeService.Add(ep);
+                    if (ep.EpisodeName == null) {
+                        Log.Warning("Skipping episodeId {a} due to missing episode name", ep.TVDBEpisodeId);
+                    }
+                    else {
+                        _episodeService.Add(ep);
+                    }
                 }
                 catch (Exception e) {
-                    Log.Error(e.Message);
+                    Log.Error(e, "Error adding episode {a} to database", epDto.EpisodeName);
                 }
             }
         }
