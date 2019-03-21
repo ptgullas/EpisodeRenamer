@@ -14,12 +14,17 @@ namespace Renamer.Services {
             _context = context;
         }
 
-        public void CheckIfUpdateNeeded(Episode ep) {
-            if (_context.Episodes
-                .FirstOrDefault(b => b.TVDBEpisodeId == ep.TVDBEpisodeId)
-                .LastUpdated < ep.LastUpdated ) {
-                Log.Information("LastUpdated property outdated on Episode {a}: {b} ", ep.Id, ep.EpisodeName, ep);
+        public void UpdateEpisodeIfLastUpdatedIsNewer(Episode ep) {
+            Episode epFromDB = _context.Episodes
+                .FirstOrDefault(b => b.TVDBEpisodeId == ep.TVDBEpisodeId);
+            if (epFromDB.LastUpdated < ep.LastUpdated) {
+                Log.Information("LastUpdated property newer on Episode {a}: {b} ", epFromDB.Id, ep.EpisodeName);
+                ep.Id = epFromDB.Id;
+                _context.Entry(epFromDB).CurrentValues.SetValues(ep);
+                _context.SaveChanges();
+                Log.Information("Updated entry for {a}: {b}", epFromDB.Id, ep.EpisodeName);
             }
+            
         }
 
         public void Add(Episode ep) {

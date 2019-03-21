@@ -90,7 +90,7 @@ namespace Renamer.Services {
         } 
 
         public async Task PopulateEpisodesFromExistingShows(int numberOfPagesFromEndToFetch = 1) {
-            var seriesIdsInDB = _context.Shows.Select(s => s.SeriesId);
+            var seriesIdsInDB = _context.Shows.Select(s => s.SeriesId).Skip(1);
             foreach (int seriesId in seriesIdsInDB) {
                 await PopulateEpisodesFromSeriesId(seriesId, numberOfPagesFromEndToFetch);
                 await Task.Delay(2000);
@@ -101,6 +101,7 @@ namespace Renamer.Services {
             Log.Information($"Populating Episodes from seriesId {seriesId}");
             try {
                 var episodeOuter = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token);
+                // await Task.Delay(2000);
                 AddEpisodesOnPageToDatabase(episodeOuter); // always add the episodes on page 1
                 if (numberOfPagesFromEndToFetch > 0) {
                     int lastPage = episodeOuter.links.Last;
@@ -110,13 +111,16 @@ namespace Renamer.Services {
                     }
                     for (int i = lastPage; i > pageToEndOn; i--) {
                         Log.Information("Fetching episodes JSON from page {a}", i);
+                        // await Task.Delay(2000);
                         episodeOuter = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token, i);
-                        AddEpisodesOnPageToDatabase(episodeOuter);
+                        if (episodeOuter != null) {
+                            AddEpisodesOnPageToDatabase(episodeOuter);
+                        }
                     }
                 }
             }
             catch (Exception e) {
-                Log.Error(e.Message);
+                Log.Error(e, "Error populating episodes for seriesId {a}", seriesId);
             }
         }
         private void AddEpisodesOnPageToDatabase(EpisodeOuterDto episodeOuter) {
@@ -125,7 +129,7 @@ namespace Renamer.Services {
                 try {
                     Log.Information("Checking episode {a}: \"{b}\"...", epDto.EpisodeId, epDto.EpisodeName);
                     Episode ep = epDto.ToEpisode();
-                    _episodeService.CheckIfUpdateNeeded(ep);
+                    _episodeService.UpdateEpisodeIfLastUpdatedIsNewer(ep);
                     _episodeService.Add(ep);
                 }
                 catch (Exception e) {
