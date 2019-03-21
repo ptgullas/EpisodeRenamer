@@ -5,23 +5,49 @@ using System.Text;
 
 namespace Renamer.Services.Models {
     public static class EpisodeFromTVDBDtoExtensions {
-        public static Episode ToEpisode(this EpisodeFromTVDBDto ep) {
+        public static Episode ToEpisode(this EpisodeFromTVDBDto epDto) {
             return new Episode() {
-                TVDBEpisodeId = ep.EpisodeId,
-                SeriesId = ep.SeriesId,
-                Season = ep.Season,
-                AiredEpisodeNumber = ep.NumberInSeason,
-                EpisodeName = ep.EpisodeName,
-                LastUpdated = ep.GetLastUpdated(),
-                AiredSeasonId = ep.AiredSeasonId,
-                AbsoluteNumber = ep.AbsoluteNumber
+                TVDBEpisodeId = epDto.EpisodeId,
+                SeriesId = epDto.SeriesId,
+                Season = epDto.Season,
+                AiredEpisodeNumber = epDto.NumberInSeason,
+                EpisodeName = epDto.EpisodeName,
+                LastUpdated = epDto.GetLastUpdated(),
+                AiredSeasonId = epDto.AiredSeasonId,
+                AbsoluteNumber = epDto.AbsoluteNumber
             };
         }
 
-        public static DateTime GetLastUpdated(this EpisodeFromTVDBDto ep) {
+        public static DateTime GetLastUpdated(this EpisodeFromTVDBDto epDto) {
             DateTime baseDateForEpoch = new DateTime(1970, 1, 1);
-            DateTimeOffset offset = DateTimeOffset.FromUnixTimeSeconds(ep.LastUpdated).DateTime.ToLocalTime();
+            DateTimeOffset offset = DateTimeOffset.FromUnixTimeSeconds(epDto.LastUpdated).DateTime.ToLocalTime();
             return offset.LocalDateTime;
+        }
+
+        public static bool IsRelativelyNew(this EpisodeFromTVDBDto epDto) {
+            if ((epDto.FirstAired != null) && (!epDto.AiredOverOneYearAgo())) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        public static bool AiredOverOneYearAgo(this EpisodeFromTVDBDto epDto) {
+            if (epDto.FirstAired != null) {
+                if (epDto.FirstAired > DateTime.Now) {
+                    return false;
+                }
+                else if ((DateTime.Now - epDto.FirstAired)?.Days > 365) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return true; // return true if FirstAired is null
+            }
         }
     }
 }

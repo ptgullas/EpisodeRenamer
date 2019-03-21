@@ -36,6 +36,7 @@ namespace Renamer.Services.Models {
         public long LastUpdated { get; set; }
         public int? AiredSeasonId { get; set; }
         public int? AbsoluteNumber { get; set; }
+        public DateTime? FirstAired { get; set; }
 
     }
 }

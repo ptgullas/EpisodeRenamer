@@ -173,15 +173,16 @@ namespace Renamer.Tests {
 
         }
         [Fact]
-        public void ExtractSeasonEpisodeFromFilenameAsEpisodeObject_DoesNotContainSeasonEpisode_Throws() {
+        public void ExtractSeasonEpisodeFromFilenameAsEpisodeObject_DoesNotContainSeasonEpisode_ReturnsNull() {
             TitleComparer comparer = new TitleComparer();
             string fileName = @"the.chilling.adventures.of.sabrina.mkv";
             string expectedMessage = $"Filename does not contain episode number in s##e## format.\r\nParameter name:{fileName}";
 
             // Act & Assert
-            Exception ex = Assert.Throws<ArgumentException>(() => comparer.ExtractSeasonEpisodeFromFilenameAsEpisodeObject(fileName));
+            // Exception ex = Assert.Throws<ArgumentException>(() => comparer.ExtractSeasonEpisodeFromFilenameAsEpisodeObject(fileName));
+            // Assert.Equal(expectedMessage.Substring(0,50), ex.Message.Substring(0,50));
 
-            Assert.Equal(expectedMessage.Substring(0,50), ex.Message.Substring(0,50));
+            Assert.Null(comparer.ExtractSeasonEpisodeFromFilenameAsEpisodeObject(fileName));
         }
         [Fact]
         public void ExtractSeasonEpisodeFromFilenameAsEpisodeObject_ContainsEpisode00_ReturnsEpObject() {

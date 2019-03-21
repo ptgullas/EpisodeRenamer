@@ -2,6 +2,7 @@
 using Renamer.Services;
 using Renamer.Services.Models;
 using System.IO;
+using System;
 
 namespace Renamer.Tests {
     public class JsonConverterTests {
@@ -38,6 +39,7 @@ namespace Renamer.Tests {
             string expectedName = "Old Wounds";
             int expectedSeason = 1;
             int expectedEpisodeNum = 1;
+            DateTime expectedAirDate = new DateTime(2017, 9, 10);
 
             // Act
             EpisodeFromTVDBDto[] eps = converter.ConvertEpisodesToDto(json);
@@ -46,6 +48,7 @@ namespace Renamer.Tests {
             Assert.Equal(expectedName, ep.EpisodeName);
             Assert.Equal(expectedSeason, ep.Season);
             Assert.Equal(expectedEpisodeNum, ep.NumberInSeason);
+            Assert.Equal(expectedAirDate, ep.FirstAired);
         }
 
         [Fact]
