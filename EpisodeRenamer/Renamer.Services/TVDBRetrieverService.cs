@@ -120,7 +120,7 @@ namespace Renamer.Services {
         }
 
         public async Task<EpisodeOuterDto> FetchEpisodes(int seriesId, string token, int page = 1) {
-            Log.Information("Fetching Episodes from seriesId {a}", seriesId);
+            Log.Information("Fetching Episodes from seriesId {a}, page {b}", seriesId, page);
             EpisodeOuterDto episodesOuter = new EpisodeOuterDto();
             var client = _clientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -140,9 +140,7 @@ namespace Renamer.Services {
 
         public Uri GetEpisodesUri(int seriesId, int page = 1) {
             _uriBuilder.Path = $"series/{seriesId}/episodes";
-            if (page != 1) {
-                _uriBuilder.Query = $"page={page}";
-            }
+            _uriBuilder.Query = $"page={page}";
             return _uriBuilder.Uri;
         }
 
