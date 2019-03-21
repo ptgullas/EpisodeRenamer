@@ -205,7 +205,7 @@ namespace Renamer.Tests {
         [Fact]
         public void FilenameContainsSeasonEpisodeFormat_ContainsEpisodeWithZero_ReturnsTrue() {
             TitleComparer comparer = new TitleComparer();
-            string fileName = @"doctor.who.2005.s12.e00.resolution.720p.webrip.hevc.x265.rmteam.mkv";
+            string fileName = @"doctor.who.2005.s12e00.resolution.720p.webrip.hevc.x265.rmteam.mkv";
             Assert.True(comparer.FilenameContainsSeasonEpisodeFormat(fileName));
         }
 

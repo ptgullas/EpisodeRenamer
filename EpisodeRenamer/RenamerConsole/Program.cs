@@ -84,9 +84,12 @@ namespace RenamerConsole {
             Console.WriteLine("2. Populate Shows table from User Favorites");
             Console.WriteLine("3. Populate Episodes for all existing shows");
             Console.WriteLine("4. Populate Episodes for a specific show");
-            Console.WriteLine("5. Rename files!!");
+            Console.Write("5. ");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("RENAME FILES!!");
+            Console.ResetColor();
             Console.WriteLine("6. Add Preferred Name for a show");
-            Console.WriteLine("9. Exit if you dare");
+            Console.WriteLine("9. Exit, if you dare");
             var result = Console.ReadLine();
             if (result.IsNumeric()) {
                 return result.ToInt();
@@ -98,7 +101,7 @@ namespace RenamerConsole {
 
         static async Task ProcessUserInput(int selection, RenamerFacade facade) {
             if (selection == 1) {
-                facade.FetchTokenIfNeeded();
+                await facade.FetchTokenIfNeeded();
             }
             else if (selection == 2) {
                 await facade.PopulateShowsFromFavorites();

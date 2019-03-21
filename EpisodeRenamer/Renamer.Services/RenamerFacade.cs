@@ -36,7 +36,7 @@ namespace Renamer.Services {
             _tvdbInfo = TVDBInfo.ReadFromFile(_tvdbInfoFilePath);
         }
 
-        public async void FetchTokenIfNeeded() {
+        public async Task FetchTokenIfNeeded() {
             if (_tvdbInfo.TokenIsExpired) {
                 Log.Information("Token is expired. Fetching new one....");
                 string newToken = await _retrieverService.FetchNewToken(_tvdbInfo.ToAuthenticator());
@@ -93,6 +93,7 @@ namespace Renamer.Services {
             var seriesIdsInDB = _context.Shows.Select(s => s.SeriesId);
             foreach (int seriesId in seriesIdsInDB) {
                 await PopulateEpisodesFromSeriesId(seriesId, numberOfPagesFromEndToFetch);
+                await Task.Delay(2000);
             }
         }
 
@@ -122,8 +123,9 @@ namespace Renamer.Services {
             var episodeList = episodeOuter.episodes.ToList();
             foreach (EpisodeFromTVDBDto epDto in episodeList) {
                 try {
-                    Log.Information("Adding episode {a}: \"{b}\"", epDto.EpisodeId, epDto.EpisodeName);
+                    Log.Information("Checking episode {a}: \"{b}\"...", epDto.EpisodeId, epDto.EpisodeName);
                     Episode ep = epDto.ToEpisode();
+                    _episodeService.CheckIfUpdateNeeded(ep);
                     _episodeService.Add(ep);
                 }
                 catch (Exception e) {

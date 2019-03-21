@@ -14,6 +14,14 @@ namespace Renamer.Services {
             _context = context;
         }
 
+        public void CheckIfUpdateNeeded(Episode ep) {
+            if (_context.Episodes
+                .FirstOrDefault(b => b.TVDBEpisodeId == ep.TVDBEpisodeId)
+                .LastUpdated < ep.LastUpdated ) {
+                Log.Information("LastUpdated property outdated on Episode {a}: {b} ", ep.Id, ep.EpisodeName, ep);
+            }
+        }
+
         public void Add(Episode ep) {
             if (!_context.Episodes
                 .Any(b => b.TVDBEpisodeId == ep.TVDBEpisodeId)) {
