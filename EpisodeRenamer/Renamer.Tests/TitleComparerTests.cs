@@ -50,20 +50,6 @@ namespace Renamer.Tests {
         }
 
         [Fact]
-        public void GetFormattedFilename_Valid_ReturnTrue() {
-            EpisodeForComparingDto episodeObject = new EpisodeForComparingDto() {
-                SeriesName = "Doom Patrol",
-                SeasonNumber = 1,
-                EpisodeNumberInSeason = 2,
-                EpisodeTitle = "Donkey Patrol"
-            };
-            TitleComparer comparer = new TitleComparer();
-            string expected = "Doom Patrol - 1.02 - Donkey Patrol";
-
-            Assert.Equal(expected, comparer.GetFormattedFilename(episodeObject));
-        }
-
-        [Fact]
         public void GetSeriesNameInLowercaseAndPeriodsWithoutStartingArticle_ReturnsTrue() {
             TitleComparer comparer = new TitleComparer();
             EpisodeForComparingDto episodeObject = new EpisodeForComparingDto() {

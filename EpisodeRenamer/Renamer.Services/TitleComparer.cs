@@ -13,15 +13,6 @@ namespace Renamer.Services {
 
 
         /// <summary>
-        /// Returns episode information as string in "SeriesName - x.yy - EpisodeTitle" format
-        /// </summary>
-        /// <param name="ep"></param>
-        /// <returns></returns>
-        public string GetFormattedFilename(EpisodeForComparingDto ep) {
-            return ($"{ep.SeriesName} - {GetSeasonEpisodeInNumberFormat(ep)} - {ep.EpisodeTitle}");
-        }
-
-        /// <summary>
         /// Returns Season & Episode in ep as string in "x.yy" format
         /// </summary>
         /// <param name="ep"></param>

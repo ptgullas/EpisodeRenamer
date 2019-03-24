@@ -41,7 +41,7 @@ namespace Renamer.Services {
             try {
                 string extension = Path.GetExtension(filePath);
                 string sourceDirectory = Path.GetDirectoryName(filePath);
-                string newFilename = _titleComparer.GetFormattedFilename(ep);
+                string newFilename = ep.GetFormattedFilename();
                 string newPath = Path.Combine(sourceDirectory, $"{newFilename}{extension}");
                 File.Move(filePath, newPath);
                 Log.Information("Renamed {a} to {b}", Path.GetFileName(filePath), Path.GetFileName(newPath));
