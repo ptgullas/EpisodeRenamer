@@ -5,12 +5,15 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Serilog;
+using Renamer.Data.Entities;
 
 namespace RenamerConsole.Menus {
     public class MainMenu : IMenu {
         private RenamerFacade Facade;
-        public MainMenu(RenamerFacade inputFacade) {
+        private EpisodeContext Context;
+        public MainMenu(RenamerFacade inputFacade, EpisodeContext context) {
             Facade = inputFacade;
+            Context = context;
         }
 
         public async Task DisplayMenu() {
@@ -38,6 +41,7 @@ namespace RenamerConsole.Menus {
             Console.WriteLine("RENAME FILES!!");
             Console.ResetColor();
             Console.WriteLine("6. Add Preferred Name for a show");
+            Console.WriteLine("7. TV Show menu");
             Console.WriteLine("9. Exit, if you dare");
             var result = Console.ReadLine();
             if (result.IsNumeric()) {
@@ -84,6 +88,14 @@ namespace RenamerConsole.Menus {
             else if (selection == 6) {
                 PromptForPreferredName();
             }
+            else if (selection == 7) {
+                await CreateTVShowMenu();
+            }
+        }
+
+        private async Task CreateTVShowMenu() {
+            TVShowMenu tvShowMenu = new TVShowMenu(Context);
+            await tvShowMenu.DisplayMenu();
         }
 
         private void PromptForPreferredName() {

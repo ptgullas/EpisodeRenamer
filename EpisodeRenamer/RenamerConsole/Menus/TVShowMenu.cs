@@ -11,43 +11,47 @@ namespace RenamerConsole.Menus {
 
         private EpisodeContext Context;
 
-        public TVShowMenu() {
-            Context = new EpisodeContext();
+        public TVShowMenu(EpisodeContext context) {
+            Context = context;
         }
 
         public async Task DisplayMenu() {
+            TVShow[] showArray = GetShows();
             TVShow selectedShow = new TVShow() {
                 SeriesName = "TempShow"
             };
             do {
-                selectedShow = DisplayTVShowMenu();
+                selectedShow = DisplayTVShowMenu(showArray);
                 if (selectedShow != null) {
-
+                    DisplayIndividualShowMenu(selectedShow);
                 }
             } while (selectedShow != null);
             
         }
 
-        private TVShow DisplayTVShowMenu() {
-            TVShow[] showArray = GetShows();
+        private TVShow DisplayTVShowMenu(TVShow[] showArray) {
 
             int userSelection = -1;
             string userInput = "INITIAL";
             string exitCharUpper = "X";
+            int numberOfShows = showArray.Count();
             while (StringIsNotNumericOrExitChar(userInput, exitCharUpper)) {
                 Console.WriteLine("TV Show Menu");
-                for (int i = 0; i < showArray.Count(); i++) {
+                for (int i = 0; i < numberOfShows; i++) {
                     Console.WriteLine($"{ i }\t{ showArray[i].SeriesName }");
                 }
-                Console.WriteLine("Enter the number of the show (X to exit):");
+                Console.WriteLine($"Enter the number of the show ({exitCharUpper} to exit):");
                 userInput = Console.ReadLine();
                 if (userInput.IsNumeric()) {
                     userSelection = userInput.ToInt();
-                    if ((userSelection < 0) || (userSelection > showArray.Count())) {
+                    if ((userSelection < 0) || (userSelection >= numberOfShows)) {
                         Console.WriteLine("That's not a valid selection, dude");
                     }
+                    else {
+                        return showArray[userSelection];
+                    }
                 }
-                else if (userInput == exitCharUpper) {
+                else if (userInput.ToUpper() == exitCharUpper) {
                     return null;
                 }
             }
