@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Serilog;
+using RenamerConsole.Menus;
 
 namespace RenamerConsole {
     class Program {
@@ -51,7 +52,9 @@ namespace RenamerConsole {
             string tvdbInfoPath = GetTVDBInfoFilePath();
             RenamerFacade facade = new RenamerFacade(retrieverService, showService, epService, localService, context, tvdbInfoPath);
 
-            await DisplayMenuAndProcessUserInput(facade);
+            MainMenu mainMenu = new MainMenu(facade, context);
+            await mainMenu.DisplayMenu();
+            // await DisplayMenuAndProcessUserInput(facade);
             // SetUpAutomapper();
 
             // GetNewToken(httpClientFactory);
