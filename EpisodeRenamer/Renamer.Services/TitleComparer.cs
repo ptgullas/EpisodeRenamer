@@ -46,13 +46,17 @@ namespace Renamer.Services {
 
         public EpisodeForComparingDto CreateEpisodeObjectFromPath(string filePath) {
             EpisodeForComparingDto ep = CreateEpisodeObjectFromFilename(Path.GetFileName(filePath));
-            ep.FilePath = filePath;
+            if (ep != null) {
+                ep.FilePath = filePath;
+            }
             return ep;
         }
 
         public EpisodeForComparingDto CreateEpisodeObjectFromFilename(string filename) {
             EpisodeForComparingDto ep = ExtractSeasonEpisodeFromFilenameAsEpisodeObject(filename);
-            ep.SeriesName = ExtractSeriesNameFromFilename(filename).ReplacePeriodsWithSpaces();
+            if (ep != null) {
+                ep.SeriesName = ExtractSeriesNameFromFilename(filename).ReplacePeriodsWithSpaces();
+            }
             return ep;
         }
         public EpisodeForComparingDto ExtractSeasonEpisodeFromFilenameAsEpisodeObject(string filename) {
