@@ -24,7 +24,6 @@ namespace Renamer.Services {
                 _context.SaveChanges();
                 Log.Information("Updated entry for {a}: {b}", epFromDB.Id, ep.EpisodeName);
             }
-            
         }
 
         public void Add(Episode ep) {
@@ -57,6 +56,15 @@ namespace Renamer.Services {
             else {
                 return null;
             }
+        }
+
+        public List<Episode> GetAllEpisodesForShow(TVShow show)
+        {
+            return _context.Episodes
+                .Where(b => b.SeriesId == show.SeriesId)
+                .OrderBy(b => b.Season)
+                .ThenBy(b => b.AiredEpisodeNumber)
+                .ToList();
         }
 
 

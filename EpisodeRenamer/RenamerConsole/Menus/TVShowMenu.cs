@@ -10,9 +10,11 @@ namespace RenamerConsole.Menus {
     public class TVShowMenu : IMenu {
 
         private EpisodeContext Context;
+        private RenamerFacade Facade;
 
-        public TVShowMenu(EpisodeContext context) {
+        public TVShowMenu(EpisodeContext context, RenamerFacade facade) {
             Context = context;
+            Facade = facade;
         }
 
         public async Task DisplayMenu() {
@@ -23,10 +25,25 @@ namespace RenamerConsole.Menus {
             do {
                 selectedShow = DisplayTVShowMenu(showArray);
                 if (selectedShow != null) {
-                    DisplayIndividualShowMenu(selectedShow);
+                    await DisplayIndividualShowMenu(selectedShow);
                 }
             } while (selectedShow != null);
             
+        }
+
+        private string DisplayListOfShows(TVShow[] showArray, string exitCharUpper) {
+            int numberOfShows = showArray.Count();
+            Console.WriteLine("TV Show Menu");
+            for (int i = 0; i < numberOfShows; i++) {
+                Console.WriteLine($"{ i }\t{ showArray[i].SeriesName }");
+            }
+            Console.Write($"Enter the number of the show (");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write($"{ exitCharUpper} to exit");
+            Console.ResetColor();
+            Console.WriteLine("):");
+            string userInput = Console.ReadLine();
+            return userInput;
         }
 
         private TVShow DisplayTVShowMenu(TVShow[] showArray) {
@@ -36,26 +53,26 @@ namespace RenamerConsole.Menus {
             string exitCharUpper = "X";
             int numberOfShows = showArray.Count();
             while (StringIsNotNumericOrExitChar(userInput, exitCharUpper)) {
-                Console.WriteLine("TV Show Menu");
-                for (int i = 0; i < numberOfShows; i++) {
-                    Console.WriteLine($"{ i }\t{ showArray[i].SeriesName }");
-                }
-                Console.WriteLine($"Enter the number of the show ({exitCharUpper} to exit):");
-                userInput = Console.ReadLine();
+                userInput = DisplayListOfShows(showArray, exitCharUpper);
                 if (userInput.IsNumeric()) {
                     userSelection = userInput.ToInt();
-                    if ((userSelection < 0) || (userSelection >= numberOfShows)) {
-                        Console.WriteLine("That's not a valid selection, dude");
+                    if ((userSelection >= 0) || (userSelection < numberOfShows)) {
+                        return showArray[userSelection];
                     }
                     else {
-                        return showArray[userSelection];
+                        Console.WriteLine("That's not a valid selection, dude");
+                        continue;
+                        // at this point, we return to the while loop
                     }
                 }
                 else if (userInput.ToUpper() == exitCharUpper) {
                     return null;
                 }
             }
-            // if user selected "X", it exits the loop and 
+            // if user selected "X", it returns null
+            // if user selected a valid number, it returns the corresponding TV Show
+            // if invalid number or string that isn't "X", it stays in the loop
+            // so we should never actually hit this
             return showArray[userSelection];
         }
 
@@ -73,11 +90,9 @@ namespace RenamerConsole.Menus {
             }
         }
 
-        private async void DisplayIndividualShowMenu(TVShow selectedShow) {
-            Console.WriteLine($"Selected: {selectedShow.SeriesName} (SeriesId: {selectedShow.SeriesId}). Preferred Name: {selectedShow.SeriesNamePreferred}");
-            Console.WriteLine("1. Display all episodes in database");
-            Console.WriteLine("2. Display seasons in database");
-            Console.WriteLine("3. Check for new/updated episodes in TVDB");
+        private async Task DisplayIndividualShowMenu(TVShow selectedShow) {
+            IndividualShowMenu individualShowMenu = new IndividualShowMenu(Context, Facade, selectedShow);
+            await individualShowMenu.DisplayMenu();
         }
     }
 }

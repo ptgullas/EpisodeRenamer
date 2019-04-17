@@ -35,14 +35,15 @@ namespace RenamerConsole.Menus {
 
             Console.WriteLine("2. Populate Shows table from User Favorites");
             Console.WriteLine("3. Populate Episodes for all existing shows");
-            Console.WriteLine("4. Populate Episodes for a specific show");
+            Console.WriteLine("4. TV Show menu");
             Console.Write("5. ");
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("RENAME FILES!!");
             Console.ResetColor();
-            Console.WriteLine("6. Add Preferred Name for a show");
-            Console.WriteLine("7. TV Show menu");
-            Console.WriteLine("9. Exit, if you dare");
+            Console.Write("9. ");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("Exit, if you dare");
+            Console.ResetColor();
             var result = Console.ReadLine();
             if (result.IsNumeric()) {
                 return result.ToInt();
@@ -77,49 +78,23 @@ namespace RenamerConsole.Menus {
                 await Facade.PopulateEpisodesFromExistingShows();
             }
             else if (selection == 4) {
-                Console.WriteLine("Enter ID:");
-                int mySeriesId = Console.ReadLine().ToInt();
-                await Facade.PopulateEpisodesFromSeriesId(mySeriesId);
+                await CreateTVShowMenu();
             }
             else if (selection == 5) {
                 Console.WriteLine("OK we are getting down to business");
                 Facade.RenameFiles();
             }
-            else if (selection == 6) {
-                PromptForPreferredName();
-            }
-            else if (selection == 7) {
-                await CreateTVShowMenu();
+            else {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Not a valid choice, bro!");
+                Console.ResetColor();
             }
         }
 
         private async Task CreateTVShowMenu() {
-            TVShowMenu tvShowMenu = new TVShowMenu(Context);
+            TVShowMenu tvShowMenu = new TVShowMenu(Context, Facade);
             await tvShowMenu.DisplayMenu();
         }
-
-        private void PromptForPreferredName() {
-            Console.WriteLine("What's the seriesId of the show you want to add a preferred name for?");
-            string seriesIdInput = Console.ReadLine();
-            int seriesId = -1;
-            if (seriesIdInput != null) {
-                while (!seriesIdInput.IsNumeric()) {
-                    Console.WriteLine("That's not a number, fool!");
-                    seriesIdInput = Console.ReadLine();
-                }
-                seriesId = seriesIdInput.ToInt();
-                Log.Information($"PromptForPreferredName: User entered {seriesId}");
-                string showName = Facade.FindTVShowNameBySeriesId(seriesId);
-                Console.WriteLine($"What should be the preferred name of {showName}?");
-                string preferredName = Console.ReadLine();
-                if (preferredName != null) {
-                    Log.Information($"PromptForPreferredName: User entered {preferredName}");
-                    Facade.AddPreferredNameToTVShow(seriesId, preferredName);
-                }
-
-            }
-        }
-
 
     }
 }
