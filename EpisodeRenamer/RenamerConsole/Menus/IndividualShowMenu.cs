@@ -75,10 +75,14 @@ namespace RenamerConsole.Menus {
             List<Episode> episodes = GetEpisodesForShow(Show);
             if (episodes != null) {
                 foreach (Episode ep in episodes) {
-                    int epNumber = (int)ep.AiredEpisodeNumber;
-                    Console.WriteLine($"{ep.Season}.{epNumber.ToString("D2")} - {ep.EpisodeName}");
+                    PrintEpisodeInfo(ep);
                 }
             }
+        }
+
+        private static void PrintEpisodeInfo(Episode ep) {
+            int epNumber = (int)ep.AiredEpisodeNumber;
+            Console.WriteLine($"{ep.Season}.{epNumber.ToString("D2")} - {ep.EpisodeName}");
         }
 
         private List<Episode> GetEpisodesForShow(TVShow show) {
