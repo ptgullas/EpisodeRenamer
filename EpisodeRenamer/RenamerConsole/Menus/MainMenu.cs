@@ -84,6 +84,9 @@ namespace RenamerConsole.Menus {
                 Console.WriteLine("OK we are getting down to business");
                 Facade.RenameFiles();
             }
+            else if (selection == 9) {
+                return;
+            }
             else {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Not a valid choice, bro!");
