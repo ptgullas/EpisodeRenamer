@@ -65,7 +65,6 @@ namespace RenamerConsole.Menus {
             }
         }
 
-
         private void DisplayTokenStatus(bool IsValid) {
             Console.BackgroundColor = ConsoleColor.Black;
             if (IsValid) {
