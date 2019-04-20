@@ -35,7 +35,8 @@ namespace RenamerConsole.Menus {
             int numberOfShows = showArray.Count();
             Console.WriteLine("TV Show Menu");
             for (int i = 0; i < numberOfShows; i++) {
-                Console.WriteLine($"{ i }\t{ showArray[i].SeriesName }");
+                MenuHelpers.PrintMenuNumber(i);
+                Console.WriteLine($"{ showArray[i].SeriesName }");
             }
             Console.Write($"Enter the number of the show (");
             Console.ForegroundColor = ConsoleColor.DarkYellow;

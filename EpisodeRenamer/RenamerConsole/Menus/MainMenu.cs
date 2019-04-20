@@ -28,19 +28,31 @@ namespace RenamerConsole.Menus {
         private int DisplayMainMenu(TVDBInfo tvdbInfo) {
             bool tokenIsValid = !tvdbInfo.TokenIsExpired;
             tvdbInfo.PrintExpiration();
+            Console.BackgroundColor = ConsoleColor.DarkMagenta;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Episode Renamer!");
+            Console.ResetColor();
             Console.WriteLine();
-            Console.Write("1. Get or refresh token:  ");
+
+            MenuHelpers.PrintMenuNumber(1);
+            Console.Write("Get or refresh token  ");
             DisplayTokenStatus(tokenIsValid);
 
-            Console.WriteLine("2. Populate Shows table from User Favorites");
-            Console.WriteLine("3. Populate Episodes for all existing shows");
-            Console.WriteLine("4. TV Show menu");
-            Console.Write("5. ");
+            MenuHelpers.PrintMenuNumber(2);
+            Console.WriteLine("Populate Shows table from User Favorites");
+
+            MenuHelpers.PrintMenuNumber(3);
+            Console.WriteLine("Populate Episodes for all existing shows");
+
+            MenuHelpers.PrintMenuNumber(4);
+            Console.WriteLine("TV Show menu");
+
+            MenuHelpers.PrintMenuNumber(5);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("RENAME FILES!!");
             Console.ResetColor();
-            Console.Write("9. ");
+
+            MenuHelpers.PrintMenuNumber(9);
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Exit, if you dare");
             Console.ResetColor();
@@ -52,6 +64,7 @@ namespace RenamerConsole.Menus {
                 return 0;
             }
         }
+
 
         private void DisplayTokenStatus(bool IsValid) {
             Console.BackgroundColor = ConsoleColor.Black;

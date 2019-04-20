@@ -28,10 +28,13 @@ namespace RenamerConsole.Menus {
 
         private int DisplayIndividualShowMenu(TVShow selectedShow) {
             Console.WriteLine($"Selected: {selectedShow.SeriesName} (SeriesId: {selectedShow.SeriesId}). Preferred Name: {selectedShow.SeriesNamePreferred}");
-            Console.WriteLine("1. Display all episodes in database");
-            Console.WriteLine("2. Check for new/updated episodes in TVDB");
-            Console.WriteLine("3. Add/Change Preferred Name");
-            Console.Write("9. ");
+            MenuHelpers.PrintMenuNumber(1);
+            Console.WriteLine("Display all episodes in database");
+            MenuHelpers.PrintMenuNumber(2);
+            Console.WriteLine("Check for new/updated episodes in TVDB");
+            MenuHelpers.PrintMenuNumber(3);
+            Console.WriteLine("Add/Change Preferred Name");
+            MenuHelpers.PrintMenuNumber(9);
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Exit!!");
             Console.ResetColor();
