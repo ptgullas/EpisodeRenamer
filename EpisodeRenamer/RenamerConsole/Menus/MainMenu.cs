@@ -48,7 +48,7 @@ namespace RenamerConsole.Menus {
             Console.WriteLine("TV Show menu");
 
             MenuHelpers.PrintMenuNumber(5);
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("RENAME FILES!!");
             Console.ResetColor();
 
