@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <ApplicationIcon>icons8_retro_tv_96_K8g_icon.ico</ApplicationIcon>
+    <ApplicationIcon>icons8_retro_tv_48_AGJ_icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
