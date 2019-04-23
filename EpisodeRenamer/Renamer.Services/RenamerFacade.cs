@@ -191,10 +191,9 @@ namespace Renamer.Services {
                     if (epEntity != null) {
                         EpisodeForComparingDto targetDto = CreateEpisodeForComparingDtoFromEntity(epEntity);
                         string localFile = Path.GetFileName(epDto.FilePath);
-
-                        Console.WriteLine($"Rename {localFile} to {targetDto.GetFormattedFilename()}?");
-                        string userInput = Console.ReadLine().ToUpper();
-                        if (userInput == "Y") {
+                        string targetName = targetDto.GetFormattedFilename();
+                        bool shouldRename = PromptForRename(localFile, targetName);
+                        if (shouldRename) {
                             _localservice.RenameFile(epDto.FilePath, targetDto);
                         }
                     }
@@ -205,6 +204,34 @@ namespace Renamer.Services {
             }
         }
 
+        private static bool PromptForRename(string localFile, string targetName) {
+            Console.Write($"Rename ");
+            WriteColor($"{localFile} ", ConsoleColor.White);
+            Console.Write("to ");
+            WriteColor($"{targetName}", ConsoleColor.Yellow);
+            Console.WriteLine("?");
+            string userInput = Console.ReadLine().ToUpper();
+            if (userInput == "Y") {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        public static void WriteColor(string str, ConsoleColor fontColor = ConsoleColor.Magenta, ConsoleColor backColor = ConsoleColor.Black) {
+            Console.ForegroundColor = fontColor;
+            Console.BackgroundColor = backColor;
+            Console.Write(str);
+            Console.ResetColor();
+        }
+
+        public static void WriteLineColor(string str, ConsoleColor fontColor = ConsoleColor.Magenta, ConsoleColor backColor = ConsoleColor.Black) {
+            Console.ForegroundColor = fontColor;
+            Console.BackgroundColor = backColor;
+            Console.WriteLine(str);
+            Console.ResetColor();
+        }
     }
 
 }
