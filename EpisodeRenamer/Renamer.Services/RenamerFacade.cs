@@ -8,6 +8,7 @@ using Serilog;
 using System.Linq;
 using System.IO;
 
+
 namespace Renamer.Services {
     public class RenamerFacade {
         private TVDBRetrieverService _retrieverService;
@@ -16,8 +17,9 @@ namespace Renamer.Services {
         private LocalMediaService _localservice;
         private EpisodeContext _context;
         private string _tvdbInfoFilePath;
+        private IRenamePrompter _prompter;
 
-        private static System.Timers.Timer myTimer;
+        // private static System.Timers.Timer myTimer;
 
         public TVDBInfo _tvdbInfo;
         public RenamerFacade(TVDBRetrieverService retrieverService,
@@ -25,6 +27,7 @@ namespace Renamer.Services {
             EpisodeService episodeService,
             LocalMediaService localService,
             EpisodeContext context,
+            IRenamePrompter prompter,
             string tvdbPath) {
             _retrieverService = retrieverService;
             _showService = showService;
@@ -32,7 +35,7 @@ namespace Renamer.Services {
             _localservice = localService;
             _context = context;
             _tvdbInfoFilePath = tvdbPath;
-
+            _prompter = prompter;
             _tvdbInfo = TVDBInfo.ReadFromFile(_tvdbInfoFilePath);
         }
 
@@ -192,7 +195,7 @@ namespace Renamer.Services {
                         EpisodeForComparingDto targetDto = CreateEpisodeForComparingDtoFromEntity(epEntity);
                         string localFile = Path.GetFileName(epDto.FilePath);
                         string targetName = targetDto.GetFormattedFilename();
-                        bool shouldRename = PromptForRename(localFile, targetName);
+                        bool shouldRename = _prompter.PromptForRename(localFile, targetName);
                         if (shouldRename) {
                             _localservice.RenameFile(epDto.FilePath, targetDto);
                         }
@@ -202,35 +205,6 @@ namespace Renamer.Services {
                     Log.Warning(e, "Could not rename file {a}", epDto.FilePath);
                 }
             }
-        }
-
-        private static bool PromptForRename(string localFile, string targetName) {
-            Console.Write($"Rename ");
-            WriteColor($"{localFile} ", ConsoleColor.White);
-            Console.Write("to ");
-            WriteColor($"{targetName}", ConsoleColor.Yellow);
-            Console.WriteLine("?");
-            string userInput = Console.ReadLine().ToUpper();
-            if (userInput == "Y") {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-
-        public static void WriteColor(string str, ConsoleColor fontColor = ConsoleColor.Magenta, ConsoleColor backColor = ConsoleColor.Black) {
-            Console.ForegroundColor = fontColor;
-            Console.BackgroundColor = backColor;
-            Console.Write(str);
-            Console.ResetColor();
-        }
-
-        public static void WriteLineColor(string str, ConsoleColor fontColor = ConsoleColor.Magenta, ConsoleColor backColor = ConsoleColor.Black) {
-            Console.ForegroundColor = fontColor;
-            Console.BackgroundColor = backColor;
-            Console.WriteLine(str);
-            Console.ResetColor();
         }
     }
 

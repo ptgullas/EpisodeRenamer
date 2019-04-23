@@ -50,7 +50,8 @@ namespace RenamerConsole {
             EpisodeService epService = new EpisodeService(context);
             LocalMediaService localService = new LocalMediaService(Configuration.GetSection("LocalMedia").GetValue<string>("directoryPath"));
             string tvdbInfoPath = GetTVDBInfoFilePath();
-            RenamerFacade facade = new RenamerFacade(retrieverService, showService, epService, localService, context, tvdbInfoPath);
+            RenamePrompterConsole prompterConsole = new RenamePrompterConsole();
+            RenamerFacade facade = new RenamerFacade(retrieverService, showService, epService, localService, context, prompterConsole, tvdbInfoPath);
 
             MainMenu mainMenu = new MainMenu(facade, context);
             await mainMenu.DisplayMenu();
