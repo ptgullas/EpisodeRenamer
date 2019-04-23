@@ -35,9 +35,7 @@ namespace RenamerConsole.Menus {
             MenuHelpers.PrintMenuNumber(3);
             Console.WriteLine("Add/Change Preferred Name");
             MenuHelpers.PrintMenuNumber(9);
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("Exit!!");
-            Console.ResetColor();
+            MenuHelpers.WriteLineColor("Exit!!", ConsoleColor.DarkYellow);
             Console.WriteLine($"Enter your selection:");
             string userInput = Console.ReadLine();
             if (userInput.IsNumeric()) {

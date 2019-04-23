@@ -39,9 +39,7 @@ namespace RenamerConsole.Menus {
                 Console.WriteLine($"{ showArray[i].SeriesName }");
             }
             Console.Write($"Enter the number of the show (");
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.Write($"{ exitCharUpper} to exit");
-            Console.ResetColor();
+            MenuHelpers.WriteColor($"{ exitCharUpper} to exit", ConsoleColor.DarkYellow);
             Console.WriteLine("):");
             string userInput = Console.ReadLine();
             return userInput;

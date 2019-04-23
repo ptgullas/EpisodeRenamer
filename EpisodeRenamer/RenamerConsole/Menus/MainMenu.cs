@@ -28,10 +28,7 @@ namespace RenamerConsole.Menus {
         private int DisplayMainMenu(TVDBInfo tvdbInfo) {
             bool tokenIsValid = !tvdbInfo.TokenIsExpired;
             tvdbInfo.PrintExpiration();
-            Console.BackgroundColor = ConsoleColor.DarkMagenta;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Episode Renamer!");
-            Console.ResetColor();
+            MenuHelpers.WriteLineColor("Episode Renamer!", ConsoleColor.Yellow, ConsoleColor.DarkMagenta);
             Console.WriteLine();
 
             MenuHelpers.PrintMenuNumber(1);
@@ -48,14 +45,10 @@ namespace RenamerConsole.Menus {
             Console.WriteLine("TV Show menu");
 
             MenuHelpers.PrintMenuNumber(5);
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("RENAME FILES!!");
-            Console.ResetColor();
+            MenuHelpers.WriteLineColor("RENAME FILES!!", ConsoleColor.Cyan);
 
             MenuHelpers.PrintMenuNumber(9);
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("Exit, if you dare");
-            Console.ResetColor();
+            MenuHelpers.WriteLineColor("Exit, if you dare", ConsoleColor.DarkYellow);
             var result = Console.ReadLine();
             if (result.IsNumeric()) {
                 return result.ToInt();
@@ -66,16 +59,12 @@ namespace RenamerConsole.Menus {
         }
 
         private void DisplayTokenStatus(bool IsValid) {
-            Console.BackgroundColor = ConsoleColor.Black;
             if (IsValid) {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("(Token is Valid!)");
+                MenuHelpers.WriteLineColor("(Token is Valid!)", ConsoleColor.Green);
             }
             else {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("(Token Expired!)");
+                MenuHelpers.WriteLineColor("(Token Expired!)", ConsoleColor.Red);
             }
-            Console.ResetColor();
         }
 
 
@@ -100,9 +89,7 @@ namespace RenamerConsole.Menus {
                 return;
             }
             else {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Not a valid choice, bro!");
-                Console.ResetColor();
+                MenuHelpers.WriteLineColor("Not a valid choice, bro!", ConsoleColor.Red);
             }
         }
 
