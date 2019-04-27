@@ -5,6 +5,7 @@ using Renamer.Data.Entities;
 using Renamer.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Serilog;
 
 namespace Renamer.Services {
     public class TVShowService {
@@ -31,6 +32,20 @@ namespace Renamer.Services {
             if (show != null) {
                 show.SeriesNamePreferred = preferredName;
                 _context.SaveChanges();
+            }
+        }
+
+        public void ToggleShowActiveStatus(int seriesId) {
+            TVShow show = _context.Shows.FirstOrDefault(b => b.SeriesId == seriesId);
+            try {
+                if (show != null) {
+                    show.IsActive = !show.IsActive;
+                    Log.Information("Set {showName} IsActive status to {activeStatus}", show.SeriesName, show.IsActive);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception e) {
+                Log.Error(e, "Error toggling IsActive status for {showName}", show.SeriesName);
             }
         }
 

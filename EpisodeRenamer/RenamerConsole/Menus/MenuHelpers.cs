@@ -24,6 +24,22 @@ namespace RenamerConsole.Menus {
             Console.ResetColor();
         }
 
+        public static void DisplayShowActiveStatus(bool isActive) {
+            if (isActive) {
+                MenuHelpers.WriteLineColor("(Active)", ConsoleColor.Green);
+            }
+            else {
+                MenuHelpers.WriteLineColor("(Inactive)", ConsoleColor.DarkGray);
+            }
+        }
+
+        public static void DisplayShowName(string seriesName, bool isActive) {
+            var showColor = ConsoleColor.Yellow;
+            if (!isActive) { showColor = ConsoleColor.DarkYellow; }
+            WriteColor($"{seriesName} ", showColor);
+
+        }
+
 
     }
 }

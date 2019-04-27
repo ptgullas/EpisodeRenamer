@@ -11,29 +11,33 @@ namespace RenamerConsole.Menus {
 
         private EpisodeContext Context;
         private RenamerFacade Facade;
+        private TVShowService ShowService;
         private TVShow Show;
-        public IndividualShowMenu(EpisodeContext context, RenamerFacade facade, TVShow show)
+        public IndividualShowMenu(EpisodeContext context, RenamerFacade facade, TVShowService showService, TVShow show)
         {
             Context = context;
             Facade = facade;
+            ShowService = showService;
             Show = show;
         }
         public async Task DisplayMenu() {
             int userInput = 0;
             while (userInput != 9) {
-                userInput = DisplayIndividualShowMenu(Show);
+                userInput = DisplayIndividualShowMenu();
                 await ProcessUserSelection(userInput);
             }
         }
 
-        private int DisplayIndividualShowMenu(TVShow selectedShow) {
-            Console.WriteLine($"Selected: {selectedShow.SeriesName} (SeriesId: {selectedShow.SeriesId}). Preferred Name: {selectedShow.SeriesNamePreferred}");
+        private int DisplayIndividualShowMenu() {
+            DisplayShowBanner();
             MenuHelpers.PrintMenuNumber(1);
             Console.WriteLine("Display all episodes in database");
             MenuHelpers.PrintMenuNumber(2);
             Console.WriteLine("Check for new/updated episodes in TVDB");
             MenuHelpers.PrintMenuNumber(3);
             Console.WriteLine("Add/Change Preferred Name");
+            MenuHelpers.PrintMenuNumber(4);
+            Console.WriteLine($"Toggle Active Status");
             MenuHelpers.PrintMenuNumber(9);
             MenuHelpers.WriteLineColor("Exit!!", ConsoleColor.DarkYellow);
             Console.WriteLine($"Enter your selection:");
@@ -46,6 +50,16 @@ namespace RenamerConsole.Menus {
             }
         }
 
+        private void DisplayShowBanner() {
+            MenuHelpers.DisplayShowName(Show.SeriesName, Show.IsActive);
+            MenuHelpers.DisplayShowActiveStatus(Show.IsActive);
+            Console.Write($"(SeriesId: ");
+            MenuHelpers.WriteColor($"{Show.SeriesId}", ConsoleColor.White);
+            Console.Write("). Preferred Name: ");
+            MenuHelpers.WriteLineColor($"{Show.SeriesNamePreferred}", ConsoleColor.Yellow);
+
+        }
+
         private async Task ProcessUserSelection(int selection) {
             if (selection == 1) {
                 DisplayEpisodesInDatabase();
@@ -55,6 +69,9 @@ namespace RenamerConsole.Menus {
             }
             else if (selection == 3) {
                 PromptForPreferredName();
+            }
+            else if (selection == 4) {
+                ToggleActiveStatus();
             }
             else if (selection == 9) {
                 return;
@@ -70,6 +87,11 @@ namespace RenamerConsole.Menus {
             if (preferredName != "") {
                 Facade.AddPreferredNameToTVShow(Show.SeriesId, preferredName);
             }
+        }
+
+        private void ToggleActiveStatus() {
+            ShowService.ToggleShowActiveStatus(Show.SeriesId);
+            Show = ShowService.FindBySeriesId(Show.SeriesId);
         }
 
         private void DisplayEpisodesInDatabase() {

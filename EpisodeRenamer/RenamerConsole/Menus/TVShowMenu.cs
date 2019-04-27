@@ -11,10 +11,12 @@ namespace RenamerConsole.Menus {
 
         private EpisodeContext Context;
         private RenamerFacade Facade;
+        private TVShowService ShowService;
 
-        public TVShowMenu(EpisodeContext context, RenamerFacade facade) {
+        public TVShowMenu(EpisodeContext context, RenamerFacade facade, TVShowService showService) {
             Context = context;
             Facade = facade;
+            ShowService = showService;
         }
 
         public async Task DisplayMenu() {
@@ -36,14 +38,21 @@ namespace RenamerConsole.Menus {
             Console.WriteLine("TV Show Menu");
             for (int i = 0; i < numberOfShows; i++) {
                 MenuHelpers.PrintMenuNumber(i);
-                Console.WriteLine($"{ showArray[i].SeriesName }");
+                MenuHelpers.DisplayShowName(showArray[i].SeriesName, showArray[i].IsActive);
+                MenuHelpers.DisplayShowActiveStatus(showArray[i].IsActive);
             }
             Console.Write($"Enter the number of the show (");
-            MenuHelpers.WriteColor($"{ exitCharUpper} to exit", ConsoleColor.DarkYellow);
+            MenuHelpers.WriteColor($"{ exitCharUpper} to exit", ConsoleColor.DarkCyan);
             Console.WriteLine("):");
             string userInput = Console.ReadLine();
             return userInput;
         }
+
+        private void DisplayShowName(TVShow show) {
+            var displayColor = ConsoleColor.White;
+            MenuHelpers.WriteColor($"{show.SeriesName} ", displayColor);
+        }
+
 
         private TVShow DisplayTVShowMenu(TVShow[] showArray) {
 
@@ -90,7 +99,7 @@ namespace RenamerConsole.Menus {
         }
 
         private async Task DisplayIndividualShowMenu(TVShow selectedShow) {
-            IndividualShowMenu individualShowMenu = new IndividualShowMenu(Context, Facade, selectedShow);
+            IndividualShowMenu individualShowMenu = new IndividualShowMenu(Context, Facade, ShowService, selectedShow);
             await individualShowMenu.DisplayMenu();
         }
     }
