@@ -68,74 +68,7 @@ namespace RenamerConsole {
             //AddSampleShow(context);
         }
 
-        static public async Task DisplayMenuAndProcessUserInput(RenamerFacade facade) {
-            TVDBInfo tvdbInfo = facade._tvdbInfo;
-            int userInput = 0;
-            while (userInput != 9) {
-                userInput = DisplayMenu(tvdbInfo);
-                await ProcessUserInput(userInput, facade);
-            }
-        }
 
-        static public int DisplayMenu(TVDBInfo tvdbInfo) {
-            bool tokenIsValid = !tvdbInfo.TokenIsExpired;
-            tvdbInfo.PrintExpiration();
-            Console.WriteLine("Episode Renamer!");
-            Console.WriteLine();
-            Console.Write("1. Get or refresh token:  ");
-            DisplayTokenStatus(tokenIsValid);
-
-            Console.WriteLine("2. Populate Shows table from User Favorites");
-            Console.WriteLine("3. Populate Episodes for all existing shows");
-            Console.WriteLine("4. Populate Episodes for a specific show");
-            Console.Write("5. ");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("RENAME FILES!!");
-            Console.ResetColor();
-            Console.WriteLine("6. Add Preferred Name for a show");
-            Console.WriteLine("9. Exit, if you dare");
-            var result = Console.ReadLine();
-            if (result.IsNumeric()) {
-                return result.ToInt();
-            }
-            else {
-                return 0;
-            }
-        }
-
-        static async Task ProcessUserInput(int selection, RenamerFacade facade) {
-            if (selection == 1) {
-                await facade.FetchTokenIfNeeded();
-            }
-            else if (selection == 2) {
-                await facade.PopulateShowsFromFavorites();
-            }
-            else if (selection == 3) {
-                await facade.PopulateEpisodesFromExistingShows();
-            }
-            else if (selection == 4) {
-                Console.WriteLine("Enter ID:");
-                int mySeriesId = Console.ReadLine().ToInt();
-                await facade.PopulateEpisodesFromSeriesId(mySeriesId);
-            }
-            else if (selection == 5) {
-                Console.WriteLine("OK we are getting down to business");
-                facade.RenameFiles();
-            }
-        }
-
-        static public void DisplayTokenStatus(bool IsValid) {
-            Console.BackgroundColor = ConsoleColor.Black;
-            if (IsValid) {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("(Token is Valid!)");
-            }
-            else {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("(Token Expired!)");
-            }
-                Console.ResetColor();
-        }
 
 
             static void PauseForInput() {
