@@ -42,7 +42,7 @@ namespace RenamerConsole.Menus {
                 MenuHelpers.DisplayShowActiveStatus(showArray[i].IsActive);
             }
             Console.Write($"Enter the number of the show (");
-            MenuHelpers.WriteColor($"{ exitCharUpper} to exit", ConsoleColor.DarkCyan);
+            MenuHelpers.WriteColor($"{ exitCharUpper} to return to Main Menu", ConsoleColor.DarkCyan);
             Console.WriteLine("):");
             string userInput = Console.ReadLine();
             return userInput;
