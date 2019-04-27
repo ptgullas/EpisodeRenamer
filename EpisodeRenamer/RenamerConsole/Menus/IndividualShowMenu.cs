@@ -39,7 +39,7 @@ namespace RenamerConsole.Menus {
             MenuHelpers.PrintMenuNumber(4);
             Console.WriteLine($"Toggle Active Status");
             MenuHelpers.PrintMenuNumber(9);
-            MenuHelpers.WriteLineColor("Exit!!", ConsoleColor.DarkYellow);
+            MenuHelpers.WriteLineColor("Exit!!", ConsoleColor.DarkCyan);
             Console.WriteLine($"Enter your selection:");
             string userInput = Console.ReadLine();
             if (userInput.IsNumeric()) {

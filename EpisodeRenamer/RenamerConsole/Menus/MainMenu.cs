@@ -47,10 +47,10 @@ namespace RenamerConsole.Menus {
             Console.WriteLine("TV Show menu");
 
             MenuHelpers.PrintMenuNumber(5);
-            MenuHelpers.WriteLineColor("RENAME FILES!!", ConsoleColor.Cyan);
+            MenuHelpers.WriteLineColor("RENAME FILES!!", ConsoleColor.Yellow);
 
             MenuHelpers.PrintMenuNumber(9);
-            MenuHelpers.WriteLineColor("Exit, if you dare", ConsoleColor.DarkYellow);
+            MenuHelpers.WriteLineColor("Exit, if you dare", ConsoleColor.DarkCyan);
             var result = Console.ReadLine();
             if (result.IsNumeric()) {
                 return result.ToInt();
