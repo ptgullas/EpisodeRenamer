@@ -93,7 +93,17 @@ namespace Renamer.Services {
         } 
 
         public async Task PopulateEpisodesFromExistingShows(int numberOfPagesFromEndToFetch = 1) {
-            var seriesIdsInDB = _context.Shows.Select(s => s.SeriesId).Skip(1);
+            var seriesIdsInDB = _context.Shows.Select(s => s.SeriesId);
+            foreach (int seriesId in seriesIdsInDB) {
+                await PopulateEpisodesFromSeriesId(seriesId, numberOfPagesFromEndToFetch);
+                await Task.Delay(2000);
+            }
+        }
+
+        public async Task PopulateEpisodesFromExistingActiveShows(int numberOfPagesFromEndToFetch = 1) {
+            var seriesIdsInDB = _context.Shows
+                .Where(s => s.IsActive)
+                .Select(s => s.SeriesId);
             foreach (int seriesId in seriesIdsInDB) {
                 await PopulateEpisodesFromSeriesId(seriesId, numberOfPagesFromEndToFetch);
                 await Task.Delay(2000);

@@ -41,7 +41,7 @@ namespace RenamerConsole.Menus {
             Console.WriteLine("Populate Shows table from User Favorites");
 
             MenuHelpers.PrintMenuNumber(3);
-            Console.WriteLine("Populate Episodes for all existing shows");
+            Console.WriteLine("Populate Episodes for existing Active shows");
 
             MenuHelpers.PrintMenuNumber(4);
             Console.WriteLine("TV Show menu");
@@ -78,7 +78,7 @@ namespace RenamerConsole.Menus {
                 await Facade.PopulateShowsFromFavorites();
             }
             else if (selection == 3) {
-                await Facade.PopulateEpisodesFromExistingShows();
+                await Facade.PopulateEpisodesFromExistingActiveShows();
             }
             else if (selection == 4) {
                 await CreateTVShowMenu();
