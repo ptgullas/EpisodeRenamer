@@ -27,11 +27,16 @@ namespace Renamer.Services {
         }
 
         public void AddPreferredName(int seriesId, string preferredName) {
-
-            TVShow show = _context.Shows.FirstOrDefault(b => b.SeriesId == seriesId);
-            if (show != null) {
-                show.SeriesNamePreferred = preferredName;
-                _context.SaveChanges();
+            Log.Information($"Adding preferred name {preferredName} to seriesId {seriesId}");
+            try {
+                TVShow show = _context.Shows.FirstOrDefault(b => b.SeriesId == seriesId);
+                if (show != null) {
+                    show.SeriesNamePreferred = preferredName;
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception e) {
+                Log.Error(e, "Trouble adding preferred name {a} to {b}", preferredName, seriesId);
             }
         }
 

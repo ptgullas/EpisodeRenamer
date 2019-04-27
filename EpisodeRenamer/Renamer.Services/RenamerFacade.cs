@@ -159,16 +159,6 @@ namespace Renamer.Services {
             return title;
         }
 
-        public void AddPreferredNameToTVShow(int seriesId, string preferredName) {
-            Log.Information($"Adding preferred name {preferredName} to seriesId {seriesId}");
-            try {
-                _showService.AddPreferredName(seriesId, preferredName);
-            }
-            catch (Exception e) {
-                Log.Error(e, "Trouble adding preferred name {a} to {b}", preferredName, seriesId);
-            }
-        }
-
         public EpisodeForComparingDto CreateEpisodeForComparingDtoFromEntity(Episode ep) {
             TVShow show = _context.Shows
                 .FirstOrDefault(b => b.SeriesId == ep.SeriesId);

@@ -85,7 +85,7 @@ namespace RenamerConsole.Menus {
             Console.WriteLine($"Enter your Preferred Name for {Show.SeriesName} (Blank to skip)");
             string preferredName = Console.ReadLine();
             if (preferredName != "") {
-                Facade.AddPreferredNameToTVShow(Show.SeriesId, preferredName);
+                ShowService.AddPreferredName(Show.SeriesId, preferredName);
             }
         }
 
