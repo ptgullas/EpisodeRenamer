@@ -122,9 +122,6 @@ namespace RenamerConsole {
                 Console.WriteLine("OK we are getting down to business");
                 facade.RenameFiles();
             }
-            else if (selection == 6) {
-                PromptForPreferredName(facade);
-            }
         }
 
         static public void DisplayTokenStatus(bool IsValid) {
@@ -140,27 +137,6 @@ namespace RenamerConsole {
                 Console.ResetColor();
         }
 
-        static public void PromptForPreferredName(RenamerFacade facade) {
-            Console.WriteLine("What's the seriesId of the show you want to add a preferred name for?");
-            string seriesIdInput = Console.ReadLine();
-            int seriesId = -1;
-            if (seriesIdInput != null) {
-                while (!seriesIdInput.IsNumeric()) {
-                    Console.WriteLine("That's not a number, fool!");
-                    seriesIdInput = Console.ReadLine();
-                }
-                seriesId = seriesIdInput.ToInt();
-                Log.Information($"PromptForPreferredName: User entered {seriesId}");
-                string showName = facade.FindTVShowNameBySeriesId(seriesId);
-                Console.WriteLine($"What should be the preferred name of {showName}?");
-                string preferredName = Console.ReadLine();
-                if (preferredName != null) {
-                    Log.Information($"PromptForPreferredName: User entered {preferredName}");
-                    facade.AddPreferredNameToTVShow(seriesId, preferredName);
-                }
-
-            }
-        }
 
             static void PauseForInput() {
             Console.WriteLine("Press any key to continue.");
