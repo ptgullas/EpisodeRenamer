@@ -12,5 +12,7 @@ namespace Renamer.Data.Entities {
         public string SeriesName { get; set; }
         public string SeriesNamePreferred { get; set; }
         public List<Episode> Episodes { get; set; }
+        public bool IsActive { get; set; }
+
     }
 }
