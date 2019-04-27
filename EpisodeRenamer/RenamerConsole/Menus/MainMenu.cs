@@ -11,9 +11,11 @@ namespace RenamerConsole.Menus {
     public class MainMenu : IMenu {
         private RenamerFacade Facade;
         private EpisodeContext Context;
-        public MainMenu(RenamerFacade inputFacade, EpisodeContext context) {
+        private TVShowService ShowService;
+        public MainMenu(RenamerFacade inputFacade, EpisodeContext context, TVShowService showService) {
             Facade = inputFacade;
             Context = context;
+            ShowService = showService;
         }
 
         public async Task DisplayMenu() {
@@ -94,7 +96,7 @@ namespace RenamerConsole.Menus {
         }
 
         private async Task CreateTVShowMenu() {
-            TVShowMenu tvShowMenu = new TVShowMenu(Context, Facade);
+            TVShowMenu tvShowMenu = new TVShowMenu(Context, Facade, ShowService);
             await tvShowMenu.DisplayMenu();
         }
 

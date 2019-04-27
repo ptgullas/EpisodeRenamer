@@ -53,7 +53,7 @@ namespace RenamerConsole {
             RenamePrompterConsole prompterConsole = new RenamePrompterConsole();
             RenamerFacade facade = new RenamerFacade(retrieverService, showService, epService, localService, context, prompterConsole, tvdbInfoPath);
 
-            MainMenu mainMenu = new MainMenu(facade, context);
+            MainMenu mainMenu = new MainMenu(facade, context, showService);
             await mainMenu.DisplayMenu();
             // await DisplayMenuAndProcessUserInput(facade);
             // SetUpAutomapper();
