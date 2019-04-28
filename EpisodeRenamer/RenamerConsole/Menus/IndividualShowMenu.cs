@@ -53,9 +53,10 @@ namespace RenamerConsole.Menus {
         private void DisplayShowBanner() {
             MenuHelpers.DisplayShowName(Show.SeriesName, Show.IsActive);
             MenuHelpers.DisplayShowActiveStatus(Show.IsActive);
-            Console.Write($"(SeriesId: ");
-            MenuHelpers.WriteColor($"{Show.SeriesId}", ConsoleColor.White);
-            Console.Write("). Preferred Name: ");
+            Console.Write($"SeriesId: ");
+            MenuHelpers.WriteColor($"{Show.SeriesId} ", ConsoleColor.White);
+            MenuHelpers.WriteColor("| ", ConsoleColor.Magenta);
+            Console.Write("Preferred Name: ");
             MenuHelpers.WriteLineColor($"{Show.SeriesNamePreferred}", ConsoleColor.Yellow);
 
         }
@@ -105,7 +106,9 @@ namespace RenamerConsole.Menus {
 
         private static void PrintEpisodeInfo(Episode ep) {
             int epNumber = (int)ep.AiredEpisodeNumber;
-            Console.WriteLine($"{ep.Season}.{epNumber.ToString("D2")} - {ep.EpisodeName}");
+            MenuHelpers.WriteColor($"{ep.Season}.{epNumber.ToString("D2")}", ConsoleColor.Cyan);
+            MenuHelpers.WriteColor(" - ", ConsoleColor.DarkGray);
+            MenuHelpers.WriteLineColor($"{ep.EpisodeName}", ConsoleColor.White);
         }
 
         private List<Episode> GetEpisodesForShow(TVShow show) {
