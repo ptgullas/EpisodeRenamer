@@ -88,6 +88,7 @@ namespace Renamer.Services {
         public async Task FetchTVShowAndAddItToDatabase(int seriesId, string token) {
             TVShowFromTVDBDto newShowDto = await _retrieverService.FetchTVShow(seriesId, token);
             TVShow newShow = newShowDto.ToTVShow();
+            newShow.IsActive = true;
             Log.Information($"Adding seriesId {seriesId}: {newShow.SeriesName} to Shows table");
             _showService.Add(newShow);
         } 
