@@ -38,7 +38,7 @@ namespace RenamerConsole.Menus {
             string userInput = "INITIAL";
             string exitCharUpper = "X";
             int numberOfShows = showArray.Count();
-            while (StringIsNotNumericOrExitChar(userInput, exitCharUpper)) {
+            while (MenuHelpers.StringIsNotNumericOrExitChar(userInput, exitCharUpper)) {
                 userInput = DisplayListOfShows(showArray, exitCharUpper);
                 if (userInput.IsNumeric()) {
                     userSelection = userInput.ToInt();
@@ -89,14 +89,7 @@ namespace RenamerConsole.Menus {
             return shows;
         }
 
-        private bool StringIsNotNumericOrExitChar(string s, string exit) {
-            if ((!s.IsNumeric() || s.ToUpper() != exit)) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
+
 
         private async Task DisplayIndividualShowMenu(TVShow selectedShow) {
             IndividualShowMenu individualShowMenu = new IndividualShowMenu(Context, Facade, ShowService, selectedShow);

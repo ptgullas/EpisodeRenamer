@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Renamer.Services;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -40,6 +41,14 @@ namespace RenamerConsole.Menus {
 
         }
 
+        public static bool StringIsNotNumericOrExitChar(string s, string exit) {
+            if ((!s.IsNumeric() || s.ToUpper() != exit)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
 
     }
 }

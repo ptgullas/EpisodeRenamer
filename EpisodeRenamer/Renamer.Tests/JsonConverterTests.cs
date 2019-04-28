@@ -52,6 +52,21 @@ namespace Renamer.Tests {
         }
 
         [Fact]
+        public void ConvertTVShowSearchResultsToDto_Valid_ReturnsOuterObject() {
+            string pathToJson = @"..\..\..\..\Renamer.Data\SampleData\SiliconValleySearchResults.json";
+            string json = File.ReadAllText(pathToJson);
+            JsonConverter converter = new JsonConverter();
+
+            string expectedShowName = "Silicon Valley";
+            long expectedSeriesId = 277165;
+
+            TVShowSearchResultsOuterDto outerObject = converter.ConvertTVShowSearchResultsToDto(json);
+
+            Assert.Equal(expectedShowName, outerObject.shows[0].SeriesNameTVDB);
+            Assert.Equal(expectedSeriesId, outerObject.shows[0].SeriesId);
+        }
+
+        [Fact]
         public void ConvertEpisodeOuterObjectToDto_Valid_ReturnsOuterObject() {
             string pathToJson = @"..\..\..\..\Renamer.Data\SampleData\OrvilleEpisodes.json";
             string json = File.ReadAllText(pathToJson);

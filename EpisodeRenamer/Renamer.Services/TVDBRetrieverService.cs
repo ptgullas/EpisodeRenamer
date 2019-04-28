@@ -35,7 +35,7 @@ namespace Renamer.Services {
                 myToken = TokenObject.Token;
             }
             catch (Exception e) {
-                Console.WriteLine($"{ e.Message }");
+                Log.Error(e, "Error fetching new token");
             }
             return myToken;
         }
@@ -47,8 +47,7 @@ namespace Renamer.Services {
         public async Task<string> FetchRefreshToken(string token) {
             Log.Information("Fetching refresh token");
             string myToken = token;
-            var client = _clientFactory.CreateClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpClient client = CreateDefaultClient(token);
             try {
                 var response = await client.GetAsync(GetRefreshTokenUri());
                 response.EnsureSuccessStatusCode();
@@ -58,7 +57,7 @@ namespace Renamer.Services {
                 myToken = TokenObject.Token;
             }
             catch (Exception e) {
-                Log.Error($"{ e.Message }");
+                Log.Error(e, "Error fetching refresh token");
             }
             return myToken;
         }
@@ -72,8 +71,7 @@ namespace Renamer.Services {
             Log.Information("Retrieving user favorites...");
             List<int> favoritesFromApi = new List<int>();
             try {
-                var client = _clientFactory.CreateClient();
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                HttpClient client = CreateDefaultClient(token);
                 Uri favoritesUri = GetFavoritesUri();
                 var response = await client.GetAsync(favoritesUri);
                 response.EnsureSuccessStatusCode();
@@ -84,31 +82,39 @@ namespace Renamer.Services {
 
             }
             catch (Exception e) {
-                Log.Error($"{ e.Message }");
+                Log.Error(e, "Error fetching user favorites");
             }
             return favoritesFromApi;
         }
+
+        private HttpClient CreateDefaultClient(string token) {
+            var client = _clientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            return client;
+        }
+
         public Uri GetFavoritesUri() {
             Log.Information("In GetFavoritesUri");
             _uriBuilder.Path = "user/favorites";
             return _uriBuilder.Uri;
         }
 
+
+
         public async Task<TVShowFromTVDBDto> FetchTVShow(int seriesId, string token) {
             Log.Information("Fetching TV Series with seriesId {a}", seriesId);
             TVShowFromTVDBDto showDto = new TVShowFromTVDBDto();
-            var client = _clientFactory.CreateClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpClient client = CreateDefaultClient(token);
             try {
                 var response = await client.GetAsync(GetShowUri(seriesId));
                 response.EnsureSuccessStatusCode();
                 var stringResponse = await response.Content.ReadAsStringAsync();
                 JsonConverter converter = new JsonConverter();
                 showDto = converter.ConvertTVSeriesToDto(stringResponse);
-                Log.Information($"Successfully fetched TV Series {seriesId}: {showDto.SeriesNameTVDB}");
+                Log.Information("Successfully fetched TV Series {seriesId}: {showName}", seriesId, showDto.SeriesNameTVDB);
             }
             catch (Exception e) {
-                Log.Error($"{ e.Message }");
+                Log.Error(e, "Error fetching TV Show {seriesId}", seriesId);
             }
             return showDto;
         }
@@ -119,21 +125,39 @@ namespace Renamer.Services {
             return _uriBuilder.Uri;
         }
 
+        public async Task<TVShowSearchResultsOuterDto> FetchShowSearchResults(string searchTerms, string token) {
+            Log.Information("Finding search results for {searchTerms}", searchTerms);
+            TVShowSearchResultsOuterDto searchResultsOuter = new TVShowSearchResultsOuterDto();
+            HttpClient client = CreateDefaultClient(token);
+            try {
+                var response = await client.GetAsync(GetSearchUri(searchTerms));
+                response.EnsureSuccessStatusCode();
+                var stringResponse = await response.Content.ReadAsStringAsync();
+                JsonConverter converter = new JsonConverter();
+                searchResultsOuter = converter.ConvertTVShowSearchResultsToDto(stringResponse);
+                Log.Information("Successfully fetched search results for term {searchTerms}", searchTerms);
+
+            }
+            catch (Exception e) {
+                Log.Error(e, "Error fetching search results");
+            }
+            return searchResultsOuter;
+        }
+
         public async Task<EpisodeOuterDto> FetchEpisodes(int seriesId, string token, int page = 1) {
             Log.Information("Fetching Episodes from seriesId {a}, page {b}", seriesId, page);
             EpisodeOuterDto episodesOuter = new EpisodeOuterDto();
-            var client = _clientFactory.CreateClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpClient client = CreateDefaultClient(token);
             try {
                 var response = await client.GetAsync(GetEpisodesUri(seriesId, page));
                 response.EnsureSuccessStatusCode();
                 var stringResponse = await response.Content.ReadAsStringAsync();
                 JsonConverter converter = new JsonConverter();
                 episodesOuter = converter.ConvertEpisodeOuterObjectToDto(stringResponse);
-                Log.Information($"Successfully fetched episodes for TV Series {seriesId}");
+                Log.Information("Successfully fetched episodes for TV Series {seriesId}", seriesId);
             }
             catch (Exception e) {
-                Log.Error($"{ e.Message }");
+                Log.Error(e, "Error fetching episodes for seriesId {seriesId}", seriesId);
             }
             return episodesOuter;
         }
@@ -141,6 +165,12 @@ namespace Renamer.Services {
         public Uri GetEpisodesUri(int seriesId, int page = 1) {
             _uriBuilder.Path = $"series/{seriesId}/episodes";
             _uriBuilder.Query = $"page={page}";
+            return _uriBuilder.Uri;
+        }
+
+        public Uri GetSearchUri(string searchTerm) {
+            _uriBuilder.Path = $"search/series";
+            _uriBuilder.Query = $"name={searchTerm}";
             return _uriBuilder.Uri;
         }
 

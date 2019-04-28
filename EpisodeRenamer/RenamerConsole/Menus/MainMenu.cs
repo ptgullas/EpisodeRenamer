@@ -49,6 +49,10 @@ namespace RenamerConsole.Menus {
             MenuHelpers.PrintMenuNumber(5);
             MenuHelpers.WriteLineColor("RENAME FILES!!", ConsoleColor.Yellow);
 
+            MenuHelpers.PrintMenuNumber(6);
+            MenuHelpers.WriteLineColor("Search for shows on TVDB", ConsoleColor.White);
+
+
             MenuHelpers.PrintMenuNumber(9);
             MenuHelpers.WriteLineColor("Exit, if you dare", ConsoleColor.DarkCyan);
             var result = Console.ReadLine();
@@ -87,6 +91,9 @@ namespace RenamerConsole.Menus {
                 Console.WriteLine("OK we are getting down to business");
                 Facade.RenameFiles();
             }
+            else if (selection == 6) {
+                await CreateSearchMenu();
+            }
             else if (selection == 9) {
                 return;
             }
@@ -94,6 +101,12 @@ namespace RenamerConsole.Menus {
                 MenuHelpers.WriteLineColor("Not a valid choice, bro!", ConsoleColor.Red);
             }
         }
+
+        private async Task CreateSearchMenu() {
+            SearchMenu searchMenu = new SearchMenu(Facade);
+            await searchMenu.DisplayMenu();
+        }
+
 
         private async Task CreateTVShowMenu() {
             TVShowMenu tvShowMenu = new TVShowMenu(Context, Facade, ShowService);

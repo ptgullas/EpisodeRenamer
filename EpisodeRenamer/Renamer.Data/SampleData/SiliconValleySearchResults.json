@@ -1,0 +1,61 @@
+﻿{
+  "data": [
+    {
+      "aliases": [],
+      "banner": "graphical/277165-g9.jpg",
+      "firstAired": "2014-04-06",
+      "id": 277165,
+      "network": "HBO",
+      "overview": "In the high-tech gold rush of modern Silicon Valley, the people most qualified to succeed are the least capable of handling success. A comedy partially inspired by Mike Judge's own experiences as a Silicon Valley engineer in the late 1980s.",
+      "seriesName": "Silicon Valley",
+      "slug": "silicon-valley",
+      "status": "Continuing"
+    },
+    {
+      "aliases": [],
+      "banner": "",
+      "firstAired": "2012-11-01",
+      "id": 283723,
+      "network": "Smithsonian Channel",
+      "overview": "Before Steve Jobs and Bill Gates, there was the \"Fairchild Eight,\" a team of young geniuses who discovered an everlasting treasure in the sands of Palo Alto. Travel back to the 1950s and witness the dawn of the electronics revolution, as told by the forefathers who built Silicon Valley from the ground up. This innovative film, by the writer of the Oscar-winning documentary The Cove, reveals how determination, jealousy, and the sheer joy of making the impossible possible drove these men to build the future and reinvent the American Dream.",
+      "seriesName": "Silicon Valley Rebels",
+      "slug": "silicon-valley-rebels",
+      "status": "Ended"
+    },
+    {
+      "aliases": [],
+      "banner": "graphical/344639-g.jpg",
+      "firstAired": "2018-03-19",
+      "id": 344639,
+      "network": "Science Channel",
+      "overview": "Industry leaders including Eric Schmidt and Steve Wozniak are interviewed in this remarkable look at how Silicon Valley has produced an unrivaled stream of innovations.",
+      "seriesName": "Silicon Valley: The Untold Story",
+      "slug": "344639",
+      "status": "Continuing"
+    },
+    {
+      "aliases": [
+        "Startups: Silicon Valley"
+      ],
+      "banner": "graphical/263541-g.jpg",
+      "firstAired": "2012-11-05",
+      "id": 263541,
+      "network": "Bravo (US)",
+      "overview": "Bravo Media explores the intertwining lives of a group of young entrepreneurs on the path to becoming Silicon Valley's next great success stories on \"Start-Ups: Silicon Valley\" premiering Monday, November 5 at 10 p.m. ET/PT. Silicon Valley isn't a town, a neighborhood, or a zip code...it's a concept; the epicenter for the most revolutionary advances in technology and where the future of tomorrow is being created today. Sarah Austin, Dwight Crow, Kim Taylor, David Murray and brother and sister duo, Ben and Hermione Way, all have a unique perspective on the future of technology, business and how to get ahead in the most competitive culture in the country. These driven, ambitious and highly motivated individuals are all work and all play as they blaze their own paths to become the next Silicon Valley success story. While trying to find balance amidst their complicated social network they discover that in the fast paced world of Silicon Valley success and failure can come and go with just a simple keystroke.",
+      "seriesName": "Start-ups: Silicon Valley",
+      "slug": "start-ups-silicon-valley",
+      "status": "Ended"
+    },
+    {
+      "aliases": [],
+      "banner": "graphical/332909-g.jpg",
+      "firstAired": "2017-08-06",
+      "id": 332909,
+      "network": "BBC Two",
+      "overview": "Jamie Bartlett uncovers the dark reality behind Silicon Valley's glittering promise to build a better world.",
+      "seriesName": "Secrets Of Silicon Valley",
+      "slug": "secrets-of-silicon-valley",
+      "status": "Ended"
+    }
+  ]
+}

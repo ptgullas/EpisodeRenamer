@@ -16,5 +16,8 @@ namespace Renamer.Services.Models {
         public string SeriesNameTVDB { get; set; }
         public string SeriesNamePreferred { get; set; }
 
+        public string Network { get; set; }
+        public string FirstAired { get; set; }
+        public string Status { get; set; }
     }
 }

@@ -93,6 +93,16 @@ namespace Renamer.Services {
             _showService.Add(newShow);
         } 
 
+        public async Task<List<TVShowFromTVDBDto>> SearchForTVShows(string searchTerms) {
+            TVShowSearchResultsOuterDto searchResultsOuter = await _retrieverService.FetchShowSearchResults(searchTerms, _tvdbInfo.Token);
+            if (searchResultsOuter.shows != null) {
+                return searchResultsOuter.shows.ToList();
+            }
+            else {
+                return null;
+            }
+        }
+
         public async Task PopulateEpisodesFromExistingShows(int numberOfPagesFromEndToFetch = 1) {
             var seriesIdsInDB = _context.Shows.Select(s => s.SeriesId);
             foreach (int seriesId in seriesIdsInDB) {
