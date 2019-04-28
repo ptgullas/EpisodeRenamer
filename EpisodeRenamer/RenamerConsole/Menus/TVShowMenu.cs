@@ -33,6 +33,35 @@ namespace RenamerConsole.Menus {
             
         }
 
+        private TVShow DisplayTVShowMenu(TVShow[] showArray) {
+            int userSelection = -1;
+            string userInput = "INITIAL";
+            string exitCharUpper = "X";
+            int numberOfShows = showArray.Count();
+            while (StringIsNotNumericOrExitChar(userInput, exitCharUpper)) {
+                userInput = DisplayListOfShows(showArray, exitCharUpper);
+                if (userInput.IsNumeric()) {
+                    userSelection = userInput.ToInt();
+                    if ((userSelection >= 0) && (userSelection < numberOfShows)) {
+                        return showArray[userSelection];
+                    }
+                    else {
+                        Console.WriteLine("That's not a valid selection, dude");
+                        continue;
+                        // at this point, we return to the while loop
+                    }
+                }
+                else if (userInput.ToUpper() == exitCharUpper) {
+                    return null;
+                }
+            }
+            // if user selected "X", it returns null
+            // if user selected a valid number, it returns the corresponding TV Show
+            // if invalid number or string that isn't "X", it stays in the loop
+            // so we should never actually hit this
+            return showArray[userSelection];
+        }
+
         private string DisplayListOfShows(TVShow[] showArray, string exitCharUpper) {
             int numberOfShows = showArray.Count();
             Console.WriteLine("TV Show Menu");
@@ -54,35 +83,6 @@ namespace RenamerConsole.Menus {
         }
 
 
-        private TVShow DisplayTVShowMenu(TVShow[] showArray) {
-
-            int userSelection = -1;
-            string userInput = "INITIAL";
-            string exitCharUpper = "X";
-            int numberOfShows = showArray.Count();
-            while (StringIsNotNumericOrExitChar(userInput, exitCharUpper)) {
-                userInput = DisplayListOfShows(showArray, exitCharUpper);
-                if (userInput.IsNumeric()) {
-                    userSelection = userInput.ToInt();
-                    if ((userSelection >= 0) || (userSelection < numberOfShows)) {
-                        return showArray[userSelection];
-                    }
-                    else {
-                        Console.WriteLine("That's not a valid selection, dude");
-                        continue;
-                        // at this point, we return to the while loop
-                    }
-                }
-                else if (userInput.ToUpper() == exitCharUpper) {
-                    return null;
-                }
-            }
-            // if user selected "X", it returns null
-            // if user selected a valid number, it returns the corresponding TV Show
-            // if invalid number or string that isn't "X", it stays in the loop
-            // so we should never actually hit this
-            return showArray[userSelection];
-        }
 
         private TVShow[] GetShows() {
             TVShow[] shows = Context.Shows.OrderBy(s => s.SeriesName).ToArray();
