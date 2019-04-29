@@ -28,54 +28,79 @@ namespace RenamerConsole.Menus {
             }
         }
 
+        private static string PromptForSearchTerms() {
+            string userSearch;
+            Console.Write("Enter a show to search for (");
+            MenuHelpers.WriteColor("blank to return to menu", ConsoleColor.DarkCyan);
+            Console.WriteLine("):");
+            userSearch = Console.ReadLine();
+            return userSearch;
+        }
+
+
         private async Task ProcessUserSearch(string userSearch) {
             List<TVShowFromTVDBDto> searchResults = await Facade.SearchForTVShows(userSearch);
             if (searchResults != null) {
-                string userShowSelection = "INITIAL";
-                string exitCharUpper = "X";
-                while (MenuHelpers.StringIsNotNumericOrExitChar(userShowSelection, exitCharUpper)) {
-                    userShowSelection = DisplaySearchResults(searchResults, exitCharUpper);
-                    if (userShowSelection.IsNumeric()) {
-                        int userSelection = userShowSelection.ToInt();
-                        int numberOfShows = searchResults.Count;
-                        if ((userSelection >= 0) && (userSelection < numberOfShows)) {
-                            TVShowFromTVDBDto selectedShow = searchResults[userSelection];
-                            await AddShowToDatabase(selectedShow);
-                        }
-                        else {
-                            Console.WriteLine("That's not one of the shows on the list");
-                            continue;
-                        }
-                    }
-                    else if (userShowSelection.ToUpper() == exitCharUpper) {
-                        return;
-                    }
-                }
+                await DisplayResultsAndPromptToAddShow(searchResults);
             }
             else {
                 MenuHelpers.WriteLineColor($"NO RESULTS FOUND FOR {userSearch}", ConsoleColor.Red);
             }
         }
 
-        private static string PromptForSearchTerms() {
-            string userSearch;
-            Console.WriteLine("Enter a show to search for (blank to return to menu): ");
-            userSearch = Console.ReadLine();
-            return userSearch;
+        private async Task DisplayResultsAndPromptToAddShow(List<TVShowFromTVDBDto> searchResults) {
+            string userShowSelection = "INITIAL";
+            string exitCharUpper = "X";
+            while (MenuHelpers.StringIsNotNumericOrExitChar(userShowSelection, exitCharUpper)) {
+                userShowSelection = DisplaySearchResults(searchResults, exitCharUpper);
+                if (userShowSelection.IsNumeric()) {
+                    int userSelection = userShowSelection.ToInt();
+                    int numberOfShows = searchResults.Count;
+                    if ((userSelection >= 0) && (userSelection < numberOfShows)) {
+                        TVShowFromTVDBDto selectedShow = searchResults[userSelection];
+                        await AddShowToDatabase(selectedShow);
+                    }
+                    else {
+                        Console.WriteLine("That's not one of the shows on the list");
+                        continue;
+                    }
+                }
+                else if (userShowSelection.ToUpper() == exitCharUpper) {
+                    return;
+                }
+            }
         }
 
         private string DisplaySearchResults(List<TVShowFromTVDBDto> showList, string exitCharUpper) {
             int numberOfShows = showList.Count;
-            Console.WriteLine("SearchResults");
+            MenuHelpers.WriteLineColor("Search Results", ConsoleColor.White, ConsoleColor.DarkMagenta);
             for (int i = 0; i < numberOfShows; i++) {
                 MenuHelpers.PrintMenuNumber(i);
-                MenuHelpers.WriteLineColor($"{showList[i].SeriesNameTVDB} | {showList[i].Network} | {showList[i].Status} | {showList[i].SeriesId}");
+                MenuHelpers.WriteColor($"{showList[i].SeriesNameTVDB}", ConsoleColor.Yellow);
+                MenuHelpers.WriteColor(" | ");
+                MenuHelpers.WriteColor($"{showList[i].Network}", ConsoleColor.Cyan);
+                MenuHelpers.WriteColor(" | ");
+                MenuHelpers.WriteColor("First Aired: ", ConsoleColor.Gray);
+                MenuHelpers.WriteColor($"{showList[i].FirstAired}", ConsoleColor.Magenta);
+                MenuHelpers.WriteColor(" | ");
+                PrintShowStatus(showList[i].Status);
+                MenuHelpers.WriteColor(" | ");
+                MenuHelpers.WriteColor("SeriesId: ", ConsoleColor.Gray);
+                MenuHelpers.WriteLineColor($"{showList[i].SeriesId}");
             }
             Console.Write($"Enter the number of the show to add it to DB (");
             MenuHelpers.WriteColor($"{ exitCharUpper} to return to Main Menu", ConsoleColor.DarkCyan);
             Console.WriteLine("):");
             string userInput = Console.ReadLine();
             return userInput;
+        }
+
+        private void PrintShowStatus(string showStatus) {
+            ConsoleColor fontColor = ConsoleColor.Red;
+            if (showStatus == "Continuing") {
+                fontColor = ConsoleColor.Green;
+            }
+            MenuHelpers.WriteColor($"{showStatus}", fontColor);
         }
 
         private async Task AddShowToDatabase(TVShowFromTVDBDto show) {
@@ -87,23 +112,23 @@ namespace RenamerConsole.Menus {
 
         private bool ConfirmAdd(TVShowFromTVDBDto show) {
             string response = "";
-            bool Add = false;
+            bool addToDb = false;
             while (IsNotYesOrNo(response)) {
                 MenuHelpers.WriteColor($"Add ");
                 MenuHelpers.WriteColor($"{show.SeriesNameTVDB} ", ConsoleColor.Yellow);
                 MenuHelpers.WriteColor($"to TVDB Favorites & database? ");
                 response = Console.ReadLine().ToUpper();
                 if (response == "Y") {
-                    Add = true;
+                    addToDb = true;
                 }
                 else if (response == "N") {
-                    Add = false;
+                    addToDb = false;
                 }
                 else {
                     continue;
                 }
             }
-            return Add;
+            return addToDb;
         }
 
         private bool IsNotYesOrNo(string userInput) {
