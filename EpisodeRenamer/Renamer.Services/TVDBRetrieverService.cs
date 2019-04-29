@@ -125,18 +125,46 @@ namespace Renamer.Services {
             return _uriBuilder.Uri;
         }
 
+        public async Task<List<int>> AddToTVDBFavorites(long seriesId, string token) {
+            Log.Information("Adding seriesId {seriesId} to Favorites", seriesId);
+            List<int> favoritesFromApi = new List<int>();
+            HttpClient client = CreateDefaultClient(token);
+            try {
+                StringContent httpContent = new StringContent("");
+                var response = await client.PutAsync(GetAddToFavoritesUri(seriesId), httpContent);
+                response.EnsureSuccessStatusCode();
+                Log.Information("Successfully retrieved favorites");
+                var stringResponse = await response.Content.ReadAsStringAsync();
+                JsonConverter converter = new JsonConverter();
+                favoritesFromApi = converter.ConvertFavoritesToDto(stringResponse);
+            }
+            catch (Exception e) {
+                Log.Error(e, "Error adding to favorites");
+            }
+            return favoritesFromApi;
+        }
+
+        public Uri GetAddToFavoritesUri(long seriesID) {
+            _uriBuilder.Path = $"user/favorites/{seriesID}";
+            return _uriBuilder.Uri;
+        }
+
         public async Task<TVShowSearchResultsOuterDto> FetchShowSearchResults(string searchTerms, string token) {
             Log.Information("Finding search results for {searchTerms}", searchTerms);
             TVShowSearchResultsOuterDto searchResultsOuter = new TVShowSearchResultsOuterDto();
             HttpClient client = CreateDefaultClient(token);
             try {
                 var response = await client.GetAsync(GetSearchUri(searchTerms));
-                response.EnsureSuccessStatusCode();
-                var stringResponse = await response.Content.ReadAsStringAsync();
-                JsonConverter converter = new JsonConverter();
-                searchResultsOuter = converter.ConvertTVShowSearchResultsToDto(stringResponse);
-                Log.Information("Successfully fetched search results for term {searchTerms}", searchTerms);
-
+                if (response.StatusCode != System.Net.HttpStatusCode.NotFound) {
+                    response.EnsureSuccessStatusCode();
+                    var stringResponse = await response.Content.ReadAsStringAsync();
+                    JsonConverter converter = new JsonConverter();
+                    searchResultsOuter = converter.ConvertTVShowSearchResultsToDto(stringResponse);
+                    Log.Information("Successfully fetched search results for term {searchTerms}", searchTerms);
+                }
+                else {
+                    Log.Information("No shows found for search term {searchTerms}", searchTerms);
+                }
             }
             catch (Exception e) {
                 Log.Error(e, "Error fetching search results");

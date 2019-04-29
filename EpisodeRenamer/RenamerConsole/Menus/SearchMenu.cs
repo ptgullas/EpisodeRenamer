@@ -23,40 +23,38 @@ namespace RenamerConsole.Menus {
             while (userSearch != "") {
                 userSearch = PromptForSearchTerms();
                 if (userSearch != "") {
-                    List<TVShowFromTVDBDto> searchResults = await Facade.SearchForTVShows(userSearch);
-                    if (searchResults != null) {
-                        int userSelection = -1;
-                        string userShowSelection = "INITIAL";
+                    await ProcessUserSearch(userSearch);
+                }
+            }
+        }
+
+        private async Task ProcessUserSearch(string userSearch) {
+            List<TVShowFromTVDBDto> searchResults = await Facade.SearchForTVShows(userSearch);
+            if (searchResults != null) {
+                string userShowSelection = "INITIAL";
+                string exitCharUpper = "X";
+                while (MenuHelpers.StringIsNotNumericOrExitChar(userShowSelection, exitCharUpper)) {
+                    userShowSelection = DisplaySearchResults(searchResults, exitCharUpper);
+                    if (userShowSelection.IsNumeric()) {
+                        int userSelection = userShowSelection.ToInt();
                         int numberOfShows = searchResults.Count;
-                        TVShowFromTVDBDto selectedShow = new TVShowFromTVDBDto();
-                        string exitCharUpper = "X";
-                        while (MenuHelpers.StringIsNotNumericOrExitChar(userShowSelection, exitCharUpper)) {
-                            userShowSelection = DisplaySearchResults(searchResults, exitCharUpper);
-                            if (userShowSelection.IsNumeric()) {
-                                userSelection = userShowSelection.ToInt();
-                                if ((userSelection >= 0) && (userSelection < numberOfShows)) {
-                                    // Add show to favorites
-                                    // Add it to DB
-                                    MenuHelpers.WriteColor("We will do something with ");
-                                    MenuHelpers.WriteLineColor($"{ searchResults[userSelection].SeriesNameTVDB}", ConsoleColor.Yellow);
-                                }
-                                else {
-                                    Console.WriteLine("That's not one of the shows on the list");
-                                    continue;
-                                }
-                            }
-                            else if (userShowSelection.ToUpper() == exitCharUpper) {
-                                return;
-                            }
+                        if ((userSelection >= 0) && (userSelection < numberOfShows)) {
+                            TVShowFromTVDBDto selectedShow = searchResults[userSelection];
+                            await AddShowToDatabase(selectedShow);
+                        }
+                        else {
+                            Console.WriteLine("That's not one of the shows on the list");
+                            continue;
                         }
                     }
-                    else {
-                        MenuHelpers.WriteLineColor($"NO RESULTS FOUND FOR {userSearch}", ConsoleColor.Red);
+                    else if (userShowSelection.ToUpper() == exitCharUpper) {
+                        return;
                     }
                 }
-
             }
-
+            else {
+                MenuHelpers.WriteLineColor($"NO RESULTS FOUND FOR {userSearch}", ConsoleColor.Red);
+            }
         }
 
         private static string PromptForSearchTerms() {
@@ -73,12 +71,46 @@ namespace RenamerConsole.Menus {
                 MenuHelpers.PrintMenuNumber(i);
                 MenuHelpers.WriteLineColor($"{showList[i].SeriesNameTVDB} | {showList[i].Network} | {showList[i].Status} | {showList[i].SeriesId}");
             }
-            Console.Write($"Enter the number of the show (");
+            Console.Write($"Enter the number of the show to add it to DB (");
             MenuHelpers.WriteColor($"{ exitCharUpper} to return to Main Menu", ConsoleColor.DarkCyan);
             Console.WriteLine("):");
             string userInput = Console.ReadLine();
             return userInput;
         }
 
+        private async Task AddShowToDatabase(TVShowFromTVDBDto show) {
+            if (ConfirmAdd(show)) {
+                await Facade.AddShowToFavoritesThenToDatabase(show);
+                await Facade.PopulateEpisodesFromSeriesId(show.SeriesId);
+            }
+        }
+
+        private bool ConfirmAdd(TVShowFromTVDBDto show) {
+            string response = "";
+            bool Add = false;
+            while (IsNotYesOrNo(response)) {
+                MenuHelpers.WriteColor($"Add ");
+                MenuHelpers.WriteColor($"{show.SeriesNameTVDB} ", ConsoleColor.Yellow);
+                MenuHelpers.WriteColor($"to TVDB Favorites & database? ");
+                response = Console.ReadLine().ToUpper();
+                if (response == "Y") {
+                    Add = true;
+                }
+                else if (response == "N") {
+                    Add = false;
+                }
+                else {
+                    continue;
+                }
+            }
+            return Add;
+        }
+
+        private bool IsNotYesOrNo(string userInput) {
+            if ((userInput.ToUpper() != "Y") && (userInput.ToUpper() != "N")) {
+                return true;
+            }
+            else { return false; }
+        }
     }
 }

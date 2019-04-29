@@ -87,11 +87,24 @@ namespace Renamer.Services {
 
         public async Task FetchTVShowAndAddItToDatabase(int seriesId, string token) {
             TVShowFromTVDBDto newShowDto = await _retrieverService.FetchTVShow(seriesId, token);
+            AddShowToDatabase(newShowDto);
+        }
+
+        private void AddShowToDatabase(TVShowFromTVDBDto newShowDto) {
             TVShow newShow = newShowDto.ToTVShow();
             newShow.IsActive = true;
-            Log.Information($"Adding seriesId {seriesId}: {newShow.SeriesName} to Shows table");
+            Log.Information($"Adding seriesId {newShow.SeriesId}: {newShow.SeriesName} to Shows table");
             _showService.Add(newShow);
-        } 
+        }
+
+        public async Task AddShowToFavoritesThenToDatabase(TVShowFromTVDBDto showDto) {
+            await AddShowToTVDBFavorites(showDto);
+            AddShowToDatabase(showDto);
+        }
+
+        public async Task AddShowToTVDBFavorites(TVShowFromTVDBDto showDto) {
+            await _retrieverService.AddToTVDBFavorites(showDto.SeriesId, _tvdbInfo.Token);
+        }
 
         public async Task<List<TVShowFromTVDBDto>> SearchForTVShows(string searchTerms) {
             TVShowSearchResultsOuterDto searchResultsOuter = await _retrieverService.FetchShowSearchResults(searchTerms, _tvdbInfo.Token);
