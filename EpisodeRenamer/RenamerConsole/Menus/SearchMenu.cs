@@ -58,7 +58,7 @@ namespace RenamerConsole.Menus {
                     int numberOfShows = searchResults.Count;
                     if ((userSelection >= 0) && (userSelection < numberOfShows)) {
                         TVShowFromTVDBDto selectedShow = searchResults[userSelection];
-                        await AddShowToDatabase(selectedShow);
+                        await ConfirmThenAddShowToDatabase(selectedShow);
                     }
                     else {
                         Console.WriteLine("That's not one of the shows on the list");
@@ -103,7 +103,7 @@ namespace RenamerConsole.Menus {
             MenuHelpers.WriteColor($"{showStatus}", fontColor);
         }
 
-        private async Task AddShowToDatabase(TVShowFromTVDBDto show) {
+        private async Task ConfirmThenAddShowToDatabase(TVShowFromTVDBDto show) {
             if (ConfirmAdd(show)) {
                 await Facade.AddShowToFavoritesThenToDatabase(show);
                 await Facade.PopulateEpisodesFromSeriesId(show.SeriesId);
