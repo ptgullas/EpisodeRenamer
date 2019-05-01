@@ -116,7 +116,7 @@ namespace RenamerConsole.Menus {
             while (IsNotYesOrNo(response)) {
                 MenuHelpers.WriteColor($"Add ");
                 MenuHelpers.WriteColor($"{show.SeriesNameTVDB} ", ConsoleColor.Yellow);
-                MenuHelpers.WriteColor($"to TVDB Favorites & database? ");
+                MenuHelpers.WriteColor($"to TVDB Favorites & database? (Y/N) ");
                 response = Console.ReadLine().ToUpper();
                 if (response == "Y") {
                     addToDb = true;
