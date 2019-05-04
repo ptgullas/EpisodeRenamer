@@ -18,6 +18,18 @@ namespace Renamer.Services.Models {
         [JsonProperty("tokenRetrieved")]
         public DateTime TokenRetrievedDate { get; set; }
 
+        public bool TokenIsInvalid {
+            get {
+                return ((TokenIsNull) || (TokenIsExpired));
+            }
+        }
+
+        public bool TokenIsNull {
+            get {
+                return (Token == null);
+            }
+        }
+
         public bool TokenIsExpired {
             get {
                 return (HoursSinceLastRefresh >= 24);

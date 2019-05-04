@@ -40,7 +40,7 @@ namespace Renamer.Services {
         }
 
         public async Task FetchTokenIfNeeded() {
-            if (_tvdbInfo.TokenIsExpired) {
+            if (_tvdbInfo.TokenIsInvalid) {
                 Log.Information("Token is expired. Fetching new one....");
                 try {
                     string newToken = await _retrieverService.FetchNewToken(_tvdbInfo.ToAuthenticator());

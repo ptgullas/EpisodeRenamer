@@ -28,7 +28,7 @@ namespace RenamerConsole.Menus {
         }
 
         private int DisplayMainMenu(TVDBInfo tvdbInfo) {
-            bool tokenIsValid = !tvdbInfo.TokenIsExpired;
+            bool tokenIsValid = !tvdbInfo.TokenIsInvalid;
             tvdbInfo.PrintExpiration();
             MenuHelpers.WriteLineColor("Episode Renamer!", ConsoleColor.Yellow, ConsoleColor.DarkMagenta);
             Console.WriteLine();
