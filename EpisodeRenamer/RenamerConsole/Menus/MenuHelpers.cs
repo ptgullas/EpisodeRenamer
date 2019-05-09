@@ -18,8 +18,23 @@ namespace RenamerConsole.Menus {
             Console.ResetColor();
         }
 
+        public static void WriteColorVT8Bit(string str, int color) {
+            Console.Write($"\u001b[38;5;{color}m{str}\u001b[0m");
+        }
+        public static void WriteLineColorVT8Bit(string str, int color) {
+            Console.WriteLine($"\u001b[38;5;{color}m{str}\u001b[0m");
+        }
+
+        public static void WriteColorVT24Bit(string str, int r, int g, int b) {
+            Console.Write($"\u001b[38;2;{r};{g};{b}m{str}\u001b[0m");
+        }
+        public static void WriteLineColorVT24Bit(string str, int r, int g, int b) {
+            Console.WriteLine($"\u001b[38;2;{r};{g};{b}m{str}\u001b[0m");
+        }
+
         public static void WriteLineColor(string str, ConsoleColor fontColor = ConsoleColor.White, ConsoleColor backColor = ConsoleColor.Black) {
             Console.ForegroundColor = fontColor;
+            
             Console.BackgroundColor = backColor;
             Console.WriteLine(str);
             Console.ResetColor();

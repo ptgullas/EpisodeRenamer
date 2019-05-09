@@ -30,7 +30,7 @@ namespace RenamerConsole.Menus {
         private int DisplayMainMenu(TVDBInfo tvdbInfo) {
             bool tokenIsValid = !tvdbInfo.TokenIsInvalid;
             tvdbInfo.PrintExpiration();
-            MenuHelpers.WriteLineColor("Episode Renamer!", ConsoleColor.Yellow, ConsoleColor.DarkMagenta);
+            MenuHelpers.WriteLineColor("\u001b[4mEpisode Renamer!\u001b[0m", ConsoleColor.Yellow, ConsoleColor.DarkMagenta);
             Console.WriteLine();
 
             MenuHelpers.PrintMenuNumber(1);
