@@ -59,6 +59,33 @@ namespace RenamerConsole.Menus {
             Console.WriteLine($"\u001b[{underline}38;2;{r};{g};{b}m{str}\u001b[0m");
         }
 
+        public static void WriteGradient(string str, int rStart, int gStart, int bStart) {
+            int rEnd = rStart - 100;
+            int gEnd = gStart - 100;
+            if (rEnd < 0) {
+                rEnd = 0;
+            }
+            if (gEnd < 0) {
+                gEnd = 0;
+            }
+            int counter = 0;
+            foreach (char s in str) {
+                int newR = rStart - counter;
+                int newG = gStart - counter;
+                int newB = bStart - counter;
+                if (newR < 7) {
+                    newR = 7;
+                }
+                if (newG < 7) {
+                    newG = 7;
+                }
+                if (newB < 7) {
+                    newB = 7;
+                }
+                WriteColorVT24Bit($"{s}", newR, newG, newB);
+                counter += 7;
+            }
+        }
 
 
         public static void WriteLineColor(string str, ConsoleColor fontColor = ConsoleColor.White, ConsoleColor backColor = ConsoleColor.Black) {
@@ -86,7 +113,8 @@ namespace RenamerConsole.Menus {
             if (!isActive) {
                 hexcolor = "#606407";
             }
-            WriteColorVT24Bit($"{seriesName} ", hexcolor);
+            // WriteColorVT24Bit($"{seriesName} ", hexcolor);
+            WriteGradient($"{seriesName} ", 248, 255, 17);
 
         }
 
