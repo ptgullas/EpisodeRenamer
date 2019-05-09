@@ -50,10 +50,6 @@ namespace RenamerConsole {
             Log.Information("Started log on {a}", DateTime.Now.ToLongTimeString());
 
             SetUpVT100();
-            Console.WriteLine("\u001b[4mHello World!\u001b[0m");
-            MenuHelpers.WriteColorVT8Bit("Hello World2", 136);
-            Console.WriteLine();
-            MenuHelpers.WriteColorVT24Bit("Hello World3", 255, 127, 255);
 
             string projectRoot = AppContext.BaseDirectory.Substring(0, AppContext.BaseDirectory.LastIndexOf(@"\bin"));
             // PrintDirectories(appRoot);

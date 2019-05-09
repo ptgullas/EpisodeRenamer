@@ -44,7 +44,7 @@ namespace RenamerConsole.Menus {
             Console.WriteLine("Populate Episodes for existing Active shows");
 
             MenuHelpers.PrintMenuNumber(4);
-            Console.WriteLine("TV Show menu");
+            MenuHelpers.WriteLineColorVT24Bit("TV Show menu", "#FF6C2C");
 
             MenuHelpers.PrintMenuNumber(5);
             MenuHelpers.WriteLineColor("RENAME FILES!!", ConsoleColor.Yellow);
