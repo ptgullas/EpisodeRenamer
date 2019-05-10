@@ -93,26 +93,26 @@ namespace RenamerConsole {
         }
 
         static void SetUpVT100() {
-            var iStdIn = GetStdHandle(STD_INPUT_HANDLE);
+//            var iStdIn = GetStdHandle(STD_INPUT_HANDLE);
             var iStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-            if (!GetConsoleMode(iStdIn, out uint inConsoleMode)) {
-                Console.WriteLine("failed to get input console mode");
-                Console.ReadKey();
-                return;
-            }
+            //if (!GetConsoleMode(iStdIn, out uint inConsoleMode)) {
+            //    Console.WriteLine("failed to get input console mode");
+            //    Console.ReadKey();
+            //    return;
+            //}
 
             if (!GetConsoleMode(iStdOut, out uint outConsoleMode)) {
                 Console.WriteLine("failed to get output console mode");
                 Console.ReadKey();
                 return;
             }
-            inConsoleMode |= ENABLE_VIRTUAL_TERMINAL_INPUT;
+//            inConsoleMode |= ENABLE_VIRTUAL_TERMINAL_INPUT;
             outConsoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
-            if (!SetConsoleMode(iStdIn, inConsoleMode)) {
-                Console.WriteLine($"failed to set input console mode, error code: {GetLastError()}");
-                Console.ReadKey();
-                return;
-            }
+            //if (!SetConsoleMode(iStdIn, inConsoleMode)) {
+            //    Console.WriteLine($"failed to set input console mode, error code: {GetLastError()}");
+            //    Console.ReadKey();
+            //    return;
+            //}
 
             if (!SetConsoleMode(iStdOut, outConsoleMode)) {
                 Console.WriteLine($"failed to set output console mode, error code: {GetLastError()}");
