@@ -31,13 +31,13 @@ namespace RenamerConsole.Menus {
         private int DisplayIndividualShowMenu() {
             DisplayShowBanner();
             MenuHelpers.PrintMenuNumber(1);
-            Console.WriteLine("Display all episodes in database");
+            MenuHelpers.WriteLineColorVT24Bit("Display all episodes in database", "#7a918d");
             MenuHelpers.PrintMenuNumber(2);
-            Console.WriteLine("Check for new/updated episodes in TVDB");
+            MenuHelpers.WriteLineColorVT24Bit("Check for new/updated episodes in TVDB", "#93b1a7");
             MenuHelpers.PrintMenuNumber(3);
-            Console.WriteLine("Add/Change Preferred Name");
+            MenuHelpers.WriteLineColorVT24Bit("Add/Change Preferred Name", "#99c2a2");
             MenuHelpers.PrintMenuNumber(4);
-            Console.WriteLine($"Toggle Active Status");
+            MenuHelpers.WriteLineColorVT24Bit($"Toggle Active Status", "#c5edac");
             MenuHelpers.PrintMenuNumber(9);
             MenuHelpers.WriteLineColor("Return to List of Shows", ConsoleColor.DarkCyan);
             Console.WriteLine($"Enter your selection:");
@@ -106,9 +106,9 @@ namespace RenamerConsole.Menus {
 
         private static void PrintEpisodeInfo(Episode ep) {
             int epNumber = (int)ep.AiredEpisodeNumber;
-            MenuHelpers.WriteColor($"{ep.Season}.{epNumber.ToString("D2")}", ConsoleColor.Cyan);
+            MenuHelpers.WriteColorVT24Bit($"{ep.Season}.{epNumber.ToString("D2")}", "#d88373");
             MenuHelpers.WriteColor(" - ", ConsoleColor.DarkGray);
-            MenuHelpers.WriteLineColor($"{ep.EpisodeName}", ConsoleColor.White);
+            MenuHelpers.WriteLineGradientYellowToGreen($"{ep.EpisodeName}");
         }
 
         private List<Episode> GetEpisodesForShow(TVShow show) {

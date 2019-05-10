@@ -34,14 +34,14 @@ namespace RenamerConsole.Menus {
             Console.WriteLine();
 
             MenuHelpers.PrintMenuNumber(1);
-            Console.Write("Get or refresh token  ");
+            MenuHelpers.WriteColorVT24Bit("Get or refresh token  ", "#e56399");
             DisplayTokenStatus(tokenIsValid);
 
             MenuHelpers.PrintMenuNumber(2);
-            Console.WriteLine("Populate Shows table from User Favorites");
+            MenuHelpers.WriteLineColorVT24Bit("Populate Shows table from User Favorites", "#e5d4ce");
 
             MenuHelpers.PrintMenuNumber(3);
-            Console.WriteLine("Populate Episodes for existing Active shows");
+            MenuHelpers.WriteLineColorVT24Bit("Populate Episodes for existing Active shows", "#7fd1b9");
 
             MenuHelpers.PrintMenuNumber(4);
             MenuHelpers.WriteLineColorVT24Bit("TV Show menu", "#FF6C2C");

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace RenamerConsole.Menus {
     public static class MenuHelpers {
@@ -87,6 +88,67 @@ namespace RenamerConsole.Menus {
             }
         }
 
+        public static void WriteGradientBurning(string str) {
+            GradientOptions burning = new GradientOptions() {
+                rStart = 243,
+                gStart = 247,
+                bStart = 117,
+                rOffsetPerLoop = 0,
+                gOffsetPerLoop = -7,
+                bOffsetPerLoop = -7,
+                rEnd = 7,
+                gEnd = 7,
+                bEnd = 7,
+                pauseBetweenLetters = false,
+                pauseDelayInMilliseconds = 0
+            };
+            WriteGradient(str, burning);
+        }
+
+        public static void WriteLineGradientYellowToGreen(string str) {
+            GradientOptions yellowToGreen = new GradientOptions() {
+                rStart = 243,
+                gStart = 247,
+                bStart = 117,
+                rOffsetPerLoop = -7,
+                gOffsetPerLoop = 0,
+                bOffsetPerLoop = -7,
+                rEnd = 7,
+                gEnd = 7,
+                bEnd = 7,
+                pauseBetweenLetters = false,
+                pauseDelayInMilliseconds = 0
+            };
+            WriteGradient(str, yellowToGreen);
+            Console.WriteLine();
+        }
+
+
+
+        public static void WriteGradient(string str, GradientOptions gradientOptions) {
+            int newR = gradientOptions.rStart;
+            int newG = gradientOptions.gStart;
+            int newB = gradientOptions.bStart;
+            foreach (char s in str) {
+                if (newR < gradientOptions.rEnd) {
+                    newR = gradientOptions.rEnd;
+                }
+                if (newG < gradientOptions.gEnd) {
+                    newG = gradientOptions.gEnd;
+                }
+                if (newB < gradientOptions.bEnd) {
+                    newB = gradientOptions.bEnd;
+                }
+                WriteColorVT24Bit($"{s}", newR, newG, newB);
+                newR += gradientOptions.rOffsetPerLoop;
+                newG += gradientOptions.gOffsetPerLoop;
+                newB += gradientOptions.bOffsetPerLoop;
+                if (gradientOptions.pauseBetweenLetters) {
+                    // await Task.Delay(gradientOptions.pauseDelayInMilliseconds);
+                }
+            }
+        }
+
 
         public static void WriteLineColor(string str, ConsoleColor fontColor = ConsoleColor.White, ConsoleColor backColor = ConsoleColor.Black) {
             Console.ForegroundColor = fontColor;
@@ -109,12 +171,16 @@ namespace RenamerConsole.Menus {
             //var showColor = ConsoleColor.Yellow;
             //if (!isActive) { showColor = ConsoleColor.DarkYellow; }
             //WriteColor($"{seriesName} ", showColor);
-            string hexcolor = "#F8FF11";
+            //string hexcolor = "#F8FF11";
             if (!isActive) {
-                hexcolor = "#606407";
+                string hexcolor = "#606407";
+                WriteColorVT24Bit($"{seriesName} ", hexcolor);
+            }
+            else {
+                WriteGradientBurning($"{seriesName} ");
             }
             // WriteColorVT24Bit($"{seriesName} ", hexcolor);
-            WriteGradient($"{seriesName} ", 248, 255, 17);
+            // WriteGradient($"{seriesName} ", 248, 255, 17);
 
         }
 
