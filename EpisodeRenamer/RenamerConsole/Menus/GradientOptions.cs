@@ -4,15 +4,19 @@ using System.Text;
 
 namespace RenamerConsole.Menus {
     public class GradientOptions {
-        public int rStart { get; set; }
-        public int gStart { get; set; }
-        public int bStart { get; set; }
-        public int rOffsetPerLoop { get; set; }
-        public int gOffsetPerLoop { get; set; }
-        public int bOffsetPerLoop { get; set; }
-        public int rEnd { get; set; }
-        public int gEnd { get; set; }
-        public int bEnd { get; set; }
+        public int RStart { get; set; }
+        public int GStart { get; set; }
+        public int BStart { get; set; }
+        public int REnd { get; set; }
+        public int GEnd { get; set; }
+        public int BEnd { get; set; }
+
+        public string HexColorStart { get; set; }
+        public string HexColorEnd { get; set; }
+
+
+        public int intervals { get; set; }
+
         public bool pauseBetweenLetters { get; set; }
         public int pauseDelayInMilliseconds { get; set; }
 

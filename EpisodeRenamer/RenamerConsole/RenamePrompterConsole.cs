@@ -8,9 +8,9 @@ namespace RenamerConsole {
     public class RenamePrompterConsole : IRenamePrompter {
         public bool PromptForRename(string localFile, string targetName) {
             Console.Write($"Rename ");
-            MenuHelpers.WriteColor($"{localFile} ", ConsoleColor.White);
+            MenuHelpers.WriteColorVT24Bit($"{localFile} ", "#41bbd9");
             Console.Write("to ");
-            MenuHelpers.WriteColor($"{targetName}", ConsoleColor.Yellow);
+            MenuHelpers.WriteColorVT24Bit($"{targetName}", "#FFFF00");
             Console.WriteLine("?");
             string userInput = Console.ReadLine().ToUpper();
             if (userInput == "Y") {

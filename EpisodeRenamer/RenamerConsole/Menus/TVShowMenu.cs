@@ -70,9 +70,9 @@ namespace RenamerConsole.Menus {
                 MenuHelpers.DisplayShowName(showArray[i].SeriesName, showArray[i].IsActive);
                 MenuHelpers.DisplayShowActiveStatus(showArray[i].IsActive);
             }
-            Console.Write($"Enter the number of the show (");
+            MenuHelpers.WriteColorVT24Bit($"Enter the number of the show (", "#F3F9D2");
             MenuHelpers.WriteColor($"{ exitCharUpper} to return to Main Menu", ConsoleColor.DarkCyan);
-            Console.WriteLine("):");
+            MenuHelpers.WriteColorVT24Bit("): ", "#F3F9D2");
             string userInput = Console.ReadLine();
             return userInput;
         }

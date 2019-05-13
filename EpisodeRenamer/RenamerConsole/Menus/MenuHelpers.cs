@@ -60,45 +60,31 @@ namespace RenamerConsole.Menus {
             Console.WriteLine($"\u001b[{underline}38;2;{r};{g};{b}m{str}\u001b[0m");
         }
 
-        public static void WriteGradient(string str, int rStart, int gStart, int bStart) {
-            int rEnd = rStart - 100;
-            int gEnd = gStart - 100;
-            if (rEnd < 0) {
-                rEnd = 0;
-            }
-            if (gEnd < 0) {
-                gEnd = 0;
-            }
-            int counter = 0;
-            foreach (char s in str) {
-                int newR = rStart - counter;
-                int newG = gStart - counter;
-                int newB = bStart - counter;
-                if (newR < 7) {
-                    newR = 7;
-                }
-                if (newG < 7) {
-                    newG = 7;
-                }
-                if (newB < 7) {
-                    newB = 7;
-                }
-                WriteColorVT24Bit($"{s}", newR, newG, newB);
-                counter += 7;
-            }
+
+        public static void WriteLineGradientCoolBlue(string str) {
+            GradientOptions coolBlue = new GradientOptions() {
+                HexColorStart = "#87E0FD",
+                intervals = 27,
+                HexColorEnd = "#1B1B07",
+                pauseBetweenLetters = false,
+                pauseDelayInMilliseconds = 0
+            };
+            WriteGradient(str, coolBlue);
+            Console.WriteLine();
+
+        }
+        public static void WriteLineGradientWhiteToBlue(string str, int numberOfIntervals = 0) {
+            string hexStart = "#FFFFFF";
+            string hexEnd = "#05abe0";
+            WriteGradient(str, hexStart, hexEnd, numberOfIntervals);
+            Console.WriteLine();
         }
 
         public static void WriteGradientBurning(string str) {
             GradientOptions burning = new GradientOptions() {
-                rStart = 243,
-                gStart = 247,
-                bStart = 117,
-                rOffsetPerLoop = 0,
-                gOffsetPerLoop = -7,
-                bOffsetPerLoop = -7,
-                rEnd = 7,
-                gEnd = 7,
-                bEnd = 7,
+                HexColorStart = "#F3F775",
+                intervals = 34,
+                HexColorEnd = "#F30707",
                 pauseBetweenLetters = false,
                 pauseDelayInMilliseconds = 0
             };
@@ -107,15 +93,9 @@ namespace RenamerConsole.Menus {
 
         public static void WriteLineGradientYellowToGreen(string str) {
             GradientOptions yellowToGreen = new GradientOptions() {
-                rStart = 243,
-                gStart = 247,
-                bStart = 117,
-                rOffsetPerLoop = -7,
-                gOffsetPerLoop = 0,
-                bOffsetPerLoop = -7,
-                rEnd = 7,
-                gEnd = 7,
-                bEnd = 7,
+                HexColorStart = "#F3F775",
+                HexColorEnd = "#07F707",
+                intervals = 34,
                 pauseBetweenLetters = false,
                 pauseDelayInMilliseconds = 0
             };
@@ -125,28 +105,82 @@ namespace RenamerConsole.Menus {
 
 
 
-        public static void WriteGradient(string str, GradientOptions gradientOptions) {
-            int newR = gradientOptions.rStart;
-            int newG = gradientOptions.gStart;
-            int newB = gradientOptions.bStart;
+        public static void WriteGradientOld(string str, GradientOptions gradientOptions) {
+            int newR = gradientOptions.RStart;
+            int newG = gradientOptions.GStart;
+            int newB = gradientOptions.BStart;
             foreach (char s in str) {
-                if (newR < gradientOptions.rEnd) {
-                    newR = gradientOptions.rEnd;
+                if (newR < gradientOptions.REnd) {
+                    newR = gradientOptions.REnd;
                 }
-                if (newG < gradientOptions.gEnd) {
-                    newG = gradientOptions.gEnd;
+                if (newG < gradientOptions.GEnd) {
+                    newG = gradientOptions.GEnd;
                 }
-                if (newB < gradientOptions.bEnd) {
-                    newB = gradientOptions.bEnd;
+                if (newB < gradientOptions.BEnd) {
+                    newB = gradientOptions.BEnd;
                 }
                 WriteColorVT24Bit($"{s}", newR, newG, newB);
-                newR += gradientOptions.rOffsetPerLoop;
-                newG += gradientOptions.gOffsetPerLoop;
-                newB += gradientOptions.bOffsetPerLoop;
                 if (gradientOptions.pauseBetweenLetters) {
                     // await Task.Delay(gradientOptions.pauseDelayInMilliseconds);
                 }
             }
+        }
+        public static void WriteGradient(string str, GradientOptions gradientOptions) {
+            Color colorStart = ColorTranslator.FromHtml(gradientOptions.HexColorStart);
+            Color colorEnd = ColorTranslator.FromHtml(gradientOptions.HexColorEnd);
+
+            WriteGradient(str, colorStart, colorEnd, gradientOptions.intervals);
+        }
+
+        public static void WriteGradient(string str, Color colorStart, Color colorEnd, int numberOfIntervals = 0) {
+            if (numberOfIntervals == 0) {
+                numberOfIntervals = str.Length;
+            }
+            int startR = colorStart.R;
+            int startG = colorStart.G;
+            int startB = colorStart.B;
+            int endR = colorEnd.R;
+            int endG = colorEnd.G;
+            int endB = colorEnd.B;
+
+            int intervalR = (endR - startR) / numberOfIntervals;
+            int intervalG = (endG - startG) / numberOfIntervals;
+            int intervalB = (endB - startB) / numberOfIntervals;
+
+            int currentR = startR;
+            int currentG = startG;
+            int currentB = startB;
+            foreach (char s in str) {
+                WriteColorVT24Bit($"{s}", currentR, currentG, currentB);
+                currentR = CalculateColorForNextInterval(currentR, intervalR, endR);
+                currentG = CalculateColorForNextInterval(currentG, intervalG, endG);
+                currentB = CalculateColorForNextInterval(currentB, intervalB, endB);
+            }
+
+        }
+
+        public static void WriteGradient(string str, string hexColorStart, string hexColorEnd, int numberOfIntervals = 0) {
+            Color colorStart = ColorTranslator.FromHtml(hexColorStart);
+            Color colorEnd = ColorTranslator.FromHtml(hexColorEnd);
+            WriteGradient(str, colorStart, colorEnd, numberOfIntervals);
+        }
+
+        private static int CalculateColorForNextInterval(int color, int interval, int endColor) {
+            color += interval;
+            if (ColorHasGonePastEndColor(color, interval, endColor)) {
+                return endColor;
+            }
+            else {
+                return color;
+            }
+        }
+
+        private static bool ColorHasGonePastEndColor(int color, int interval, int endColor) {
+            bool hasGonePast = false;
+            if (((color < endColor) && (interval < 0)) || ((color > endColor) && (interval > 0))) {
+                return true;
+            }
+            return hasGonePast;
         }
 
 
