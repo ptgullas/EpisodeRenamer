@@ -29,7 +29,7 @@ namespace RenamerConsole.Menus {
 
         private int DisplayMainMenu(TVDBInfo tvdbInfo) {
             bool tokenIsValid = !tvdbInfo.TokenIsInvalid;
-            tvdbInfo.PrintExpiration();
+            PrintTokenExpiration(tvdbInfo);
             MenuHelpers.WriteLineColor("\u001b[4mEpisode Renamer!\u001b[0m", ConsoleColor.Yellow, ConsoleColor.DarkMagenta);
             // MenuHelpers.WriteLineGradientWhiteToBlue("Episode Renamer!");
             Console.WriteLine();
@@ -65,9 +65,19 @@ namespace RenamerConsole.Menus {
             }
         }
 
+        private void PrintTokenExpiration(TVDBInfo tvdbInfo) {
+            DateTime expiration = tvdbInfo.GetExpiration();
+            string expireWord = "expires";
+            if (tvdbInfo.TokenIsExpired) { expireWord = "expired"; }
+            MenuHelpers.WriteColorVT24Bit($"Token {expireWord} on ", "#dbbbf5");
+            MenuHelpers.WriteColorVT24Bit($"{expiration.ToString("MM/dd/yyyy hh:mm tt")}", "#ce5374");
+            Console.WriteLine();
+        }
+
         private void DisplayTokenStatus(bool IsValid) {
             if (IsValid) {
-                MenuHelpers.WriteLineColor("(Token is Valid!)", ConsoleColor.Green);
+                // MenuHelpers.WriteLineColor("(Token is Valid! \u306F hey)", ConsoleColor.Green);
+                MenuHelpers.WriteLineColorVT24Bit("(Token is Valid!)", "#00FF00");
             }
             else {
                 MenuHelpers.WriteLineColor("(Token Expired!)", ConsoleColor.Red);
