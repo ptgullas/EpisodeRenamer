@@ -64,6 +64,13 @@ namespace Renamer.Tests {
         }
 
         [Theory]
+        [InlineData(@"Sh*t Show at the F**k Factory")]
+        public void ReplaceInvalidChars_HasAsterisks_ReturnsStringWithHyphens(string val) {
+            string expected = "Sh-t Show at the F--k Factory";
+            Assert.Equal(expected, val.ReplaceInvalidChars());
+        }
+
+        [Theory]
         [InlineData(@"Chapter Six/ An Exorcism in Greendale")]
         [InlineData(@"Chapter Six\ An Exorcism in Greendale")]
         public void ReplaceInvalidChars_HasInvalidChars_ReturnsStringWithHyphen(string val) {
