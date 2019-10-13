@@ -21,16 +21,14 @@ namespace RenamerConsole.Menus {
 
         public async Task DisplayMenu() {
             TVShow[] showArray = GetShows();
-            TVShow selectedShow = new TVShow() {
-                SeriesName = "TempShow"
-            };
+            TVShow selectedShow;
             do {
                 selectedShow = DisplayTVShowMenu(showArray);
                 if (selectedShow != null) {
                     await DisplayIndividualShowMenu(selectedShow);
                 }
             } while (selectedShow != null);
-            
+
         }
 
         private TVShow DisplayTVShowMenu(TVShow[] showArray) {
