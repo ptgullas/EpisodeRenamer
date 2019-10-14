@@ -32,6 +32,7 @@ namespace Renamer.Services {
         }
         public static string ReplaceInvalidChars(this string str, string strToReplace = "-") {
             str = str.ReplaceColonSpaceWithHyphen();
+            str = str.Replace("?", "");
             // this is a colon, a backslash, and a forward slash, and an asterisk
             string invalidChars = "[:\\\\/*]";
             return Regex.Replace(str, invalidChars, strToReplace);

@@ -71,6 +71,13 @@ namespace Renamer.Tests {
         }
 
         [Theory]
+        [InlineData(@"Succession - 1.06 - Which Side Are You On?")]
+        public void ReplaceInvalidChars_HasQuestionMark_ReturnsStringWithoutQuestionMark(string val) {
+            string expected = "Succession - 1.06 - Which Side Are You On";
+            Assert.Equal(expected, val.ReplaceInvalidChars());
+        }
+
+        [Theory]
         [InlineData(@"Chapter Six/ An Exorcism in Greendale")]
         [InlineData(@"Chapter Six\ An Exorcism in Greendale")]
         public void ReplaceInvalidChars_HasInvalidChars_ReturnsStringWithHyphen(string val) {
