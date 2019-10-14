@@ -96,8 +96,21 @@ namespace Renamer.Services {
 
         private Match GetSeasonEpisodeMatchFromFilename(string filename) {
             string seasonEpisodePattern = @"\.s(\d+)e(\d+)\.";
-            Regex rgx = new Regex(seasonEpisodePattern);
-            return rgx.Match(filename);
+            Match lowerCaseMatch = GetRegExMatchFromPattern(filename, seasonEpisodePattern);
+            if (lowerCaseMatch.Success) {
+                return lowerCaseMatch;
+            }
+            else {
+                seasonEpisodePattern = @"\.S(\d+)E(\d+)\.";
+                Match upperCaseMatch = GetRegExMatchFromPattern(filename, seasonEpisodePattern);
+                return upperCaseMatch;
+            }
+        }
+
+        private static Match GetRegExMatchFromPattern(string stringToCheck, string regExPattern) {
+            Regex rgx = new Regex(regExPattern);
+            Match lowerCaseMatch = rgx.Match(stringToCheck);
+            return lowerCaseMatch;
         }
 
         public bool FilenameContainsSeasonEpisodeFormat(string filename) {

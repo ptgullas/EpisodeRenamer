@@ -170,6 +170,19 @@ namespace Renamer.Tests {
 
             Assert.Null(comparer.ExtractSeasonEpisodeFromFilenameAsEpisodeObject(fileName));
         }
+
+        [Fact]
+        public void ExtractSeasonEpisodeFromFilenameAsEpisodeObject_ContainsCapitalSeasonEpisode_ReturnsEpObject() {
+            TitleComparer comparer = new TitleComparer();
+            string fileName = @"Succession.S01E03.BDRip.X264-REWARD.mkv";
+
+            int expectedSeason = 1;
+            int expectedEpisode = 3;
+            Assert.Equal(expectedSeason, comparer.ExtractSeasonEpisodeFromFilenameAsEpisodeObject(fileName).SeasonNumber);
+            Assert.Equal(expectedEpisode, comparer.ExtractSeasonEpisodeFromFilenameAsEpisodeObject(fileName).EpisodeNumberInSeason);
+
+        }
+
         [Fact]
         public void ExtractSeasonEpisodeFromFilenameAsEpisodeObject_ContainsEpisode00_ReturnsEpObject() {
             TitleComparer comparer = new TitleComparer();
