@@ -95,14 +95,14 @@ namespace Renamer.Services {
 
 
         private Match GetSeasonEpisodeMatchFromFilename(string filename) {
-            string seasonEpisodePattern = @"\.s(\d+)e(\d+)\.";
-            Match lowerCaseMatch = GetRegExMatchFromPattern(filename, seasonEpisodePattern);
+            string seasonEpisodePatternLowercase = @"\.s(\d+)e(\d+)\.";
+            Match lowerCaseMatch = GetRegExMatchFromPattern(filename, seasonEpisodePatternLowercase);
             if (lowerCaseMatch.Success) {
                 return lowerCaseMatch;
             }
             else {
-                seasonEpisodePattern = @"\.S(\d+)E(\d+)\.";
-                Match upperCaseMatch = GetRegExMatchFromPattern(filename, seasonEpisodePattern);
+                string seasonEpisodePatternUppercase = @"\.S(\d+)E(\d+)\.";
+                Match upperCaseMatch = GetRegExMatchFromPattern(filename, seasonEpisodePatternUppercase);
                 return upperCaseMatch;
             }
         }
