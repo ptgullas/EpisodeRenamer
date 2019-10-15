@@ -16,4 +16,4 @@ Update: fixed this. Ran gitk --all (The Git graphical history viewer). Found the
 Made a new commit, then did:
 git push origin master --force
 
-This got rid of the dupe commits of GitHub.
+This removed the duplicate commits from GitHub.
