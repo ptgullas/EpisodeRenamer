@@ -229,6 +229,9 @@ namespace Renamer.Services {
                             _localservice.RenameFile(epDto.FilePath, targetDto);
                         }
                     }
+                    else {
+                        Log.Information("Could not find a matching database entry for {epFileName}. Make sure the series name matches.", epDto.FilePath);
+                    }
                 }
                 catch (Exception e) {
                     Log.Warning(e, "Could not rename file {a}", epDto.FilePath);
