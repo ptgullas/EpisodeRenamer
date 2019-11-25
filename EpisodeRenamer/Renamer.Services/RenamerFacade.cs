@@ -173,7 +173,7 @@ namespace Renamer.Services {
                 try {
                     Log.Information("Checking episode {a}: \"{b}\"...", epDto.EpisodeId, epDto.EpisodeName);
                     Episode ep = epDto.ToEpisode();
-                    if (epDto.IsRelativelyNew()) {
+                    if (epDto.FirstAiredInPastYear()) {
                         _episodeService.UpdateEpisodeIfLastUpdatedIsNewer(ep);
                     }
                     if (ep.EpisodeName == null) {

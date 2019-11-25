@@ -24,7 +24,7 @@ namespace Renamer.Services.Models {
             return offset.LocalDateTime;
         }
 
-        public static bool IsRelativelyNew(this EpisodeFromTVDBDto epDto) {
+        public static bool FirstAiredInPastYear(this EpisodeFromTVDBDto epDto) {
             if ((epDto.FirstAired != null) && (!epDto.AiredOverOneYearAgo())) {
                 return true;
             }
