@@ -39,13 +39,13 @@ namespace Renamer.Services {
         }
 
         public static bool IsNumeric(this string source) {
-            return int.TryParse(source, out int i);
+            return int.TryParse(source, out _);
         }
 
         public static int ToInt(this string source) {
             int result = 0;
             if (source.IsNumeric()) {
-                bool b = int.TryParse(source, out result);
+                _ = int.TryParse(source, out result);
             }
             return result;
         }
