@@ -11,7 +11,6 @@ namespace Renamer.Services {
 
         }
 
-
         /// <summary>
         /// Returns Season & Episode in ep as string in "x.yy" format
         /// </summary>
@@ -20,7 +19,6 @@ namespace Renamer.Services {
         public string GetSeasonEpisodeInNumberFormat(EpisodeForComparingDto ep) {
             return $"{ep.SeasonNumber}.{ep.EpisodeNumberInSeason.ToString("D2")}";
         }
-
 
         public bool FilenameMatchesEpisode(EpisodeForComparingDto ep, string filename) {
             return (FilenameContainsSeriesName(ep, filename) && FilenameContainsSeasonEpisode(ep, filename));
