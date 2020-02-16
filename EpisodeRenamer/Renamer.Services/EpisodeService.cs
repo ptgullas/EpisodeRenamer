@@ -17,7 +17,11 @@ namespace Renamer.Services {
         public void UpdateEpisodeIfLastUpdatedIsNewer(Episode ep) {
             Episode epFromDB = _context.Episodes
                 .FirstOrDefault(b => b.TVDBEpisodeId == ep.TVDBEpisodeId);
-            if (epFromDB != null && (epFromDB.LastUpdated < ep.LastUpdated)) {
+            if (epFromDB != null 
+                // comment out next 2 lines if LastUpdated bug on thetvdb API is still around
+                && 
+                (epFromDB.LastUpdated < ep.LastUpdated)
+                ) {
                 Log.Information("LastUpdated property newer on Episode {a}: {b} ", epFromDB.Id, ep.EpisodeName);
                 ep.Id = epFromDB.Id;
                 _context.Entry(epFromDB).CurrentValues.SetValues(ep);
