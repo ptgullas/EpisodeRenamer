@@ -38,6 +38,8 @@ namespace RenamerConsole.Menus {
             MenuHelpers.WriteLineColorVT24Bit("Add/Change Preferred Name", "#99c2a2");
             MenuHelpers.PrintMenuNumber(4);
             MenuHelpers.WriteLineColorVT24Bit($"Toggle Active Status", "#c5edac");
+            MenuHelpers.PrintMenuNumber(5);
+            MenuHelpers.WriteLineColorVT24Bit($"Get episodes from specific Json page", "#99c2a2");
             MenuHelpers.PrintMenuNumber(9);
             MenuHelpers.WriteLineColor("Return to List of Shows", ConsoleColor.DarkCyan);
             MenuHelpers.WriteColorVT24Bit($"Enter your selection: ", "#C0D684");
@@ -74,6 +76,9 @@ namespace RenamerConsole.Menus {
             else if (selection == 4) {
                 ToggleActiveStatus();
             }
+            else if (selection == 5) {
+                await PromptForSpecificJsonPageToDownload();
+            }
             else if (selection == 9) {
                 return;
             }
@@ -87,6 +92,17 @@ namespace RenamerConsole.Menus {
             string preferredName = Console.ReadLine();
             if (preferredName != "") {
                 ShowService.AddPreferredName(Show.SeriesId, preferredName);
+            }
+        }
+
+        private async Task PromptForSpecificJsonPageToDownload() {
+            Console.WriteLine($"Enter the specific page you want to download");
+            string pageToDownload = Console.ReadLine();
+            if (!pageToDownload.IsNumeric()) {
+                Console.WriteLine("That's not a number!");
+            }
+            else {
+                await Facade.PopulateEpisodesFromSeriesIdFromSpecificPage(Show.SeriesId, pageToDownload.ToInt());
             }
         }
 

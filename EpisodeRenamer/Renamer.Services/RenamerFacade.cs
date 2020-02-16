@@ -139,25 +139,30 @@ namespace Renamer.Services {
             }
         }
 
+        public async Task PopulateEpisodesFromSeriesIdFromSpecificPage(int seriesId, int page = 1) {
+            Log.Information($"Populating Episodes from seriesId {seriesId} from JSON page {page}.");
+            try {
+                await GetEpisodesFromSpecificTVDBJsonPageThenAddToDB(seriesId, page);
+            }
+            catch (Exception e) {
+                Log.Error(e, "Error populating episodes for seriesId {a}", seriesId);
+            }
+        }
+
         public async Task PopulateEpisodesFromSeriesId(int seriesId, int numberOfPagesFromEndToFetch = 1) {
             Log.Information($"Populating Episodes from seriesId {seriesId}");
             try {
-                var episodeOuter = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token);
+                var episodeOuterPageOne = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token);
                 // await Task.Delay(2000);
-                AddEpisodesOnPageToDatabase(episodeOuter); // always add the episodes on page 1
+                AddEpisodesOnPageToDatabase(episodeOuterPageOne); // always add the episodes on page 1
                 if (numberOfPagesFromEndToFetch > 0) {
-                    int lastPage = episodeOuter.links.Last;
+                    int lastPage = episodeOuterPageOne.links.Last;
                     int pageToEndOn = lastPage - numberOfPagesFromEndToFetch;
                     if (pageToEndOn <= 0) {
                         pageToEndOn = 1; // we already added the episodes on page 1, so stop when we get down to 1
                     }
                     for (int i = lastPage; i > pageToEndOn; i--) {
-                        Log.Information("Fetching episodes JSON from page {a}", i);
-                        // await Task.Delay(2000);
-                        episodeOuter = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token, i);
-                        if (episodeOuter != null) {
-                            AddEpisodesOnPageToDatabase(episodeOuter);
-                        }
+                        await GetEpisodesFromSpecificTVDBJsonPageThenAddToDB(seriesId, i);
                     }
                 }
             }
@@ -166,6 +171,14 @@ namespace Renamer.Services {
             }
         }
 
+        private async Task GetEpisodesFromSpecificTVDBJsonPageThenAddToDB(int seriesId, int page) {
+            Log.Information("Fetching episodes JSON from page {a}", page);
+            // await Task.Delay(2000);
+            var episodeOuter = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token, page);
+            if (episodeOuter != null) {
+                AddEpisodesOnPageToDatabase(episodeOuter);
+            }
+        }
 
         private void AddEpisodesOnPageToDatabase(EpisodeOuterDto episodeOuter) {
             var episodeList = episodeOuter.episodes.ToList();
