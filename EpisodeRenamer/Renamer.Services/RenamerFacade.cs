@@ -145,7 +145,7 @@ namespace Renamer.Services {
                 await GetEpisodesFromSpecificTVDBJsonPageThenAddToDB(seriesId, page);
             }
             catch (Exception e) {
-                Log.Error(e, "Error populating episodes for seriesId {a}", seriesId);
+                Log.Error(e, "Error populating episodes for seriesId {a} from page {b}", seriesId, page);
             }
         }
 
@@ -153,7 +153,6 @@ namespace Renamer.Services {
             Log.Information($"Populating Episodes from seriesId {seriesId}");
             try {
                 var episodeOuterPageOne = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token);
-                // await Task.Delay(2000);
                 AddEpisodesOnPageToDatabase(episodeOuterPageOne); // always add the episodes on page 1
                 if (numberOfPagesFromEndToFetch > 0) {
                     int lastPage = episodeOuterPageOne.links.Last;
@@ -173,7 +172,6 @@ namespace Renamer.Services {
 
         private async Task GetEpisodesFromSpecificTVDBJsonPageThenAddToDB(int seriesId, int page) {
             Log.Information("Fetching episodes JSON from page {a}", page);
-            // await Task.Delay(2000);
             var episodeOuter = await _retrieverService.FetchEpisodes(seriesId, _tvdbInfo.Token, page);
             if (episodeOuter != null) {
                 AddEpisodesOnPageToDatabase(episodeOuter);
