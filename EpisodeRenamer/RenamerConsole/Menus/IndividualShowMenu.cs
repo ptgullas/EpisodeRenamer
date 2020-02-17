@@ -39,7 +39,7 @@ namespace RenamerConsole.Menus {
             MenuHelpers.PrintMenuNumber(4);
             MenuHelpers.WriteLineColorVT24Bit($"Toggle Active Status", "#c5edac");
             MenuHelpers.PrintMenuNumber(5);
-            MenuHelpers.WriteLineColorVT24Bit($"Get episodes from specific Json page", "#99c2a2");
+            MenuHelpers.WriteLineColorVT24Bit($"Get episodes from specific Json page", "#ce5374");
             MenuHelpers.PrintMenuNumber(9);
             MenuHelpers.WriteLineColor("Return to List of Shows", ConsoleColor.DarkCyan);
             MenuHelpers.WriteColorVT24Bit($"Enter your selection: ", "#C0D684");
