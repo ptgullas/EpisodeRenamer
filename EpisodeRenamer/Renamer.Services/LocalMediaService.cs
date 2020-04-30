@@ -17,7 +17,12 @@ namespace Renamer.Services {
         }
 
         private List<string> GetFiles() {
-            return Directory.GetFiles(_directoryPath, "*.mkv", SearchOption.TopDirectoryOnly).ToList();
+            var extensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
+                ".mkv", ".mp4"
+            };
+            return Directory.EnumerateFiles(_directoryPath, "*.*", SearchOption.TopDirectoryOnly)
+                .Where(s => extensions.Contains(Path.GetExtension(s)))
+                .ToList();
         }
 
         public List<EpisodeForComparingDto> GetFilesAsDtosToCompare() {
