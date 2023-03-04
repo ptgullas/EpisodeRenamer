@@ -127,13 +127,6 @@ namespace RenamerConsole {
             Console.ReadLine();
         }
 
-        static void SetUpAutomapper() {
-            Mapper.Initialize(config => {
-                config.CreateMap<EpisodeFromTVDBDto, Episode>();
-                config.CreateMap<TVShowFromTVDBDto, TVShow>();
-            });
-        }
-
         static void GetApiKey() {
             var tvdbInfo = Configuration.GetSection("TVDBInfo");
             string apiKey = tvdbInfo.GetValue<string>("apikey");
