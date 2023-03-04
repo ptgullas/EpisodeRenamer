@@ -249,6 +249,14 @@ namespace Renamer.Services {
                 }
             }
         }
+
+        public bool ChangeLocalDirectory(string newDirectory) {
+            return _localservice.ChangeLocalDirectory(newDirectory);
+        }
+
+        public string GetLocalDirectory() {
+            return _localservice.DirectoryPath;
+        }
     }
 
 }

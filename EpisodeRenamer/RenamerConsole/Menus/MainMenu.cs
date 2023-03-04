@@ -53,6 +53,8 @@ namespace RenamerConsole.Menus {
             MenuHelpers.PrintMenuNumber(6);
             MenuHelpers.WriteLineColor("Search for shows on TVDB", ConsoleColor.White);
 
+            MenuHelpers.PrintMenuNumber(7);
+            MenuHelpers.WriteLineColor("Change local folder (temporarily)", ConsoleColor.DarkRed);
 
             MenuHelpers.PrintMenuNumber(9);
             MenuHelpers.WriteLineColor("Exit, if you dare", ConsoleColor.DarkCyan);
@@ -105,6 +107,9 @@ namespace RenamerConsole.Menus {
             else if (selection == 6) {
                 await CreateSearchMenu();
             }
+            else if (selection == 7) {
+                CreateFolderChangeMenu();
+            }
             else if (selection == 9) {
                 return;
             }
@@ -122,6 +127,11 @@ namespace RenamerConsole.Menus {
         private async Task CreateTVShowMenu() {
             TVShowMenu tvShowMenu = new TVShowMenu(Context, Facade, ShowService);
             await tvShowMenu.DisplayMenu();
+        }
+
+        private void CreateFolderChangeMenu() {
+            FolderChangeMenu folderChangeMenu = new FolderChangeMenu(Facade);
+            folderChangeMenu.DisplayMenu();
         }
 
     }

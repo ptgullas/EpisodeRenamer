@@ -10,17 +10,17 @@ using Serilog;
 namespace Renamer.Services {
     public class LocalMediaService {
         private TitleComparer _titleComparer;
-        private string _directoryPath;
+        public string DirectoryPath { get; private set; }
         public LocalMediaService(string directoryPath) {
             _titleComparer = new TitleComparer();
-            _directoryPath = directoryPath;
+            DirectoryPath = directoryPath;
         }
 
         private List<string> GetFiles() {
             var extensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
                 ".mkv", ".mp4"
             };
-            return Directory.EnumerateFiles(_directoryPath, "*.*", SearchOption.TopDirectoryOnly)
+            return Directory.EnumerateFiles(DirectoryPath, "*.*", SearchOption.TopDirectoryOnly)
                 .Where(s => extensions.Contains(Path.GetExtension(s)))
                 .ToList();
         }
@@ -55,6 +55,14 @@ namespace Renamer.Services {
                 Log.Error(e.Message);
             }
 
+        }
+
+        public bool ChangeLocalDirectory(string newDirectory) {
+            if (!Directory.Exists(newDirectory)) { 
+                return false; 
+            }
+            DirectoryPath = newDirectory;
+            return true;
         }
     }
 }
