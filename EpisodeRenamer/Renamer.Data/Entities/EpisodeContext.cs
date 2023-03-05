@@ -70,6 +70,12 @@ namespace Renamer.Data.Entities {
                 b.ToTable("UserFavorites");
             });
 
+            modelBuilder.Entity<Episode>()
+                .HasOne(e => e.TVShow)
+                .WithMany(t => t.Episodes)
+                .HasForeignKey("SeriesId");
+
+            /*
             modelBuilder.Entity("Renamer.Data.Entities.Episode", b =>
             {
                 b.HasOne("Renamer.Data.Entities.TVShow")
@@ -77,6 +83,7 @@ namespace Renamer.Data.Entities {
                     .HasForeignKey("SeriesId")
                     .HasPrincipalKey("SeriesId");
             });
+            */
         }
     }
 }

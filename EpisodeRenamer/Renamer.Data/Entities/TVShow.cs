@@ -11,7 +11,7 @@ namespace Renamer.Data.Entities {
         [JsonProperty]
         public string SeriesName { get; set; }
         public string SeriesNamePreferred { get; set; }
-        public List<Episode> Episodes { get; set; }
+        public ICollection<Episode> Episodes { get; set; }
         public bool IsActive { get; set; }
 
     }

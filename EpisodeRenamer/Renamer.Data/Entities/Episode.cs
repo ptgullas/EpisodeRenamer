@@ -16,5 +16,6 @@ namespace Renamer.Data.Entities {
         public DateTime LastUpdated { get; set; }
 
         public int SeriesId { get; set; }
+        public TVShow TVShow { get; set; }
     }
 }
