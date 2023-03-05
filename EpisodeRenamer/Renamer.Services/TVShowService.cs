@@ -55,9 +55,10 @@ namespace Renamer.Services {
         }
 
         public TVShow FindByName(string seriesName) {
-            TVShow show = _context.Shows.FirstOrDefault(b =>
-                b.SeriesName.ToUpper().RemoveNonAlphanumeric() == seriesName.ToUpper().RemoveNonAlphanumeric());
-            return show;
+            string seriesNameUpperAlphaOnly = seriesName.ToUpper().RemoveNonAlphanumeric();
+            IEnumerable<TVShow> shows = _context.Shows.ToList();
+            return shows.FirstOrDefault(
+                s => s.SeriesName.ToUpper().RemoveNonAlphanumeric() == seriesNameUpperAlphaOnly);
         }
 
         public TVShow FindBySeriesId(int seriesId) {
